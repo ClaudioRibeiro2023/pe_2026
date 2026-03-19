@@ -8,6 +8,7 @@ import { Button } from '@/shared/ui/Button'
 import { Input } from '@/shared/ui/Input'
 import { useToast } from '@/shared/ui/Toast'
 import { PageLoader } from '@/shared/ui/Loader'
+import { getErrorMessage } from '@/shared/lib/errorUtils'
 import { ROUTES } from '@/shared/config/routes'
 import { env } from '@/shared/config/env'
 import { supabase } from '@/shared/lib/supabaseClient'
@@ -132,11 +133,11 @@ export function LoginPage() {
         title: 'Email reenviado!',
         message: 'Verifique sua caixa de entrada para confirmar sua conta.',
       })
-    } catch (error: any) {
+    } catch (error: unknown) {
       addToast({
         type: 'error',
         title: 'Não foi possível reenviar',
-        message: error.message || 'Tente novamente em instantes.',
+        message: getErrorMessage(error),
       })
     } finally {
       setLoading(false)
@@ -160,11 +161,11 @@ export function LoginPage() {
       })
 
       setIsRecovery(false)
-    } catch (error: any) {
+    } catch (error: unknown) {
       addToast({
         type: 'error',
         title: 'Erro ao enviar email',
-        message: error.message || 'Não foi possível enviar o email de recuperação.',
+        message: getErrorMessage(error),
       })
     } finally {
       setLoading(false)

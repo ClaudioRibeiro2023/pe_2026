@@ -7,6 +7,7 @@ import { Button } from '@/shared/ui/Button'
 import { Input } from '@/shared/ui/Input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/Card'
 import { useToast } from '@/shared/ui/Toast'
+import { getErrorMessage } from '@/shared/lib/errorUtils'
 import { ROUTES } from '@/shared/config/routes'
 import { env } from '@/shared/config/env'
 import { supabase } from '@/shared/lib/supabaseClient'
@@ -76,11 +77,11 @@ export function ResetPasswordPage() {
 
       // Redirecionar para login após 3 segundos
       setTimeout(() => navigate(ROUTES.LOGIN), 3000)
-    } catch (error: any) {
+    } catch (error: unknown) {
       addToast({
         type: 'error',
         title: 'Erro ao redefinir senha',
-        message: error.message || 'Não foi possível redefinir sua senha.',
+        message: getErrorMessage(error),
       })
     } finally {
       setLoading(false)

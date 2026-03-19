@@ -30,7 +30,7 @@ function loadNotifications(): Notification[] {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
       const parsed = JSON.parse(stored)
-      return parsed.map((n: any) => ({
+      return parsed.map((n: Omit<Notification, 'timestamp'> & { timestamp: string }) => ({
         ...n,
         timestamp: new Date(n.timestamp),
       }))

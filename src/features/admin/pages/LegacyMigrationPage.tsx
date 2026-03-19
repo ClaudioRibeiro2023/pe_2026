@@ -6,6 +6,7 @@ import { Select } from '@/shared/ui/Select'
 import { PageLoader } from '@/shared/ui/Loader'
 import { useToast } from '@/shared/ui/Toast'
 import { supabase, isSupabaseConfigured } from '@/shared/lib/supabaseClient'
+import { getErrorMessage } from '@/shared/lib/errorUtils'
 import { useAreas } from '@/features/areas/hooks'
 
 interface LegacyActionPlan {
@@ -190,11 +191,11 @@ export function LegacyMigrationPage() {
 
       setSelectedPlans(new Set())
       loadLegacyPlans()
-    } catch (error: any) {
+    } catch (error: unknown) {
       addToast({
         type: 'error',
         title: 'Erro na migração',
-        message: error?.message || 'Não foi possível migrar os planos.',
+        message: getErrorMessage(error),
       })
     } finally {
       setMigrating(false)
@@ -232,11 +233,11 @@ export function LegacyMigrationPage() {
       })
 
       loadLegacyPlans()
-    } catch (error: any) {
+    } catch (error: unknown) {
       addToast({
         type: 'error',
         title: 'Erro ao excluir',
-        message: error?.message || 'Não foi possível excluir os planos.',
+        message: getErrorMessage(error),
       })
     }
   }

@@ -20,7 +20,8 @@ class Analytics {
     document.head.appendChild(script)
 
     window.dataLayer = window.dataLayer || []
-    function gtag(...args: any[]) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function gtag(...args: [string, ...unknown[]]) {
       window.dataLayer.push(args)
     }
     window.gtag = gtag
@@ -103,7 +104,7 @@ export const analytics = new Analytics()
 // Tipos globais para TypeScript
 declare global {
   interface Window {
-    dataLayer: any[]
-    gtag?: (...args: any[]) => void
+    dataLayer: unknown[]
+    gtag?: (...args: [string, ...unknown[]]) => void
   }
 }

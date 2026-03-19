@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/Card'
 import { Button } from '@/shared/ui/Button'
 import { useToast } from '@/shared/ui/Toast'
 import { supabase, isSupabaseConfigured } from '@/shared/lib/supabaseClient'
+import { getErrorMessage } from '@/shared/lib/errorUtils'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { runPlatformReport, generateMarkdownReport, type PlatformCheck } from '@/shared/lib/platformReport'
 
@@ -80,8 +81,8 @@ export function ValidationPage() {
         if (error) throw error
         updateCheck('db-connection', { status: 'passed', message: 'Conectado com sucesso' })
       }
-    } catch (e: any) {
-      updateCheck('db-connection', { status: 'failed', message: e.message })
+    } catch (e: unknown) {
+      updateCheck('db-connection', { status: 'failed', message: getErrorMessage(e) })
     }
 
     // Check tables exist
@@ -105,8 +106,8 @@ export function ValidationPage() {
         } else {
           updateCheck(id, { status: 'passed' })
         }
-      } catch (e: any) {
-        updateCheck(id, { status: 'failed', message: e.message })
+      } catch (e: unknown) {
+        updateCheck(id, { status: 'failed', message: getErrorMessage(e) })
       }
     }
 
@@ -120,8 +121,8 @@ export function ValidationPage() {
       } else {
         updateCheck('rls-enabled', { status: 'warning', message: 'Não foi possível verificar' })
       }
-    } catch (e: any) {
-      updateCheck('rls-enabled', { status: 'warning', message: e.message })
+    } catch (e: unknown) {
+      updateCheck('rls-enabled', { status: 'warning', message: getErrorMessage(e) })
     }
 
     // Function checks
@@ -130,11 +131,12 @@ export function ValidationPage() {
       const { data, error } = await supabase.rpc('is_admin')
       if (error) throw error
       updateCheck('rls-is-admin', { status: 'passed', message: `Retornou: ${data}` })
-    } catch (e: any) {
-      if (e.message?.includes('does not exist')) {
+    } catch (e: unknown) {
+      const msg = getErrorMessage(e)
+      if (msg.includes('does not exist')) {
         updateCheck('rls-is-admin', { status: 'failed', message: 'Função não existe' })
       } else {
-        updateCheck('rls-is-admin', { status: 'warning', message: e.message })
+        updateCheck('rls-is-admin', { status: 'warning', message: msg })
       }
     }
 
@@ -143,11 +145,12 @@ export function ValidationPage() {
       const { data, error } = await supabase.rpc('user_area_id')
       if (error) throw error
       updateCheck('rls-user-area', { status: 'passed', message: data ? `Área: ${data}` : 'Sem área' })
-    } catch (e: any) {
-      if (e.message?.includes('does not exist')) {
+    } catch (e: unknown) {
+      const msg = getErrorMessage(e)
+      if (msg.includes('does not exist')) {
         updateCheck('rls-user-area', { status: 'failed', message: 'Função não existe' })
       } else {
-        updateCheck('rls-user-area', { status: 'warning', message: e.message })
+        updateCheck('rls-user-area', { status: 'warning', message: msg })
       }
     }
 
@@ -161,8 +164,8 @@ export function ValidationPage() {
         status: count > 0 ? 'passed' : 'warning',
         message: `${count} área(s) encontrada(s)`,
       })
-    } catch (e: any) {
-      updateCheck('data-areas', { status: 'failed', message: e.message })
+    } catch (e: unknown) {
+      updateCheck('data-areas', { status: 'failed', message: getErrorMessage(e) })
     }
 
     updateCheck('data-pillars', { status: 'running' })
@@ -174,8 +177,8 @@ export function ValidationPage() {
         status: count > 0 ? 'passed' : 'warning',
         message: `${count} pilar(es) encontrado(s)`,
       })
-    } catch (e: any) {
-      updateCheck('data-pillars', { status: 'failed', message: e.message })
+    } catch (e: unknown) {
+      updateCheck('data-pillars', { status: 'failed', message: getErrorMessage(e) })
     }
 
     updateCheck('data-templates', { status: 'running' })
@@ -187,8 +190,8 @@ export function ValidationPage() {
         status: count > 0 ? 'passed' : 'warning',
         message: `${count} template(s) encontrado(s)`,
       })
-    } catch (e: any) {
-      updateCheck('data-templates', { status: 'failed', message: e.message })
+    } catch (e: unknown) {
+      updateCheck('data-templates', { status: 'failed', message: getErrorMessage(e) })
     }
 
     // Context checks
@@ -200,8 +203,8 @@ export function ValidationPage() {
         status: data && data.length > 0 ? 'passed' : 'warning',
         message: data && data.length > 0 ? 'Contexto disponível' : 'Contexto não encontrado',
       })
-    } catch (e: any) {
-      updateCheck('ctx-strategic', { status: 'warning', message: e.message })
+    } catch (e: unknown) {
+      updateCheck('ctx-strategic', { status: 'warning', message: getErrorMessage(e) })
     }
 
     updateCheck('ctx-okrs', { status: 'running' })
@@ -212,8 +215,8 @@ export function ValidationPage() {
         status: data && data.length > 0 ? 'passed' : 'warning',
         message: data && data.length > 0 ? 'Contexto disponível' : 'Contexto não encontrado',
       })
-    } catch (e: any) {
-      updateCheck('ctx-okrs', { status: 'warning', message: e.message })
+    } catch (e: unknown) {
+      updateCheck('ctx-okrs', { status: 'warning', message: getErrorMessage(e) })
     }
 
     // Storage check
@@ -222,7 +225,7 @@ export function ValidationPage() {
       const { error } = await supabase.storage.getBucket('action-evidences')
       if (error) throw error
       updateCheck('storage-bucket', { status: 'passed', message: 'Bucket disponível' })
-    } catch (_e: any) {
+    } catch {
       updateCheck('storage-bucket', { status: 'warning', message: 'Bucket não encontrado ou sem acesso' })
     }
 

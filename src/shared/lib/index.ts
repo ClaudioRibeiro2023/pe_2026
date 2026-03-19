@@ -16,3 +16,4 @@ export {
   useExport,
 } from './export'
 export type { ReportPDFOptions } from './export'
+export { getErrorMessage } from './errorUtils'

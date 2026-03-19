@@ -46,9 +46,8 @@ export function useRealtimeSubscription({
     return () => {
       if (channel) {
         void supabase.removeChannel(channel).catch((err: unknown) => {
-          if ((err as any)?.name !== 'AbortError') {
-            console.error('Erro ao remover canal realtime:', err)
-          }
+          if (err instanceof Error && err.name === 'AbortError') return
+          console.error('Erro ao remover canal realtime:', err)
         })
       }
     }

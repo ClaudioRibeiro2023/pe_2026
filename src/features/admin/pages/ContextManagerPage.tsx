@@ -5,6 +5,7 @@ import { Button } from '@/shared/ui/Button'
 import { PageLoader } from '@/shared/ui/Loader'
 import { useToast } from '@/shared/ui/Toast'
 import { supabase, isSupabaseConfigured } from '@/shared/lib/supabaseClient'
+import { getErrorMessage } from '@/shared/lib/errorUtils'
 
 interface ContextItem {
   id: string
@@ -138,11 +139,11 @@ export function ContextManagerPage() {
       })
 
       loadContexts()
-    } catch (error: any) {
+    } catch (error: unknown) {
       addToast({
         type: 'error',
         title: 'Erro ao salvar',
-        message: error?.message || 'Não foi possível salvar o contexto.',
+        message: getErrorMessage(error),
       })
     } finally {
       setSaving(false)
@@ -165,11 +166,11 @@ export function ContextManagerPage() {
         title: 'JSON importado',
         message: `Dados importados de ${fileName}. Clique em Salvar para persistir.`,
       })
-    } catch (error: any) {
+    } catch (error: unknown) {
       addToast({
         type: 'error',
         title: 'Erro ao importar',
-        message: error?.message || 'Não foi possível importar o arquivo JSON.',
+        message: getErrorMessage(error),
       })
     }
   }

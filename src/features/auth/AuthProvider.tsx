@@ -199,7 +199,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (!session?.user) {
           setUser(null)
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!mounted) return
         if (isNetworkError(err)) {
           console.warn('[Auth] Supabase unreachable — falling back to demo mode')
@@ -249,7 +249,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         } else {
           setUser(null)
         }
-      } catch (_err: any) {
+      } catch {
         if (!mounted) return
         setUser(null)
         window.clearTimeout(loadingTimeout)
