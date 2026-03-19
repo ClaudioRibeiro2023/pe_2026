@@ -12,6 +12,7 @@ import type {
   CreateAreaPlanData, UpdateAreaPlanData, CreatePlanActionData, UpdatePlanActionData,
   CreateSubtaskData, UpdateSubtaskData, CreateEvidenceData,
   CreateCommentData, UpdateCommentData, CreateRiskData, UpdateRiskData, ActionFilters,
+  ActionStatus,
 } from './types'
 
 // ============================================================
@@ -323,10 +324,8 @@ export async function updatePlanAction(actionId: string, data: UpdatePlanActionD
   
   // Registrar mudanças no histórico
   Object.keys(data).forEach(key => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const oldVal = (oldAction as any)[key]
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const newVal = (data as any)[key]
+    const oldVal = (oldAction as Record<string, unknown>)[key]
+    const newVal = (data as Record<string, unknown>)[key]
     if (oldVal !== newVal) {
       mockStore.history.push({
         id: generateId('history'),
@@ -356,8 +355,7 @@ export async function deletePlanAction(actionId: string): Promise<void> {
 
 export async function updateActionStatus(actionId: string, status: string): Promise<PlanAction> {
   console.info('[Mock API] updateActionStatus:', actionId, status)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return updatePlanAction(actionId, { status: status as any })
+  return updatePlanAction(actionId, { status: status as ActionStatus })
 }
 
 export async function fetchActionsByPackId(packId: string): Promise<PlanAction[]> {
@@ -682,21 +680,34 @@ export async function fetchEvidenceBacklog(): Promise<EvidenceBacklogItem[]> {
     })
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function fetchPlanStats(planId: string): Promise<any> {
+export async function fetchPlanStats(planId: string): Promise<{
+  total: number
+  completed: number
+  inProgress: number
+  pending: number
+  blocked: number
+  awaitingEvidence: number
+  inValidation: number
+  overdue: number
+  completionPercentage: number
+  totalCostEstimate: number
+  totalCostActual: number
+}> {
   console.info('[Mock API] fetchPlanStats:', planId)
   const actions = mockStore.actions.filter(a => a.plan_id === planId)
   const today = new Date().toISOString().split('T')[0]
+  const completed = actions.filter(a => a.status === 'CONCLUIDA').length
   
   return {
     total: actions.length,
-    completed: actions.filter(a => a.status === 'CONCLUIDA').length,
+    completed,
     inProgress: actions.filter(a => a.status === 'EM_ANDAMENTO').length,
     pending: actions.filter(a => a.status === 'PENDENTE').length,
     blocked: actions.filter(a => a.status === 'BLOQUEADA').length,
     awaitingEvidence: actions.filter(a => a.status === 'AGUARDANDO_EVIDENCIA').length,
     inValidation: actions.filter(a => a.status === 'EM_VALIDACAO').length,
     overdue: actions.filter(a => a.due_date && a.due_date < today && a.status !== 'CONCLUIDA').length,
+    completionPercentage: actions.length > 0 ? Math.round((completed / actions.length) * 100) : 0,
     totalCostEstimate: actions.reduce((sum, a) => sum + (a.cost_estimate || 0), 0),
     totalCostActual: actions.reduce((sum, a) => sum + (a.cost_actual || 0), 0),
   }

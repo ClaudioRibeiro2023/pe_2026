@@ -10,8 +10,7 @@ import { getErrorMessage } from '@/shared/lib/errorUtils'
 interface ContextItem {
   id: string
   context_type: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: Record<string, any>
+  data: Record<string, unknown>
   version: number
   updated_at: string
 }

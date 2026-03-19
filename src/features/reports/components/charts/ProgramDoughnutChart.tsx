@@ -5,6 +5,7 @@ import {
   ArcElement,
   Tooltip,
   Legend,
+  type TooltipItem,
 } from 'chart.js'
 import type { ProgramBreakdown } from '../../hooks'
 
@@ -66,8 +67,7 @@ export default function ProgramDoughnutChart({ programBreakdown }: ProgramDoughn
         cornerRadius: 8,
         padding: 10,
         callbacks: {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          label: (ctx: any) => {
+          label: (ctx: TooltipItem<'doughnut'>) => {
             const prog = programBreakdown[ctx.dataIndex]
             return ` ${ctx.label}: ${prog.total} acoes (${prog.completionRate}% concluidas)`
           },
