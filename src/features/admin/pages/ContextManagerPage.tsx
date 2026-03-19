@@ -10,6 +10,7 @@ import { getErrorMessage } from '@/shared/lib/errorUtils'
 interface ContextItem {
   id: string
   context_type: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Record<string, any>
   version: number
   updated_at: string
@@ -83,8 +84,8 @@ export function ContextManagerPage() {
       JSON.parse(text)
       setJsonError(null)
       return true
-    } catch (e: any) {
-      setJsonError(e.message)
+    } catch (e: unknown) {
+      setJsonError(getErrorMessage(e))
       return false
     }
   }

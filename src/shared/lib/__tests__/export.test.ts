@@ -11,6 +11,7 @@ describe('exportToExcel', () => {
     capturedCsv = ''
     anchorMock = { href: '', download: '', click: vi.fn() }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     vi.spyOn(document, 'createElement').mockReturnValue(anchorMock as any)
 
     // Subclass Blob to capture CSV content (jsdom Blob lacks .text())
@@ -21,6 +22,7 @@ describe('exportToExcel', () => {
           capturedCsv = String(parts[0])
         }
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any
 
     vi.stubGlobal('URL', {

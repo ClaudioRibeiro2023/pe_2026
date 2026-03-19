@@ -255,6 +255,7 @@ export function ActionPlansPage() {
 
   const handleCreate = async (data: ActionPlanFormSchema) => {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await createMutation.mutateAsync(data as any)
       setCreateModalOpen(false)
       addToast({
@@ -275,6 +276,7 @@ export function ActionPlansPage() {
     if (!editingPlan) return
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await updateMutation.mutateAsync({ id: editingPlan.id, data: data as any })
       setEditingPlan(null)
       addToast({

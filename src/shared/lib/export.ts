@@ -20,6 +20,7 @@ const loadPdfLibs = async () => {
 }
 
 // Exportar para PDF
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function exportToPDF<T extends Record<string, any>>(
   data: T[],
   columns: { header: string; dataKey: keyof T }[],
@@ -50,6 +51,7 @@ export async function exportToPDF<T extends Record<string, any>>(
 }
 
 // Exportar para Excel
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function exportToExcel<T extends Record<string, any>>(
   data: T[],
   columns: { header: string; dataKey: keyof T }[],
@@ -86,6 +88,7 @@ export interface ReportPDFOptions {
   filters?: { label: string; value: string }[]
   sections: {
     title: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data: Record<string, any>[]
     columns: { header: string; dataKey: string }[]
   }[]
@@ -142,6 +145,7 @@ export async function exportReportToPDF(options: ReportPDFOptions) {
       headStyles: { fillColor: [0, 98, 184], textColor: [255, 255, 255] },
       alternateRowStyles: { fillColor: [248, 250, 252] },
     })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     yPos = (doc as any).lastAutoTable?.finalY + 10 || yPos + 30
   }
 
@@ -149,6 +153,7 @@ export async function exportReportToPDF(options: ReportPDFOptions) {
 }
 
 // Hook para exportação com suporte a toast
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useExport<T extends Record<string, any>>() {
   const exportData = async (
     data: T[],

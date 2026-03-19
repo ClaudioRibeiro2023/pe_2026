@@ -284,6 +284,7 @@ export function AreaPlanPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-muted mb-1">Status</p>
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                     <PlanStatusBadge status={selectedAction.status as any} />
                   </div>
                   <div>

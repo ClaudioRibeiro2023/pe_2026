@@ -66,6 +66,7 @@ export default function ProgramDoughnutChart({ programBreakdown }: ProgramDoughn
         cornerRadius: 8,
         padding: 10,
         callbacks: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           label: (ctx: any) => {
             const prog = programBreakdown[ctx.dataIndex]
             return ` ${ctx.label}: ${prog.total} acoes (${prog.completionRate}% concluidas)`

@@ -195,6 +195,7 @@ export function GoalsPage() {
 
   const handleCreate = async (data: GoalFormSchema) => {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await createMutation.mutateAsync(data as any)
       setCreateModalOpen(false)
       addToast({

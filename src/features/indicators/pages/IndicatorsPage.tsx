@@ -180,6 +180,7 @@ export function IndicatorsPage() {
 
   const handleCreate = async (data: IndicatorFormSchema) => {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await createMutation.mutateAsync(data as any)
       setCreateModalOpen(false)
       addToast({
@@ -200,6 +201,7 @@ export function IndicatorsPage() {
     if (!editingIndicator) return
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await updateMutation.mutateAsync({ id: editingIndicator.id, data: data as any })
       setEditingIndicator(null)
       addToast({

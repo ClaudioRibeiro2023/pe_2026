@@ -30,13 +30,16 @@ export function useRealtimeSubscription({
     const channel: RealtimeChannel = supabase
       .channel(`${table}_changes`)
       .on(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         'postgres_changes' as any,
         {
           event,
           schema: 'public',
           table,
           ...(filter ? { filter } : {}),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (_payload: RealtimePostgresChangesPayload<any>) => {
           queryClient.invalidateQueries({ queryKey })
         }

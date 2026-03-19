@@ -6,6 +6,7 @@ import { CommentsList } from '@/features/comments/components/CommentsList'
 import { CommentForm } from '@/features/comments/components/CommentForm'
 import { FileUpload } from '@/shared/components/upload/FileUpload'
 import { useToast } from '@/shared/ui/Toast'
+import { getErrorMessage } from '@/shared/lib/errorUtils'
 import { supabase } from '@/shared/lib/supabaseClient'
 import type { ActionPlan } from '../types'
 import { format } from 'date-fns/format'
@@ -83,8 +84,8 @@ export function ActionPlanDetails({ plan, open, onClose }: ActionPlanDetailsProp
       })
 
       loadAttachments()
-    } catch (error: any) {
-      throw new Error(error.message || 'Erro ao enviar arquivo')
+    } catch (error: unknown) {
+      throw new Error(getErrorMessage(error))
     }
   }
 

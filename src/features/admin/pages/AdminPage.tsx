@@ -10,6 +10,7 @@ import { PageLoader } from '@/shared/ui/Loader'
 import { useToast } from '@/shared/ui/Toast'
 import { ROUTES } from '@/shared/config/routes'
 import { supabase, isSupabaseConfigured } from '@/shared/lib/supabaseClient'
+import { getErrorMessage } from '@/shared/lib/errorUtils'
 import { useAreas } from '@/features/areas/hooks'
 
 interface UserProfile {
@@ -141,11 +142,11 @@ export function AdminPage() {
       setInviteEmail('')
       setInviteRole('colaborador')
       loadUsers()
-    } catch (error: any) {
+    } catch (error: unknown) {
       addToast({
         type: 'error',
         title: 'Erro ao enviar convite',
-        message: error?.message || 'Não foi possível enviar o convite.',
+        message: getErrorMessage(error),
       })
     } finally {
       setInviteLoading(false)

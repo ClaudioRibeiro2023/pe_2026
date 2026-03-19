@@ -323,7 +323,9 @@ export async function updatePlanAction(actionId: string, data: UpdatePlanActionD
   
   // Registrar mudanças no histórico
   Object.keys(data).forEach(key => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const oldVal = (oldAction as any)[key]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const newVal = (data as any)[key]
     if (oldVal !== newVal) {
       mockStore.history.push({
@@ -354,6 +356,7 @@ export async function deletePlanAction(actionId: string): Promise<void> {
 
 export async function updateActionStatus(actionId: string, status: string): Promise<PlanAction> {
   console.info('[Mock API] updateActionStatus:', actionId, status)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return updatePlanAction(actionId, { status: status as any })
 }
 
@@ -679,6 +682,7 @@ export async function fetchEvidenceBacklog(): Promise<EvidenceBacklogItem[]> {
     })
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function fetchPlanStats(planId: string): Promise<any> {
   console.info('[Mock API] fetchPlanStats:', planId)
   const actions = mockStore.actions.filter(a => a.plan_id === planId)

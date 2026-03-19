@@ -11,6 +11,7 @@ const isElectron = process.env.ELECTRON === 'true'
 const getElectronPlugins = async (): Promise<any[]> => {
   if (!isElectron) return []
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const plugins: any[] = []
 
   try {

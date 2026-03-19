@@ -100,6 +100,7 @@ export function renderTable(
     tableWidth: 'auto',
   })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (doc as any).lastAutoTable?.finalY + 8 || startY + 30
 }
 

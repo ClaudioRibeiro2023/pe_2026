@@ -3,6 +3,7 @@ import { filterNavByRole, canAccessRoute, getAccessibleRoutes } from '../navAcce
 import type { NavSection } from '@/shared/config/navigation'
 
 // Stub icon — navAccess never calls the icon function, so a placeholder is safe
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Icon = (() => null) as any
 
 const mockSections: NavSection[] = [

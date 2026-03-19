@@ -4,6 +4,7 @@ import type { PlanAction } from '../types'
  * Utilitário para normalizar dados de ações vindos da API
  * Garante compatibilidade entre diferentes formatos de retorno
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function normalizeActionsData(data: any): PlanAction[] {
   if (!data) return []
   
@@ -24,6 +25,7 @@ export function normalizeActionsData(data: any): PlanAction[] {
 /**
  * Obtém o total de itens de diferentes formatos de resposta
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getTotalItems(data: any): number {
   if (!data) return 0
   
