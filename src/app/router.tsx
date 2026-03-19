@@ -7,6 +7,7 @@ import { NotFoundPage } from '@/app/pages/NotFoundPage'
 import { PageLoader } from '@/shared/ui/Loader'
 import { ROUTES } from '@/shared/config/routes'
 import { LegacyAreaRedirect } from './components/LegacyAreaRedirect'
+import { FeatureErrorBoundary } from '@/shared/components/error-boundary/FeatureErrorBoundary'
 
 const DashboardPage = lazy(() =>
   import('@/features/dashboard/pages/DashboardPage').then((m) => ({ default: m.DashboardPage }))
@@ -199,8 +200,12 @@ const ValidationPage = lazy(() =>
   import('@/features/admin/pages/ValidationPage').then((m) => ({ default: m.ValidationPage }))
 )
 
-function SuspensePage({ children }: { children: ReactNode }) {
-  return <Suspense fallback={<PageLoader text="Carregando..." />}>{children}</Suspense>
+function SuspensePage({ children, featureName }: { children: ReactNode; featureName?: string }) {
+  return (
+    <FeatureErrorBoundary featureName={featureName}>
+      <Suspense fallback={<PageLoader text="Carregando..." />}>{children}</Suspense>
+    </FeatureErrorBoundary>
+  )
 }
 
 export function AppRouter() {
