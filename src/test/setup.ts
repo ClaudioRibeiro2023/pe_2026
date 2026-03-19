@@ -34,5 +34,4 @@ global.IntersectionObserver = class IntersectionObserver {
     return []
   }
   unobserve() {}
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-} as any
+} as unknown as typeof IntersectionObserver
