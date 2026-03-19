@@ -417,11 +417,11 @@ Do `BACKLOG_CONSOLIDADO_v1.md` — 25+ items por módulo:
 | Test coverage | 0% | ~15% | 50% |
 | ESLint errors | 5 | **0** ✅ | 0 |
 | ESLint warnings | 27 | **0** ✅ | 0 |
-| `any` usages | 77 | **19** (suprimidos, 15 genuinamente necessários) ✅ | < 15 |
+| `any` usages | 77 | **10** (todos genuinamente necessários) ✅ | < 15 |
 | TODO/FIXME reais | 40 | **3** ✅ | < 5 |
 | console.log | 7 | **0** ✅ | 0 |
 | Repo size | ~3.2 GB | < 200 MB ✅ | < 150 MB |
-| Git commits | 0 | **26** ✅ | — |
+| Git commits | 0 | **30** ✅ | — |
 | Error Boundaries | 0 | **1** ✅ | por feature |
 | CI/CD | nenhum | **GitHub Actions** ✅ | — |
 | Router LOC | 757 | **75** ✅ (5 route groups) | — |
@@ -430,7 +430,7 @@ Do `BACKLOG_CONSOLIDADO_v1.md` — 25+ items por módulo:
 ---
 
 **Gerado em:** 2026-03-19
-**Última atualização:** 2026-03-19 03:20 (219 unit + 23 E2E, any 77→19, CI Playwright)
+**Última atualização:** 2026-03-19 03:25 (219 unit + 23 E2E, any 77→10, 30 commits, CI Playwright)
 **Versão:** 1.0.6
 **Arquivos auditados:** 299 source files + configs + scripts + specs
 **Autor:** Cascade AI Audit
