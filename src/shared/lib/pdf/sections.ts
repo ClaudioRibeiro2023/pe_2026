@@ -100,8 +100,7 @@ export function renderTable(
     tableWidth: 'auto',
   })
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (doc as any).lastAutoTable?.finalY + 8 || startY + 30
+  return doc.lastAutoTable?.finalY ? doc.lastAutoTable.finalY + 8 : startY + 30
 }
 
 export function renderTextBlock(doc: jsPDF, content: string, startY: number): number {

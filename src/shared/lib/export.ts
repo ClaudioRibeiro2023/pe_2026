@@ -145,8 +145,7 @@ export async function exportReportToPDF(options: ReportPDFOptions) {
       headStyles: { fillColor: [0, 98, 184], textColor: [255, 255, 255] },
       alternateRowStyles: { fillColor: [248, 250, 252] },
     })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    yPos = (doc as any).lastAutoTable?.finalY + 10 || yPos + 30
+    yPos = doc.lastAutoTable?.finalY ? doc.lastAutoTable.finalY + 10 : yPos + 30
   }
 
   doc.save(`${options.title.toLowerCase().replace(/\s+/g, '-')}-${format(new Date(), 'yyyy-MM-dd')}.pdf`)

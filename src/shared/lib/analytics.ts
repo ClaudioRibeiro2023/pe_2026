@@ -20,7 +20,6 @@ class Analytics {
     document.head.appendChild(script)
 
     window.dataLayer = window.dataLayer || []
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function gtag(...args: [string, ...unknown[]]) {
       window.dataLayer.push(args)
     }
