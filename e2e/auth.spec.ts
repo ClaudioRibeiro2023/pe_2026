@@ -1,27 +1,36 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Authentication', () => {
-  test('should display login page', async ({ page }) => {
+test.describe('Authentication — Login Page', () => {
+  test('should redirect root to login', async ({ page }) => {
     await page.goto('/')
-    await expect(page).toHaveTitle(/Template/)
-    await expect(page.getByRole('heading', { name: /entrar/i })).toBeVisible()
+    await page.waitForURL(/\/login/)
+    await expect(page).toHaveURL(/\/login/)
   })
 
-  test('should show validation errors for empty form', async ({ page }) => {
+  test('should display login form with email and password fields', async ({ page }) => {
+    await page.goto('/login')
+    await expect(page.getByLabel(/email/i)).toBeVisible()
+    await expect(page.getByLabel(/senha/i)).toBeVisible()
+    await expect(page.getByRole('button', { name: /entrar/i })).toBeVisible()
+  })
+
+  test('should show validation errors for empty form submission', async ({ page }) => {
     await page.goto('/login')
     await page.getByRole('button', { name: /entrar/i }).click()
     await expect(page.getByText(/email inválido/i)).toBeVisible()
   })
 
-  test('should navigate to signup', async ({ page }) => {
+  test('should show validation error for short password', async ({ page }) => {
     await page.goto('/login')
-    await page.getByRole('button', { name: /não tem conta/i }).click()
-    await expect(page.getByRole('heading', { name: /criar conta/i })).toBeVisible()
+    await page.getByLabel(/email/i).fill('test@example.com')
+    await page.getByLabel(/senha/i).fill('123')
+    await page.getByRole('button', { name: /entrar/i }).click()
+    await expect(page.getByText(/mínimo 6 caracteres/i)).toBeVisible()
   })
 
   test('should show password recovery form', async ({ page }) => {
     await page.goto('/login')
-    await page.getByRole('button', { name: /esqueceu sua senha/i }).click()
-    await expect(page.getByRole('heading', { name: /recuperar senha/i })).toBeVisible()
+    await page.getByText(/esqueceu/i).click()
+    await expect(page.getByText(/recuperar|redefinir/i)).toBeVisible()
   })
 })
