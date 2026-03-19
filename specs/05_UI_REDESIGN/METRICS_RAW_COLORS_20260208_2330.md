@@ -1,0 +1,113 @@
+﻿# Raw Color Metrics - 20260208_2330
+
+| Pattern | Count |
+|---------|-------|
+| `text-gray-` | 55 |
+| `bg-gray-` | 27 |
+| `border-gray-` | 8 |
+| `bg-white` | 23 |
+| `text-black` | 0 |
+| `text-white` | 61 |
+| `stroke-gray-` | 0 |
+| **TOTAL** | **174** |
+
+---
+
+## Detail by Pattern
+
+### `text-gray-` (55)
+
+  - src\features\action-plans\components\ActionPlanCard.tsx (2x)
+  - src\features\admin\pages\ValidationPage.tsx (1x)
+  - src\features\area-plans\components\form\CostSection.tsx (3x)
+  - src\features\area-plans\components\form\OptionsSection.tsx (3x)
+  - src\features\area-plans\components\form\TimelineSection.tsx (3x)
+  - src\features\area-plans\components\ActionKanbanBoard.tsx (1x)
+  - src\features\area-plans\components\ProgressBar.tsx (3x)
+  - src\features\area-plans\types.ts (3x)
+  - src\features\plan-templates\types.ts (1x)
+  - src\features\planning\components\AreaSubnav.tsx (3x)
+  - src\features\planning\pages\actions\ActionsApprovalsPage.tsx (6x)
+  - src\features\planning\pages\actions\ActionsEvidencesPage.tsx (5x)
+  - src\features\planning\pages\actions\ActionsNewPage.tsx (3x)
+  - src\features\planning\pages\actions\ActionsTemplatesPage.tsx (5x)
+  - src\features\planning\pages\area\PlanningAreaStrategicPackPage.tsx (3x)
+  - src\features\strategic-pack\components\MonthlyCloseButton.tsx (1x)
+  - src\shared\ui\Badge.tsx (2x)
+  - src\shared\ui\Logo.tsx (3x)
+  - src\shared\ui\Pagination.tsx (2x)
+  - src\shared\ui\Tooltip.tsx (1x)
+  - src\shared\ui\VirtualizedList.tsx (1x)
+
+### `bg-gray-` (27)
+
+  - src\features\action-plans\components\ActionPlanCard.tsx (2x)
+  - src\features\admin\pages\ValidationPage.tsx (3x)
+  - src\features\area-plans\components\ProgressBar.tsx (1x)
+  - src\features\area-plans\pages\AreaPlansTimeline.tsx (1x)
+  - src\features\area-plans\types.ts (3x)
+  - src\features\plan-templates\types.ts (1x)
+  - src\features\planning\components\AreaSubnav.tsx (1x)
+  - src\features\reports\components\ExecutiveReport.tsx (5x)
+  - src\features\reports\components\ProgressReport.tsx (2x)
+  - src\features\strategic-pack\components\MonthlyCloseButton.tsx (1x)
+  - src\shared\ui\Badge.tsx (3x)
+  - src\shared\ui\Tooltip.tsx (4x)
+
+### `border-gray-` (8)
+
+  - src\features\admin\pages\ContextManagerPage.tsx (1x)
+  - src\features\admin\pages\ValidationPage.tsx (1x)
+  - src\features\area-plans\components\form\CostSection.tsx (1x)
+  - src\features\area-plans\components\form\OptionsSection.tsx (1x)
+  - src\features\area-plans\pages\AreaPlansTimeline.tsx (2x)
+  - src\features\planning\components\AreaSubnav.tsx (1x)
+  - src\features\strategic-pack\components\MonthlyCloseButton.tsx (1x)
+
+### `bg-white` (23)
+
+  - src\features\area-plans\components\ActionKanbanBoard.tsx (1x)
+  - src\features\area-plans\pages\AreaPlansKanban.tsx (2x)
+  - src\features\auth\pages\LoginPage.tsx (2x)
+  - src\features\planning\components\AreaSubnav.tsx (1x)
+  - src\features\strategy\pages\StrategyKpisPage.tsx (3x)
+  - src\features\strategy\pages\StrategyOkrsPage.tsx (2x)
+  - src\features\strategy\pages\StrategyOverviewPage.tsx (1x)
+  - src\features\strategy\pages\StrategyPillarsPage.tsx (2x)
+  - src\features\strategy\pages\StrategyRisksPage.tsx (2x)
+  - src\features\strategy\pages\StrategyScenariosPage.tsx (1x)
+  - src\features\strategy\pages\StrategyThesisPage.tsx (4x)
+  - src\shared\components\electron\UpdateNotification.tsx (2x)
+
+### `text-white` (61)
+
+  - src\app\layout\Sidebar.tsx (2x)
+  - src\app\layout\Topbar.tsx (2x)
+  - src\features\action-plans\components\ActionPlanCard.tsx (1x)
+  - src\features\analytics\pages\ScoreboardPage.tsx (1x)
+  - src\features\area-plans\components\ActionTimeline.tsx (1x)
+  - src\features\area-plans\components\SubtaskList.tsx (1x)
+  - src\features\area-plans\components\UnifiedPlanWizard.tsx (1x)
+  - src\features\area-plans\pages\AreaPlansListPage.tsx (1x)
+  - src\features\auth\pages\LoginPage.tsx (10x)
+  - src\features\auth\pages\ResetPasswordPage.tsx (1x)
+  - src\features\plan-templates\components\TemplateSelector.tsx (1x)
+  - src\features\planning\components\AreaSelector.tsx (2x)
+  - src\features\reports\components\PackActionsReport.tsx (1x)
+  - src\features\strategic-pack\components\GeneratePlanButton.tsx (1x)
+  - src\features\strategy\pages\StrategyKpisPage.tsx (7x)
+  - src\features\strategy\pages\StrategyOkrsPage.tsx (3x)
+  - src\features\strategy\pages\StrategyOverviewPage.tsx (1x)
+  - src\features\strategy\pages\StrategyRisksPage.tsx (2x)
+  - src\features\strategy\pages\StrategyScenariosPage.tsx (3x)
+  - src\features\strategy\pages\StrategyThesisPage.tsx (3x)
+  - src\shared\components\electron\UpdateNotification.tsx (6x)
+  - src\shared\components\mobile\MobileDrawer.tsx (1x)
+  - src\shared\components\notifications\NotificationPanel.tsx (1x)
+  - src\shared\components\onboarding\OnboardingTour.tsx (1x)
+  - src\shared\design\utils.ts (2x)
+  - src\shared\ui\Button.tsx (2x)
+  - src\shared\ui\DataTable.tsx (1x)
+  - src\shared\ui\Logo.tsx (1x)
+  - src\shared\ui\Tooltip.tsx (1x)
+

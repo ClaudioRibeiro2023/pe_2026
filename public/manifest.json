@@ -1,0 +1,43 @@
+{
+  "name": "Painel Estratégico 2026",
+  "short_name": "PE 2026",
+  "description": "Sistema de Gestão Estratégica e Indicadores",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Visualizar dashboard principal",
+      "url": "/",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Metas",
+      "short_name": "Metas",
+      "description": "Gerenciar metas estratégicas",
+      "url": "/goals",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Indicadores",
+      "short_name": "Indicadores",
+      "description": "Acompanhar indicadores",
+      "url": "/indicators",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

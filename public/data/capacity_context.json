@@ -1,0 +1,100 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "lastUpdate": "2026-01-22",
+    "source": "DOC 09"
+  },
+  "allocation": {
+    "focus": "Q1 prioriza monetizacao e prontidao operacional",
+    "q1Priority": "60-70% da capacidade gerencial em monetizacao",
+    "constraints": [
+      "Capacidade finita de equipes e janelas climaticas",
+      "Execucao por demanda gera picos se nao houver ativacao",
+      "Qualidade e margem sao limites de seguranca"
+    ]
+  },
+  "quarterlyMix": [
+    {
+      "quarter": "Q1",
+      "distribution": {
+        "operacao": "45-55%",
+        "ativacao": "20-25%",
+        "produtoDados": "10-15%",
+        "comercialMarketing": "5-10%",
+        "governanca": "10-15%"
+      }
+    },
+    {
+      "quarter": "Q2",
+      "distribution": {
+        "operacao": "40-50%",
+        "ativacao": "15-20%",
+        "produtoDados": "15-20%",
+        "comercialMarketing": "10-15%",
+        "governanca": "10-15%"
+      }
+    },
+    {
+      "quarter": "Q3",
+      "distribution": {
+        "operacao": "35-45%",
+        "ativacao": "15-20%",
+        "produtoDados": "20-25%",
+        "comercialMarketing": "10-15%",
+        "governanca": "10-15%"
+      }
+    },
+    {
+      "quarter": "Q4",
+      "distribution": {
+        "operacao": "35-45%",
+        "ativacao": "15-20%",
+        "produtoDados": "15-20%",
+        "comercialMarketing": "10-15%",
+        "governanca": "10-15%"
+      }
+    }
+  ],
+  "wipLimits": {
+    "institutional": "7-10 iniciativas simultaneas",
+    "perArea": "3-5 iniciativas simultaneas",
+    "rule": "Passou disso, pausar ou cancelar"
+  },
+  "tacticalReinforcement": [
+    {
+      "id": "TR-01",
+      "area": "Operacao",
+      "action": "Reforco temporario de equipe no Q1",
+      "rationale": "Evitar perda de janela e manter vazao"
+    },
+    {
+      "id": "TR-02",
+      "area": "CS",
+      "action": "Dono por contratante Pareto",
+      "rationale": "Ativacao de demanda com responsavel claro"
+    },
+    {
+      "id": "TR-03",
+      "area": "Produto/Dados",
+      "action": "Painel de monetizacao e provas rapidas",
+      "rationale": "Destravar decisao do cliente"
+    }
+  ],
+  "budgetGuidelines": [
+    {
+      "id": "BG-01",
+      "category": "Opex essencial",
+      "rule": "Custos que sustentam execucao com qualidade"
+    },
+    {
+      "id": "BG-02",
+      "category": "Opex estrategico",
+      "rule": "Gastos ligados a iniciativas (INIT-*) e KRs"
+    },
+    {
+      "id": "BG-03",
+      "category": "Capex",
+      "rule": "Somente com justificativa objetiva e retorno esperado"
+    }
+  ]
+}

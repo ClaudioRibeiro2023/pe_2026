@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "lastUpdate": "2026-01-22",
+    "source": "DOC 09 + DOC 11-G"
+  },
+  "budget": {
+    "status": "ATENCAO",
+    "variancePercent": 6.8,
+    "lastReview": "2026-01-15",
+    "nextReview": "2026-02-15",
+    "notes": [
+      "Reforcos taticos em operacao e CS pressionam Opex",
+      "Revisar alocacao Q1 para manter margem"
+    ]
+  },
+  "unitCosts": [
+    {
+      "id": "UC-2026-01",
+      "unit": "Techdengue",
+      "period": "Jan/2026",
+      "costPerHa": 52.74,
+      "margin": 34.4,
+      "status": "OK"
+    },
+    {
+      "id": "UC-2026-02",
+      "unit": "Aero",
+      "period": "Jan/2026",
+      "costPerHa": 61.2,
+      "margin": 28.5,
+      "status": "ATENCAO"
+    }
+  ],
+  "cash": {
+    "projected30": 1520000,
+    "projected60": 2180000,
+    "projected90": 2750000,
+    "runwayDays": 96,
+    "alert": "Manter disciplina de cobranca e reduzir inadimplencia"
+  },
+  "receivables": {
+    "aging30": 640000,
+    "aging60": 320000,
+    "aging90": 210000,
+    "overdue": 180000
+  }
+}

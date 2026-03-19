@@ -1,0 +1,675 @@
+{
+  "metadata": {
+    "version": "3.0",
+    "lastUpdate": "2026-01-14",
+    "source": "Analise_Estrategica_2025_Validada.md + PE2026_Metas_Final.md"
+  },
+  "pillars": [
+    {
+      "id": "P1",
+      "title": "Estrutura corporativa e governança",
+      "frontier": "Governança, separação Aero x Techdengue e padrão sell-ready.",
+      "subpillars": [
+        {
+          "id": "P1.S1",
+          "title": "Governança e compliance",
+          "frontier": "Rituais, decisões e controles de qualidade contínuos."
+        },
+        {
+          "id": "P1.S2",
+          "title": "Finanças por unidade",
+          "frontier": "P&L gerencial e disciplina de reporting por unidade."
+        },
+        {
+          "id": "P1.S3",
+          "title": "Rastreabilidade e evidências",
+          "frontier": "Mapas de rastreabilidade e evidências verificáveis."
+        }
+      ]
+    },
+    {
+      "id": "P2",
+      "title": "Crescimento e diversificação",
+      "frontier": "Monetização previsível e carteira diversificada.",
+      "subpillars": [
+        {
+          "id": "P2.S1",
+          "title": "Monetização Q1",
+          "frontier": "War Room e execução do saldo com previsibilidade."
+        },
+        {
+          "id": "P2.S2",
+          "title": "Novos contratos",
+          "frontier": "Pipeline robusto e diversificado."
+        }
+      ]
+    },
+    {
+      "id": "P3",
+      "title": "Excelência operacional",
+      "frontier": "Escala com qualidade, capacidade e margem sustentadas.",
+      "subpillars": [
+        {
+          "id": "P3.S1",
+          "title": "Capacidade e escala",
+          "frontier": "Planejamento operacional e produtividade."
+        },
+        {
+          "id": "P3.S2",
+          "title": "Qualidade e padronização",
+          "frontier": "Processos replicáveis e auditoria interna."
+        }
+      ]
+    },
+    {
+      "id": "P4",
+      "title": "Produto, dados e IA",
+      "frontier": "Provas de valor e automação orientada a resultados.",
+      "subpillars": [
+        {
+          "id": "P4.S1",
+          "title": "Prova de valor",
+          "frontier": "Biblioteca de evidências e painéis por cliente."
+        },
+        {
+          "id": "P4.S2",
+          "title": "Automação aplicada",
+          "frontier": "Eficiência operacional e uso de IA com governança."
+        }
+      ]
+    },
+    {
+      "id": "P5",
+      "title": "Pessoas e liderança",
+      "frontier": "Densidade intelectual, liderança e cultura sustentável.",
+      "subpillars": [
+        {
+          "id": "P5.S1",
+          "title": "People analytics",
+          "frontier": "Indicadores de clima, retenção e performance."
+        },
+        {
+          "id": "P5.S2",
+          "title": "Rituais de liderança",
+          "frontier": "Cadência e desenvolvimento de líderes."
+        }
+      ]
+    }
+  ],
+  "themes": [
+    {
+      "id": "TH-01",
+      "title": "Governança mínima e rastreável",
+      "description": "Padrões e evidências obrigatórias para decisões e execução.",
+      "pillar": "P1"
+    },
+    {
+      "id": "TH-02",
+      "title": "Monetização com previsibilidade",
+      "description": "War Room, Pareto ativo e plano de ativação por cliente.",
+      "pillar": "P2"
+    },
+    {
+      "id": "TH-03",
+      "title": "Escala com qualidade",
+      "description": "Processos padronizados, auditoria interna e produtividade.",
+      "pillar": "P3"
+    },
+    {
+      "id": "TH-04",
+      "title": "Produto como prova de valor",
+      "description": "Evidências, painéis e automação aplicada.",
+      "pillar": "P4"
+    },
+    {
+      "id": "TH-05",
+      "title": "Liderança e pessoas",
+      "description": "Rituais de liderança, clima e retenção.",
+      "pillar": "P5"
+    }
+  ],
+  "objectives": [
+    {
+      "id": "OBJ-01",
+      "title": "Implementar governança corporativa e separação gerencial",
+      "pillar": "P1",
+      "theme": "TH-01",
+      "owner": "Direção Executiva",
+      "linkedOkrs": ["OKR-P1"],
+      "krs": ["KR-P1-01", "KR-P1-02", "KR-P1-03"]
+    },
+    {
+      "id": "OBJ-02",
+      "title": "Monetizar base contratual com previsibilidade",
+      "pillar": "P2",
+      "theme": "TH-02",
+      "owner": "Direção Executiva",
+      "linkedOkrs": ["OKR-P2"],
+      "krs": ["KR-P2-01", "KR-P2-02", "KR-P2-03"]
+    },
+    {
+      "id": "OBJ-03",
+      "title": "Escalar operação com qualidade e margem",
+      "pillar": "P3",
+      "theme": "TH-03",
+      "owner": "Operação",
+      "linkedOkrs": ["OKR-P3"],
+      "krs": ["KR-P3-01", "KR-P3-02"]
+    },
+    {
+      "id": "OBJ-04",
+      "title": "Produto e dados como prova de valor",
+      "pillar": "P4",
+      "theme": "TH-04",
+      "owner": "Produto/Dados",
+      "linkedOkrs": ["OKR-P4"],
+      "krs": ["KR-P4-01", "KR-P4-02"]
+    },
+    {
+      "id": "OBJ-05",
+      "title": "Fortalecer liderança e densidade intelectual",
+      "pillar": "P5",
+      "theme": "TH-05",
+      "owner": "RH",
+      "linkedOkrs": ["OKR-P5"],
+      "krs": ["KR-P5-01", "KR-P5-02"]
+    }
+  ],
+  "performance2025": {
+    "receita": {
+      "consolidado": 10323677.92,
+      "techdengue": 9430536.76,
+      "aeroeng": 893141.16,
+      "crescimentoYoY": 84.8,
+      "metaAtingimento": 95.0
+    },
+    "operacional": {
+      "margemOperacional": 34.3,
+      "margemMeta": 26.0,
+      "resultadoOperacional": 3544513.95,
+      "despesas": 6779163.97,
+      "economiaVsMeta": 1245248
+    },
+    "volumetria": {
+      "hectaresMapeados": 117366.59,
+      "medicoes": 288,
+      "haPorMedicao": 407.5,
+      "precoMedio": 80.35
+    },
+    "financeiro": {
+      "roi": 319.2,
+      "payback": 3.8,
+      "pmrTechdengue": 21.4,
+      "pmrAeroeng": 40.8,
+      "inadimplencia": 0.47
+    }
+  },
+  "alertasCriticos": [
+    {
+      "id": "AE-CONC-001",
+      "nivel": "CRITICO",
+      "categoria": "Concentração",
+      "titulo": "Concentração Aero Engenharia",
+      "metrica": "HHI = 4.410",
+      "risco": "Perda de 1 cliente = -R$ 346k resultado",
+      "acaoRequerida": "Prospectar 3+ novos clientes em 90 dias",
+      "prazo": "Q1/2026",
+      "impacto": "ALTO",
+      "probabilidade": "MEDIA"
+    },
+    {
+      "id": "AE-GAP-001",
+      "nivel": "CRITICO",
+      "categoria": "Performance",
+      "titulo": "Gap Receita AE",
+      "metrica": "48,3% da meta",
+      "risco": "Unidade subperformando",
+      "acaoRequerida": "Revisar estratégia comercial AE",
+      "prazo": "Q1/2026",
+      "impacto": "ALTO",
+      "probabilidade": "ALTA"
+    },
+    {
+      "id": "PD-INV-001",
+      "nivel": "ATENCAO",
+      "categoria": "Investimento",
+      "titulo": "Subinvestimento P&D",
+      "metrica": "-38,3% vs orçado",
+      "risco": "Perda competitividade médio prazo",
+      "acaoRequerida": "Revisar orçamento P&D",
+      "prazo": "Q2/2026",
+      "impacto": "MEDIO",
+      "probabilidade": "MEDIA"
+    },
+    {
+      "id": "FIN-SAZ-001",
+      "nivel": "ATENCAO",
+      "categoria": "Fluxo de Caixa",
+      "titulo": "Sazonalidade Extrema",
+      "metrica": "Jul+Ago = 10% do ano",
+      "risco": "Fluxo de caixa irregular",
+      "acaoRequerida": "Planejar reserva de caixa",
+      "prazo": "Q2/2026",
+      "impacto": "MEDIO",
+      "probabilidade": "ALTA"
+    }
+  ],
+  "indicadoresSaudaveis": [
+    {
+      "indicador": "Margem Operacional",
+      "valor": 34.3,
+      "meta": 26.0,
+      "status": "EXCELENTE",
+      "variacao": 8.3
+    },
+    {
+      "indicador": "Crescimento YoY",
+      "valor": 84.8,
+      "status": "EXCEPCIONAL"
+    },
+    {
+      "indicador": "Inadimplência",
+      "valor": 0.47,
+      "status": "MUITO_BAIXA"
+    },
+    {
+      "indicador": "ROI Investimentos",
+      "valor": 319,
+      "status": "EXCEPCIONAL"
+    },
+    {
+      "indicador": "HHI Techdengue",
+      "valor": 268,
+      "status": "BEM_DIVERSIFICADO",
+      "threshold": 1500
+    }
+  ],
+  "concentracaoCarteira": {
+    "techdengue": {
+      "hhi": 268,
+      "cr5": 25.0,
+      "cr10": 42.3,
+      "cr20": 65.2,
+      "status": "SAUDAVEL",
+      "interpretacao": "Desconcentrado (<1.500)"
+    },
+    "aeroeng": {
+      "hhi": 4410,
+      "cr2": 84.1,
+      "cr3": 100.0,
+      "status": "CRITICO",
+      "interpretacao": "Altamente concentrado (>2.500)",
+      "clientes": [
+        {
+          "nome": "Brumadinho (Vale)",
+          "receita": 532747,
+          "participacao": 59.6,
+          "impactoPerda": 346000
+        },
+        {
+          "nome": "Belo Horizonte",
+          "receita": 218954,
+          "participacao": 24.5,
+          "impactoPerda": 142000
+        },
+        {
+          "nome": "Barão de Cocais",
+          "receita": 141440,
+          "participacao": 15.8,
+          "impactoPerda": 92000
+        }
+      ]
+    }
+  },
+  "economiaUnitaria": {
+    "niveis": [
+      {
+        "nivel": 1,
+        "descricao": "Custo Base (Direto de Campo)",
+        "valor": 6.87,
+        "componentes": [
+          "Folha OP",
+          "Viagens",
+          "Insumos",
+          "Frota"
+        ],
+        "margem": 91.5
+      },
+      {
+        "nivel": 2,
+        "descricao": "Custo Ampliado (+ Tecnologia)",
+        "valor": 14.29,
+        "componentes": [
+          "Nível 1",
+          "Drones",
+          "Veículos",
+          "Equipamentos"
+        ],
+        "margem": 82.2
+      },
+      {
+        "nivel": 3,
+        "descricao": "Com Apoio (+ Estrutura Rateada)",
+        "valor": 21.95,
+        "componentes": [
+          "Nível 2",
+          "ADM",
+          "Financeiro",
+          "RH"
+        ],
+        "margem": 72.7
+      },
+      {
+        "nivel": 4,
+        "descricao": "Total Alocado",
+        "valor": 52.74,
+        "componentes": [
+          "Todas despesas rateadas 91,3%"
+        ],
+        "margem": 34.4
+      }
+    ],
+    "precoVenda": 80.35,
+    "margemUnitaria": 27.61,
+    "breakEven": 52.74
+  },
+  "sazonalidade": {
+    "indices": [
+      {
+        "mes": "Janeiro",
+        "indice": 89.7,
+        "categoria": "NORMAL"
+      },
+      {
+        "mes": "Fevereiro",
+        "indice": 74.3,
+        "categoria": "BAIXO"
+      },
+      {
+        "mes": "Março",
+        "indice": 100.0,
+        "categoria": "BASE"
+      },
+      {
+        "mes": "Abril",
+        "indice": 120.6,
+        "categoria": "ALTO"
+      },
+      {
+        "mes": "Maio",
+        "indice": 109.1,
+        "categoria": "MEDIO_ALTO"
+      },
+      {
+        "mes": "Junho",
+        "indice": 132.0,
+        "categoria": "ALTO"
+      },
+      {
+        "mes": "Julho",
+        "indice": 59.4,
+        "categoria": "MINIMO"
+      },
+      {
+        "mes": "Agosto",
+        "indice": 61.1,
+        "categoria": "BAIXO"
+      },
+      {
+        "mes": "Setembro",
+        "indice": 87.4,
+        "categoria": "NORMAL"
+      },
+      {
+        "mes": "Outubro",
+        "indice": 80.4,
+        "categoria": "NORMAL"
+      },
+      {
+        "mes": "Novembro",
+        "indice": 119.5,
+        "categoria": "ALTO"
+      },
+      {
+        "mes": "Dezembro",
+        "indice": 166.6,
+        "categoria": "MAXIMO"
+      }
+    ],
+    "amplitude": 180.7,
+    "coeficienteVariacao": 32.4,
+    "trimestres": {
+      "Q1": {
+        "valor": 2271983,
+        "participacao": 22.0
+      },
+      "Q2": {
+        "valor": 3112538,
+        "participacao": 30.1
+      },
+      "Q3": {
+        "valor": 1788123,
+        "participacao": 17.3
+      },
+      "Q4": {
+        "valor": 3153008,
+        "participacao": 30.5
+      }
+    }
+  },
+  "metas2026": {
+    "cenarios": {
+      "pessimista": {
+        "probabilidade": 15,
+        "receita": 8310000,
+        "hectares": 92172,
+        "variacao": -19.5,
+        "gatilho": "Resolução SES/MG não renovada",
+        "techdengue": 7410000,
+        "aeroeng": 900000
+      },
+      "base": {
+        "probabilidade": 60,
+        "receita": 11440000,
+        "hectares": 120000,
+        "variacao": 10.8,
+        "gatilho": "Resolução renovada com continuidade",
+        "techdengue": 9640000,
+        "aeroeng": 1800000,
+        "oficial": true
+      },
+      "otimista": {
+        "probabilidade": 25,
+        "receita": 13290000,
+        "hectares": 137388,
+        "variacao": 28.7,
+        "gatilho": "Resolução renovada + expansão investimentos",
+        "techdengue": 11040000,
+        "aeroeng": 2250000
+      }
+    },
+    "valorEsperado": {
+      "receita": 11430000,
+      "hectares": 120173,
+      "variacao": 10.7,
+      "techdengue": 9660000,
+      "aeroeng": 1780000
+    },
+    "q1Fixo": {
+      "hectares": 50438,
+      "receita": 4052693,
+      "participacao": 42.0,
+      "status": "GARANTIDO",
+      "descricao": "Contratos já firmados - independe de cenário"
+    }
+  },
+  "gatilhosCenario": [
+    {
+      "id": "REG-001",
+      "gatilho": "Resolução renovada sem alterações",
+      "prazo": "Fev/2026",
+      "acao": "Elevar metas",
+      "cenarioAlvo": "otimista"
+    },
+    {
+      "id": "REG-002",
+      "gatilho": "Resolução renovada com alterações",
+      "prazo": "Mar/2026",
+      "acao": "Manter metas",
+      "cenarioAlvo": "base"
+    },
+    {
+      "id": "REG-003",
+      "gatilho": "Resolução não renovada",
+      "prazo": "Mar/2026",
+      "acao": "Contingência",
+      "cenarioAlvo": "pessimista"
+    },
+    {
+      "id": "COM-001",
+      "gatilho": "Pipeline TD >10 novos contratos",
+      "prazo": "Jun/2026",
+      "acao": "Revisar para cima",
+      "cenarioAlvo": "otimista"
+    },
+    {
+      "id": "COM-002",
+      "gatilho": "AE: 3+ novos clientes fechados",
+      "prazo": "Jun/2026",
+      "acao": "Confirmar meta",
+      "cenarioAlvo": "base"
+    },
+    {
+      "id": "RIS-001",
+      "gatilho": "Perda contrato Vale",
+      "prazo": "Qualquer",
+      "acao": "Revisão estrutural",
+      "cenarioAlvo": "pessimista"
+    }
+  ],
+  "kpis": {
+    "techdengue": [
+      {
+        "indicador": "Hectares/mês",
+        "meta": 10000,
+        "alertaAmarelo": 8000,
+        "alertaVermelho": 5000,
+        "unidade": "ha"
+      },
+      {
+        "indicador": "Receita/mês",
+        "meta": 803000,
+        "alertaAmarelo": 640000,
+        "alertaVermelho": 400000,
+        "unidade": "R$"
+      },
+      {
+        "indicador": "ha/dia útil",
+        "meta": 492,
+        "alertaAmarelo": 400,
+        "alertaVermelho": 300,
+        "unidade": "ha/dia"
+      },
+      {
+        "indicador": "Taxa recebimento",
+        "meta": 85,
+        "alertaAmarelo": 75,
+        "alertaVermelho": 65,
+        "unidade": "%"
+      }
+    ],
+    "aeroeng": [
+      {
+        "indicador": "Receita/mês",
+        "meta": 150000,
+        "alertaAmarelo": 100000,
+        "alertaVermelho": 50000,
+        "unidade": "R$"
+      },
+      {
+        "indicador": "Novos clientes/trim",
+        "meta": 2,
+        "alertaAmarelo": 1,
+        "alertaVermelho": 0,
+        "unidade": "clientes"
+      },
+      {
+        "indicador": "Concentração Vale",
+        "meta": 70,
+        "alertaAmarelo": 80,
+        "alertaVermelho": 90,
+        "unidade": "%",
+        "inverso": true
+      }
+    ]
+  },
+  "estruturaCustos": {
+    "custoEstruturalMinimo": {
+      "anual": 1773680,
+      "mensal": 147807,
+      "descricao": "Piso de sobrevivência"
+    },
+    "pontoEquilibrio": {
+      "anual": 5500920,
+      "mensal": 458410,
+      "margemSeguranca": 45.2
+    },
+    "alavancagem": {
+      "gao": 1.91,
+      "interpretacao": "+10% receita = +19% lucro",
+      "margemContribuicao": 65
+    },
+    "elasticidade": [
+      {
+        "crescimentoReceita": 10,
+        "crescimentoCusto": 3,
+        "novaMargemOperacional": 38.4
+      },
+      {
+        "crescimentoReceita": 25,
+        "crescimentoCusto": 8,
+        "novaMargemOperacional": 43.3
+      },
+      {
+        "crescimentoReceita": 50,
+        "crescimentoCusto": 15,
+        "novaMargemOperacional": 49.7
+      }
+    ]
+  },
+  "capacidadeOperacional": {
+    "atual": {
+      "operadoresCampo": 6,
+      "capacidadeMaxMes": 17046,
+      "produtividadeMedia": 492,
+      "utilizacao": 57.4
+    },
+    "necessaria": {
+      "picoFevereiro": 18352,
+      "produtividadePico": 1080,
+      "acaoNecessaria": "Contratar +1 piloto temporário para fevereiro"
+    },
+    "capacidadeOciosa": 42.6
+  },
+  "insights": {
+    "estrategicos": [
+      "Techdengue é motor validado: superou meta, alta margem, carteira diversificada",
+      "Aero Engenharia apresenta risco existencial: 84,1% em 2 clientes (HHI 4.410)",
+      "GAO 1,91x: estrutura altamente escalável - crescer receita maximiza valor",
+      "Q1 2026 é janela crítica: 50.438 ha garantidos (42% do ano)",
+      "Consórcios têm ticket 2,85x maior e preço 12,6% superior aos municípios"
+    ],
+    "operacionais": [
+      "Capacidade ociosa de 42,6% permite crescer 50% sem aumentos proporcionais de custo fixo",
+      "Sazonalidade: usar Q1 e Q3 (baixa) para capacitação e prospecção",
+      "Fevereiro é pico crítico: 1.080 ha/dia (8% acima da capacidade atual)",
+      "PMR Techdengue (21,4 dias) é saudável; AE (40,8 dias) requer atenção"
+    ],
+    "financeiros": [
+      "Margem de segurança de 45,2% acima do ponto de equilíbrio",
+      "ROI de 319% valida investimentos em tecnologia",
+      "Preço R$ 80,35/ha está 52% acima do break-even (R$ 52,74)",
+      "Nunca aceitar contratos abaixo de R$ 65/ha (margem <20%)"
+    ]
+  }
+}

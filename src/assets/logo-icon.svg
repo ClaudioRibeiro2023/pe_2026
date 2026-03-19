@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
+  <defs>
+    <linearGradient id="aeroGradientIcon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0052A3"/>
+      <stop offset="100%" style="stop-color:#0066CC"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Círculo de fundo -->
+  <circle cx="20" cy="20" r="18" fill="url(#aeroGradientIcon)"/>
+  
+  <!-- Linha de tendência ascendente -->
+  <path d="M8 28 L16 20 L24 14" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  
+  <!-- Avião estilizado -->
+  <g transform="translate(21, 10) rotate(-35)">
+    <path d="M0 5 L12 5 L15 3 L12 1 L0 1 Z" fill="white"/>
+    <path d="M3 1 L5 -2 L7 1" fill="white"/>
+    <path d="M9 5 L11 8 L13 5" fill="white"/>
+  </g>
+</svg>

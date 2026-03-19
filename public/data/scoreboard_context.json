@@ -1,0 +1,314 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "lastUpdate": "2026-01-22",
+    "source": "DOC 05 + DOC 06"
+  },
+  "guardrails": [
+    {
+      "id": "A1",
+      "indicador": "Margem operacional",
+      "definicao": "Resultado operacional / receita",
+      "valor": 30.8,
+      "unidade": "%",
+      "cadencia": "Mensal",
+      "gatilho": "Queda por 2 meses seguidos",
+      "owner": "Financeiro",
+      "source": "DRE",
+      "status": "OK"
+    },
+    {
+      "id": "A2",
+      "indicador": "Caixa e previsibilidade 30/60/90",
+      "definicao": "Posicao de caixa + projecao",
+      "valor": 62.0,
+      "unidade": "%",
+      "cadencia": "Semanal",
+      "gatilho": "Quebra de previsibilidade",
+      "owner": "Financeiro",
+      "source": "Fluxo de caixa",
+      "status": "ATENCAO"
+    },
+    {
+      "id": "A3",
+      "indicador": "Qualidade de entrega",
+      "definicao": "Retrabalho + falhas criticas",
+      "valor": 8.0,
+      "unidade": "%",
+      "cadencia": "Semanal",
+      "gatilho": "Aumento de falhas repetidas",
+      "owner": "Operacao",
+      "source": "Auditoria interna",
+      "status": "OK"
+    },
+    {
+      "id": "A4",
+      "indicador": "Saude organizacional",
+      "definicao": "Turnover e pulso de clima",
+      "valor": 18.0,
+      "unidade": "%",
+      "cadencia": "Mensal",
+      "gatilho": "Aceleracao de turnover",
+      "owner": "RH",
+      "source": "People Analytics",
+      "status": "OK"
+    }
+  ],
+  "pillars": [
+    {
+      "pillar": "P1",
+      "title": "Estrutura corporativa e governanca",
+      "kpis": [
+        {
+          "id": "P1.KPI-01",
+          "indicador": "Separacao gerencial Aero x Techdengue",
+          "definicao": "DRE e rotinas por unidade",
+          "valor": 72,
+          "unidade": "%",
+          "cadencia": "Mensal",
+          "gatilho": "Abaixo de 80% por 2 meses",
+          "owner": "Direcao Executiva",
+          "source": "Relatorios gerenciais",
+          "status": "ATENCAO"
+        },
+        {
+          "id": "P1.KPI-02",
+          "indicador": "Disciplina documental",
+          "definicao": "% de iniciativas com DEC/RSK/EVID",
+          "valor": 65,
+          "unidade": "%",
+          "cadencia": "Mensal",
+          "gatilho": "Abaixo de 75% por 30 dias",
+          "owner": "Guardiã PE",
+          "source": "MAP-TRC",
+          "status": "ATENCAO"
+        }
+      ]
+    },
+    {
+      "pillar": "P2",
+      "title": "Crescimento e diversificacao",
+      "kpis": [
+        {
+          "id": "P2.KPI-01",
+          "indicador": "Concentracao de receita",
+          "definicao": "% top 5 e participacao Techdengue",
+          "valor": 42.0,
+          "unidade": "%",
+          "cadencia": "Mensal",
+          "gatilho": "Top 5 acima de 45% por 2 meses",
+          "owner": "Comercial",
+          "source": "Financeiro",
+          "status": "ATENCAO"
+        },
+        {
+          "id": "P2.KPI-02",
+          "indicador": "Renovacoes e permanencia",
+          "definicao": "Contratos renovados vs elegiveis",
+          "valor": 78.0,
+          "unidade": "%",
+          "cadencia": "Mensal",
+          "gatilho": "Renovacao abaixo de 75%",
+          "owner": "CS",
+          "source": "CRM",
+          "status": "OK"
+        }
+      ]
+    },
+    {
+      "pillar": "P3",
+      "title": "Excelencia operacional e escala",
+      "kpis": [
+        {
+          "id": "P3.KPI-01",
+          "indicador": "Capacidade operacional",
+          "definicao": "Capacidade disponivel vs necessaria",
+          "valor": 84.0,
+          "unidade": "%",
+          "cadencia": "Semanal",
+          "gatilho": "Capacidade abaixo de 80%",
+          "owner": "Operacao",
+          "source": "Pipeline operacional",
+          "status": "OK"
+        },
+        {
+          "id": "P3.KPI-02",
+          "indicador": "Produtividade por equipe",
+          "definicao": "Ha por equipe/semana",
+          "valor": 1150,
+          "unidade": "ha",
+          "cadencia": "Semanal",
+          "gatilho": "Queda acima de 10% por 2 semanas",
+          "owner": "Operacao",
+          "source": "Relatorio operacional",
+          "status": "OK"
+        }
+      ]
+    },
+    {
+      "pillar": "P4",
+      "title": "Produto, dados e IA",
+      "kpis": [
+        {
+          "id": "P4.KPI-01",
+          "indicador": "Prova de valor entregue",
+          "definicao": "Pacotes de evidencia por Pareto",
+          "valor": 58,
+          "unidade": "%",
+          "cadencia": "Mensal",
+          "gatilho": "Abaixo de 60% por ciclo",
+          "owner": "Produto/Dados",
+          "source": "Biblioteca de provas",
+          "status": "ATENCAO"
+        },
+        {
+          "id": "P4.KPI-02",
+          "indicador": "Automacao aplicada",
+          "definicao": "Ganho operacional mensurado",
+          "valor": 12.5,
+          "unidade": "%",
+          "cadencia": "Mensal",
+          "gatilho": "Ganho abaixo de 10%",
+          "owner": "Produto/Dados",
+          "source": "Relatorios internos",
+          "status": "OK"
+        }
+      ]
+    },
+    {
+      "pillar": "P5",
+      "title": "Pessoas e lideranca",
+      "kpis": [
+        {
+          "id": "P5.KPI-01",
+          "indicador": "Turnover",
+          "definicao": "Rotatividade acumulada",
+          "valor": 21.0,
+          "unidade": "%",
+          "cadencia": "Mensal",
+          "gatilho": "Acima de 30%",
+          "owner": "RH",
+          "source": "People Analytics",
+          "status": "OK"
+        },
+        {
+          "id": "P5.KPI-02",
+          "indicador": "Aderencia a rituais de lideranca",
+          "definicao": "% de rituais executados",
+          "valor": 68.0,
+          "unidade": "%",
+          "cadencia": "Mensal",
+          "gatilho": "Abaixo de 75% por 2 ciclos",
+          "owner": "RH",
+          "source": "MBR RH",
+          "status": "ATENCAO"
+        }
+      ]
+    }
+  ],
+  "monetization": {
+    "summary": {
+      "saldoTotal": 88348.85,
+      "execucaoPercentual": 62.4,
+      "runRateSemanal": 1570,
+      "ativacaoPercentual": 48.0,
+      "paretoTop14Percent": 71.0,
+      "previsao30": 12400,
+      "previsao60": 22600,
+      "previsao90": 31100,
+      "idadeSaldoMedia": 112
+    },
+    "metrics": [
+      {
+        "id": "C1",
+        "indicador": "Saldo a executar",
+        "valor": 88348.85,
+        "unidade": "ha",
+        "cadencia": "Semanal",
+        "gatilho": "Saldo sem reducao por 3 semanas",
+        "owner": "CS",
+        "source": "Base contratual",
+        "alert": "Top-14 concentra 71% do saldo",
+        "nota": "Priorizar Pareto Top-14"
+      },
+      {
+        "id": "C2",
+        "indicador": "Execucao acumulada",
+        "valor": 62.4,
+        "unidade": "%",
+        "cadencia": "Semanal",
+        "gatilho": "Execucao abaixo de 70% no Q1",
+        "owner": "Operacao",
+        "source": "Relatorio operacional",
+        "alert": "Meta Q1: 85%",
+        "nota": "Acelerar vazao em fevereiro"
+      },
+      {
+        "id": "C3",
+        "indicador": "Vazao de execucao (run-rate)",
+        "valor": 1570,
+        "unidade": "ha/sem",
+        "cadencia": "Semanal",
+        "gatilho": "Queda de vazao por 2 semanas",
+        "owner": "Operacao",
+        "source": "Pipeline operacional",
+        "alert": "Queda por 2 semanas aciona War Room",
+        "nota": "Monitorar janelas criticas"
+      },
+      {
+        "id": "C4",
+        "indicador": "Taxa de ativacao de demanda",
+        "valor": 48.0,
+        "unidade": "%",
+        "cadencia": "Semanal",
+        "gatilho": "Ativacao abaixo de 60%",
+        "owner": "CS",
+        "source": "Plano de ativacao",
+        "alert": "Alvo Q2 >= 70%",
+        "nota": "Ativar contratantes com saldo envelhecido"
+      },
+      {
+        "id": "C5",
+        "indicador": "Previsao 30/60/90",
+        "valor": 31100,
+        "unidade": "ha",
+        "cadencia": "Semanal",
+        "gatilho": "Previsao sem evidencia confirmada",
+        "owner": "CS",
+        "source": "Agenda confirmada",
+        "alert": "Sem evidencia -> acionar escalonamento",
+        "nota": "Consolidar agenda Pareto"
+      },
+      {
+        "id": "C6",
+        "indicador": "Idade do saldo",
+        "valor": 112,
+        "unidade": "dias",
+        "cadencia": "Mensal",
+        "gatilho": "> 120 dias",
+        "owner": "CS",
+        "source": "Base contratual",
+        "alert": "> 120 dias aciona plano",
+        "nota": "Revisar carteira base"
+      },
+      {
+        "id": "C7",
+        "indicador": "Pareto do saldo",
+        "valor": 71.0,
+        "unidade": "%",
+        "cadencia": "Semanal",
+        "gatilho": "Top-14 sem plano de ativacao",
+        "owner": "CS",
+        "source": "Pareto Top-14",
+        "alert": "Status de execucao por contratante",
+        "nota": "Relatorio semanal por cliente"
+      }
+    ],
+    "warRoom": {
+      "status": "Ativo",
+      "cadence": "Semanal",
+      "focus": "Top-14 + previsao 30/60/90",
+      "owner": "CS + Operacao"
+    }
+  }
+}

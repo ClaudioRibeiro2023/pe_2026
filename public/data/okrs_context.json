@@ -1,0 +1,446 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "lastUpdate": "2026-01-22",
+    "source": "DOC 06 + DOC 11"
+  },
+  "corporate": [
+    {
+      "id": "OKR-P1",
+      "pillar": "P1",
+      "objective": "Governanca, separacao Aero x Techdengue e padrao sell-ready",
+      "owner": "Direcao Executiva",
+      "priority": "Alta",
+      "krs": [
+        {
+          "id": "KR-P1-01",
+          "title": "P&L gerencial por unidade com fechamento mensal ate dia 10",
+          "target": "Mar-Dez/2026",
+          "status": "EM_ANDAMENTO",
+          "evidence": ["EVID-2026-003"],
+          "kpis": ["P1.KPI-01"],
+          "initiatives": ["INIT-2026-007"]
+        },
+        {
+          "id": "KR-P1-02",
+          "title": "Alcadas e DEC ativos com registro formal",
+          "target": "Fev/2026",
+          "status": "EM_ANDAMENTO",
+          "evidence": ["EVID-2026-005"],
+          "kpis": ["P1.KPI-02"],
+          "initiatives": ["INIT-2026-006"]
+        },
+        {
+          "id": "KR-P1-03",
+          "title": "RSK criticos mapeados e revisados em MBR",
+          "target": "Mar/2026",
+          "status": "EM_ANDAMENTO",
+          "evidence": ["EVID-2026-006"],
+          "kpis": ["A3"],
+          "initiatives": []
+        },
+        {
+          "id": "KR-P1-04",
+          "title": "Disciplina de evidencias com MAP-TRC atualizado",
+          "target": "Jan/2026",
+          "status": "EM_ANDAMENTO",
+          "evidence": ["EVID-2026-002"],
+          "kpis": ["P1.KPI-02"],
+          "initiatives": ["INIT-2026-009"]
+        }
+      ]
+    },
+    {
+      "id": "OKR-P2",
+      "pillar": "P2",
+      "objective": "Monetizar base contratual com previsibilidade (contrato → demanda → execucao → caixa)",
+      "owner": "Direcao Executiva",
+      "priority": "Critica",
+      "krs": [
+        {
+          "id": "KR-P2-01",
+          "title": "Executar minimo 50.438 ha no Q1",
+          "target": "Q1/2026",
+          "status": "ATENCAO",
+          "evidence": ["EVID-2026-001"],
+          "kpis": ["C2", "C3"],
+          "initiatives": ["INIT-2026-002"]
+        },
+        {
+          "id": "KR-P2-02",
+          "title": "Reduzir saldo para <= 37.910 ha ate 31/mar",
+          "target": "Mar/2026",
+          "status": "EM_ANDAMENTO",
+          "evidence": ["EVID-2026-004"],
+          "kpis": ["C1", "C6"],
+          "initiatives": []
+        },
+        {
+          "id": "KR-P2-03",
+          "title": "Operar War Room Q1 semanal com Top-14",
+          "target": "Fev/2026",
+          "status": "EM_ANDAMENTO",
+          "evidence": ["EVID-2026-001"],
+          "kpis": ["C7"],
+          "initiatives": ["INIT-2026-001"]
+        }
+      ]
+    },
+    {
+      "id": "OKR-P3",
+      "pillar": "P3",
+      "objective": "Escala operacional com margem, qualidade e prontidao",
+      "owner": "Operacao",
+      "priority": "Alta",
+      "krs": [
+        {
+          "id": "KR-P3-01",
+          "title": "Manter margem operacional anual >= 30%",
+          "target": "2026",
+          "status": "EM_ANDAMENTO",
+          "evidence": ["EVID-2026-008"],
+          "kpis": ["A1"],
+          "initiatives": []
+        },
+        {
+          "id": "KR-P3-02",
+          "title": "Planejamento semanal de capacidade no Q1",
+          "target": "Fev-Mar/2026",
+          "status": "EM_ANDAMENTO",
+          "evidence": ["EVID-2026-007"],
+          "kpis": ["P3.KPI-01", "P3.KPI-02"],
+          "initiatives": ["INIT-2026-005", "INIT-2026-008"]
+        }
+      ]
+    },
+    {
+      "id": "OKR-P4",
+      "pillar": "P4",
+      "objective": "Produto, dados e IA como prova de valor",
+      "owner": "Produto/Dados",
+      "priority": "Alta",
+      "krs": [
+        {
+          "id": "KR-P4-01",
+          "title": "Pacote de evidencias Pareto Top-14 entregue mensalmente",
+          "target": "Q1/2026",
+          "status": "EM_ANDAMENTO",
+          "evidence": ["EVID-2026-009"],
+          "kpis": ["P4.KPI-01"],
+          "initiatives": ["INIT-2026-004"]
+        },
+        {
+          "id": "KR-P4-02",
+          "title": "Painel de monetizacao publicado ate mar",
+          "target": "Mar/2026",
+          "status": "EM_ANDAMENTO",
+          "evidence": ["EVID-2026-010"],
+          "kpis": ["C5"],
+          "initiatives": ["INIT-2026-003"]
+        }
+      ]
+    },
+    {
+      "id": "OKR-P5",
+      "pillar": "P5",
+      "objective": "Densidade intelectual, lideranca e capacidade humana",
+      "owner": "RH",
+      "priority": "Alta",
+      "krs": [
+        {
+          "id": "KR-P5-01",
+          "title": "Turnover anual <= 35%",
+          "target": "2026",
+          "status": "EM_ANDAMENTO",
+          "evidence": ["EVID-2026-011"],
+          "kpis": ["P5.KPI-01"],
+          "initiatives": []
+        },
+        {
+          "id": "KR-P5-02",
+          "title": "Rituais de lideranca implantados com aderencia >= 85%",
+          "target": "Jun/2026",
+          "status": "EM_ANDAMENTO",
+          "evidence": ["EVID-2026-012"],
+          "kpis": ["P5.KPI-02"],
+          "initiatives": []
+        }
+      ]
+    }
+  ],
+  "areas": [
+    {
+      "area": "RH",
+      "owner": "RH",
+      "focus": "Lideranca, retenção e people analytics",
+      "okrs": [
+        {
+          "id": "OKR-RH-01",
+          "objective": "Reduzir rotatividade e estabilizar o time",
+          "linkedCorporateKrs": ["KR-P5-01"],
+          "status": "EM_ANDAMENTO"
+        },
+        {
+          "id": "OKR-RH-02",
+          "objective": "Elevar engajamento e corrigir gaps",
+          "linkedCorporateKrs": ["KR-P5-02"],
+          "status": "EM_ANDAMENTO"
+        }
+      ],
+      "modules": [
+        {
+          "id": "RH-MOD-01",
+          "title": "People Analytics + painel RH 1.0",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-RH-01"],
+          "notes": "Clima, turnover e retenção monitorados mensalmente."
+        },
+        {
+          "id": "RH-MOD-02",
+          "title": "Escola de Líderes + rituais mínimos",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-RH-02"],
+          "notes": "Rotina de coaching e agenda trimestral de liderança."
+        },
+        {
+          "id": "RH-MOD-03",
+          "title": "Onboarding 45/90 + retenção ativa",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-RH-01", "OKR-RH-02"],
+          "notes": "Aderência acompanhada por jornada de 45/90 dias."
+        }
+      ]
+    },
+    {
+      "area": "Marketing",
+      "owner": "Marketing",
+      "focus": "Demanda qualificada e provas",
+      "okrs": [
+        {
+          "id": "OKR-MKT-01",
+          "objective": "Gerar demanda qualificada com previsibilidade",
+          "linkedCorporateKrs": ["KR-P2-01"],
+          "status": "EM_ANDAMENTO"
+        },
+        {
+          "id": "OKR-MKT-02",
+          "objective": "Biblioteca de provas ativa",
+          "linkedCorporateKrs": ["KR-P4-01"],
+          "status": "EM_ANDAMENTO"
+        }
+      ],
+      "modules": [
+        {
+          "id": "MKT-MOD-01",
+          "title": "Funil de demanda + SLA com Comercial",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-MKT-01"],
+          "notes": "SLA MQL/SQL com revisão quinzenal."
+        },
+        {
+          "id": "MKT-MOD-02",
+          "title": "Biblioteca de provas + kits de decisão",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-MKT-02"],
+          "notes": "Playbooks e cases alinhados a tese."
+        },
+        {
+          "id": "MKT-MOD-03",
+          "title": "Agenda nacional (eventos com tese + pós-evento)",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-MKT-01"],
+          "notes": "Calendário com follow-up e pipeline rastreado."
+        }
+      ]
+    },
+    {
+      "area": "Produto/Dados",
+      "owner": "Produto/Dados",
+      "focus": "Evidencia, IA e eficiencia",
+      "okrs": [
+        {
+          "id": "OKR-PROD-01",
+          "objective": "Entregar provas e painéis de valor",
+          "linkedCorporateKrs": ["KR-P4-01", "KR-P4-02"],
+          "status": "EM_ANDAMENTO"
+        }
+      ],
+      "modules": [
+        {
+          "id": "PROD-MOD-01",
+          "title": "Eficiência e padronização do fluxo",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-PROD-01"],
+          "linkedInitiatives": ["INIT-2026-003"],
+          "notes": "Fluxo de entrega padronizado com SLAs por etapa."
+        },
+        {
+          "id": "PROD-MOD-02",
+          "title": "Biblioteca de evidências + painéis",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-PROD-01"],
+          "linkedInitiatives": ["INIT-2026-004"],
+          "notes": "Painéis por cliente e evidências mensais."
+        },
+        {
+          "id": "PROD-MOD-03",
+          "title": "IA aplicada com governança",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-PROD-01"],
+          "notes": "Backlog de automações com controles de qualidade."
+        }
+      ]
+    },
+    {
+      "area": "Operacao",
+      "owner": "Operacao",
+      "focus": "Capacidade e qualidade",
+      "okrs": [
+        {
+          "id": "OKR-OP-01",
+          "objective": "Pipeline operacional e aderencia",
+          "linkedCorporateKrs": ["KR-P3-02", "KR-P2-01"],
+          "status": "EM_ANDAMENTO"
+        }
+      ],
+      "modules": [
+        {
+          "id": "OP-MOD-01",
+          "title": "Pipeline 4-6 semanas + aderência",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-OP-01"],
+          "linkedInitiatives": ["INIT-2026-008"],
+          "notes": "Pipeline semanal com aderência por squad."
+        },
+        {
+          "id": "OP-MOD-02",
+          "title": "Qualidade padronizada + auditoria interna",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-OP-01"],
+          "linkedInitiatives": ["INIT-2026-005"],
+          "notes": "Checklist de qualidade e auditorias mensais."
+        },
+        {
+          "id": "OP-MOD-03",
+          "title": "Custo por hectare + manutenção preventiva",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-OP-01"],
+          "notes": "Indicadores de custo e manutenção integrada."
+        }
+      ]
+    },
+    {
+      "area": "CS",
+      "owner": "CS",
+      "focus": "Ativacao de demanda e previsibilidade",
+      "okrs": [
+        {
+          "id": "OKR-CS-01",
+          "objective": "Ativar demanda do Pareto",
+          "linkedCorporateKrs": ["KR-P2-01", "KR-P2-03"],
+          "status": "EM_ANDAMENTO"
+        }
+      ],
+      "modules": [
+        {
+          "id": "CS-MOD-01",
+          "title": "Pareto + planos de ativação por cliente",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-CS-01"],
+          "linkedInitiatives": ["INIT-2026-001", "INIT-2026-002"],
+          "notes": "Top-14 com plano de ativação e follow-up semanal."
+        },
+        {
+          "id": "CS-MOD-02",
+          "title": "Previsão 30/60/90 + agenda confirmada",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-CS-01"],
+          "linkedInitiatives": ["INIT-2026-001"],
+          "notes": "Forecast atualizado no War Room."
+        },
+        {
+          "id": "CS-MOD-03",
+          "title": "Gestão de reclamações por causa raiz",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-CS-01"],
+          "notes": "Classificação por causa raiz e plano de ação."
+        }
+      ]
+    },
+    {
+      "area": "Comercial",
+      "owner": "Comercial",
+      "focus": "Pipeline qualificado e diversificacao",
+      "okrs": [
+        {
+          "id": "OKR-COM-01",
+          "objective": "Pipeline qualificado e diversificacao",
+          "linkedCorporateKrs": ["KR-P2-02"],
+          "status": "EM_ANDAMENTO"
+        }
+      ],
+      "modules": [
+        {
+          "id": "COM-MOD-01",
+          "title": "ICP + contas-alvo + funil disciplinado",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-COM-01"],
+          "notes": "Qualificação com ICP e cadência semanal."
+        },
+        {
+          "id": "COM-MOD-02",
+          "title": "Oferta replicável + prova de valor",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-COM-01"],
+          "notes": "Proposta padrão com kit de evidências."
+        },
+        {
+          "id": "COM-MOD-03",
+          "title": "Travas de capacidade + transição para CS",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-COM-01"],
+          "linkedInitiatives": ["INIT-2026-005"],
+          "notes": "Checklist de transição e limites de capacidade."
+        }
+      ]
+    },
+    {
+      "area": "Financeiro",
+      "owner": "Financeiro",
+      "focus": "Caixa, margem e previsibilidade",
+      "okrs": [
+        {
+          "id": "OKR-FIN-01",
+          "objective": "Previsibilidade de caixa e margem",
+          "linkedCorporateKrs": ["KR-P1-01", "KR-P3-01"],
+          "status": "EM_ANDAMENTO"
+        }
+      ],
+      "modules": [
+        {
+          "id": "FIN-MOD-01",
+          "title": "Projeção de caixa semanal + aging de recebíveis",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-FIN-01"],
+          "notes": "Aging com alertas e projeção semanal."
+        },
+        {
+          "id": "FIN-MOD-02",
+          "title": "Margem por unidade + custo por entrega",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-FIN-01"],
+          "linkedInitiatives": ["INIT-2026-007"],
+          "notes": "P&L gerencial por unidade e custo por entrega."
+        },
+        {
+          "id": "FIN-MOD-03",
+          "title": "Separação econômica Aero x Techdengue",
+          "status": "EM_ANDAMENTO",
+          "linkedOkrs": ["OKR-FIN-01"],
+          "linkedInitiatives": ["INIT-2026-007"],
+          "notes": "Separação de receitas/custos e reporte mensal."
+        }
+      ]
+    }
+  ]
+}

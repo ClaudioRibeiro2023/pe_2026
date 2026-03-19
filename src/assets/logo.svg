@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" fill="none">
+  <!-- Avião estilizado formando gráfico ascendente -->
+  <defs>
+    <linearGradient id="aeroGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0052A3"/>
+      <stop offset="100%" style="stop-color:#0066CC"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Ícone do avião/gráfico -->
+  <g transform="translate(5, 5)">
+    <!-- Linha de tendência ascendente -->
+    <path d="M0 35 L15 25 L30 15" stroke="url(#aeroGradient)" stroke-width="3" stroke-linecap="round" fill="none"/>
+    
+    <!-- Avião estilizado -->
+    <g transform="translate(25, 8) rotate(-30)">
+      <path d="M0 8 L20 8 L25 5 L20 2 L0 2 Z" fill="url(#aeroGradient)"/>
+      <path d="M5 2 L8 -3 L12 2" fill="url(#aeroGradient)"/>
+      <path d="M15 8 L18 13 L22 8" fill="url(#aeroGradient)"/>
+    </g>
+  </g>
+  
+  <!-- Texto "Estratégico" -->
+  <text x="55" y="28" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="600" fill="#1f2937">
+    Estratégico
+  </text>
+  
+  <!-- Texto "Aero" em destaque -->
+  <text x="153" y="28" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700" fill="#0066CC">
+    Aero
+  </text>
+  
+  <!-- Tagline -->
+  <text x="55" y="42" font-family="Inter, system-ui, sans-serif" font-size="8" fill="#6b7280" letter-spacing="0.5">
+    PLANEJAMENTO QUE DECOLA
+  </text>
+</svg>

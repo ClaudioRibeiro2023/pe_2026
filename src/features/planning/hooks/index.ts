@@ -1,0 +1,1 @@
+export { useLastArea } from './useLastArea'

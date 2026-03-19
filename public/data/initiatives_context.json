@@ -1,0 +1,200 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "lastUpdate": "2026-01-22",
+    "source": "DOC 08"
+  },
+  "capacity": {
+    "wipInstitutionalLimit": 10,
+    "wipAreaLimit": 5,
+    "inProgressCount": 6,
+    "blockedCount": 1,
+    "p0Count": 5
+  },
+  "prioritizationCriteria": [
+    {
+      "id": "CRIT-01",
+      "title": "Impacto em monetizacao",
+      "description": "Saldo executado, previsibilidade e ativacao de demanda.",
+      "weight": "Alto"
+    },
+    {
+      "id": "CRIT-02",
+      "title": "Risco operacional",
+      "description": "Exposicao a gargalos, falhas de qualidade e janelas criticas.",
+      "weight": "Medio"
+    },
+    {
+      "id": "CRIT-03",
+      "title": "Esforco/capacidade",
+      "description": "Disponibilidade de equipe e dependencias criticas.",
+      "weight": "Medio"
+    },
+    {
+      "id": "CRIT-04",
+      "title": "Alinhamento com pilares",
+      "description": "Conexao direta com OKRs corporativos e KRs prioritarios.",
+      "weight": "Alto"
+    }
+  ],
+  "evidenceRequirement": {
+    "mandatory": true,
+    "requiredArtifacts": ["EVID-*", "DEC-*", "MAP-TRC"],
+    "validation": "Checklist de evidencias validado antes de concluir iniciativa"
+  },
+  "initiatives": [
+    {
+      "id": "INIT-2026-001",
+      "title": "Implantar Sala de Situacao Q1 (Pareto Top-14)",
+      "type": "MET",
+      "priority": "P0",
+      "pillar": "P2",
+      "okr": "OKR-P2",
+      "kr": "KR-P2-03",
+      "owner": "CS",
+      "sponsor": "Direcao Executiva",
+      "status": "EM_ANDAMENTO",
+      "startDate": "2026-01-15",
+      "endDate": "2026-03-31",
+      "effort": "ALTO",
+      "dependencies": ["INIT-2026-003"],
+      "evidences": ["EVID-2026-001"]
+    },
+    {
+      "id": "INIT-2026-002",
+      "title": "Criar Playbook de Ativacao de Demanda",
+      "type": "MET",
+      "priority": "P0",
+      "pillar": "P2",
+      "okr": "OKR-P2",
+      "kr": "KR-P2-01",
+      "owner": "CS",
+      "sponsor": "Direcao Executiva",
+      "status": "EM_ANDAMENTO",
+      "startDate": "2026-01-20",
+      "endDate": "2026-02-28",
+      "effort": "MEDIO",
+      "dependencies": [],
+      "evidences": []
+    },
+    {
+      "id": "INIT-2026-003",
+      "title": "Painel de monetizacao (saldo, vazao, previsao)",
+      "type": "SIS",
+      "priority": "P0",
+      "pillar": "P4",
+      "okr": "OKR-P4",
+      "kr": "KR-P4-02",
+      "owner": "Produto/Dados",
+      "sponsor": "Direcao Executiva",
+      "status": "EM_ANDAMENTO",
+      "startDate": "2026-01-18",
+      "endDate": "2026-03-15",
+      "effort": "ALTO",
+      "dependencies": [],
+      "evidences": []
+    },
+    {
+      "id": "INIT-2026-004",
+      "title": "Pacote mensal de prova de valor para Top-14",
+      "type": "COM",
+      "priority": "P0",
+      "pillar": "P4",
+      "okr": "OKR-P4",
+      "kr": "KR-P4-01",
+      "owner": "Produto/Dados",
+      "sponsor": "Direcao Executiva",
+      "status": "EM_ANDAMENTO",
+      "startDate": "2026-01-25",
+      "endDate": "2026-03-31",
+      "effort": "MEDIO",
+      "dependencies": [],
+      "evidences": []
+    },
+    {
+      "id": "INIT-2026-005",
+      "title": "Integracao formal CS ↔ Operacao ↔ Financeiro",
+      "type": "MET",
+      "priority": "P0",
+      "pillar": "P3",
+      "okr": "OKR-P3",
+      "kr": "KR-P3-02",
+      "owner": "Operacao",
+      "sponsor": "Direcao Executiva",
+      "status": "EM_ANDAMENTO",
+      "startDate": "2026-01-22",
+      "endDate": "2026-03-10",
+      "effort": "MEDIO",
+      "dependencies": [],
+      "evidences": []
+    },
+    {
+      "id": "INIT-2026-006",
+      "title": "Registro de decisoes (DEC) e riscos (RSK) ativo",
+      "type": "MET",
+      "priority": "P1",
+      "pillar": "P1",
+      "okr": "OKR-P1",
+      "kr": "KR-P1-02",
+      "owner": "Guardiã PE",
+      "sponsor": "Direcao Executiva",
+      "status": "EM_ANDAMENTO",
+      "startDate": "2026-01-10",
+      "endDate": "2026-02-15",
+      "effort": "BAIXO",
+      "dependencies": [],
+      "evidences": ["DEC-2026-003"]
+    },
+    {
+      "id": "INIT-2026-007",
+      "title": "Apuracao gerencial por unidade",
+      "type": "MET",
+      "priority": "P1",
+      "pillar": "P1",
+      "okr": "OKR-P1",
+      "kr": "KR-P1-01",
+      "owner": "Financeiro",
+      "sponsor": "Direcao Executiva",
+      "status": "EM_ANDAMENTO",
+      "startDate": "2026-01-05",
+      "endDate": "2026-03-31",
+      "effort": "MEDIO",
+      "dependencies": [],
+      "evidences": ["EVID-2026-003"]
+    },
+    {
+      "id": "INIT-2026-008",
+      "title": "Planejamento semanal de capacidade (Q1)",
+      "type": "MET",
+      "priority": "P0",
+      "pillar": "P3",
+      "okr": "OKR-P3",
+      "kr": "KR-P3-02",
+      "owner": "Operacao",
+      "sponsor": "Direcao Executiva",
+      "status": "BLOQUEADA",
+      "startDate": "2026-01-20",
+      "endDate": "2026-02-28",
+      "effort": "MEDIO",
+      "dependencies": ["INIT-2026-005"],
+      "evidences": []
+    },
+    {
+      "id": "INIT-2026-009",
+      "title": "Mapa de rastreabilidade e disciplina de evidencias",
+      "type": "MET",
+      "priority": "P1",
+      "pillar": "P1",
+      "okr": "OKR-P1",
+      "kr": "KR-P1-04",
+      "owner": "Guardiã PE",
+      "sponsor": "Direcao Executiva",
+      "status": "EM_ANDAMENTO",
+      "startDate": "2026-01-18",
+      "endDate": "2026-02-10",
+      "effort": "BAIXO",
+      "dependencies": ["INIT-2026-006"],
+      "evidences": ["EVID-2026-002"]
+    }
+  ]
+}

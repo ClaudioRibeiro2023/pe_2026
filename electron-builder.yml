@@ -1,0 +1,44 @@
+appId: com.estrategicoaero.app
+productName: Estratégico Aero
+copyright: Copyright © 2026 Estratégico Aero
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - package.json
+
+extraMetadata:
+  main: dist-electron/main.js
+
+# Disable code signing for local builds
+forceCodeSigning: false
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: build/icon.ico
+  artifactName: EstrategicoAero-Setup-${version}.${ext}
+  signAndEditExecutable: false
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  deleteAppDataOnUninstall: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Estratégico Aero
+
+publish:
+  provider: generic
+  url: file:///C:/Updates/EstrategicoAero
+  channel: latest
+
+# Auto-update configuration
+electronUpdaterCompatibility: ">= 2.16"

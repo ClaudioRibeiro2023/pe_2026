@@ -1,0 +1,1 @@
+export { StrategicPackPage } from './StrategicPackPage'

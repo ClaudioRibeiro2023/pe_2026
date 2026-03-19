@@ -1,0 +1,7 @@
+dist
+node_modules
+release
+dist-electron
+coverage
+.vite
+build

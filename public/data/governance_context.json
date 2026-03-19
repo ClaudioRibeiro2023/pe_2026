@@ -1,0 +1,616 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "lastUpdate": "2026-01-22",
+    "source": "PE2026.todo.md + DOC 00-11"
+  },
+  "canonicalArtifacts": [
+    {
+      "id": "ART-DOC-00",
+      "docRef": "DOC 00",
+      "title": "Tese e diretrizes do PE2026",
+      "description": "Documento mestre de tese, fronteiras e norteadores estratégicos.",
+      "owner": "Direção Estratégica",
+      "module": "Estratégia",
+      "status": "ATIVO",
+      "lastUpdate": "2026-01-10",
+      "link": "https://intranet/pe2026/doc-00"
+    },
+    {
+      "id": "ART-DOC-01",
+      "docRef": "DOC 01",
+      "title": "Base contratual e monetização",
+      "description": "Base de contratos, saldo e diretrizes de monetização Q1.",
+      "owner": "CS",
+      "module": "Monetização",
+      "status": "ATIVO",
+      "lastUpdate": "2026-01-12",
+      "link": "https://intranet/pe2026/doc-01"
+    },
+    {
+      "id": "ART-DOC-02",
+      "docRef": "DOC 02",
+      "title": "Pilares e temas estratégicos",
+      "description": "Mapa de pilares P1–P5, subpilares e temas prioritários.",
+      "owner": "Direção Estratégica",
+      "module": "Estratégia",
+      "status": "ATIVO",
+      "lastUpdate": "2026-01-11",
+      "link": "https://intranet/pe2026/doc-02"
+    },
+    {
+      "id": "ART-DOC-03",
+      "docRef": "DOC 03",
+      "title": "Cenários e metas 2026",
+      "description": "Cenários probabilísticos, metas e gatilhos de ajuste.",
+      "owner": "Direção Executiva",
+      "module": "Estratégia",
+      "status": "ATIVO",
+      "lastUpdate": "2026-01-14",
+      "link": "https://intranet/pe2026/doc-03"
+    },
+    {
+      "id": "ART-DOC-04",
+      "docRef": "DOC 04",
+      "title": "Placar institucional (KPIs)",
+      "description": "KPIs de guardrails, pilares e monetização com regras de alerta.",
+      "owner": "Guardiã PE",
+      "module": "Placar",
+      "status": "ATIVO",
+      "lastUpdate": "2026-01-18",
+      "link": "https://intranet/pe2026/doc-04"
+    },
+    {
+      "id": "ART-DOC-05",
+      "docRef": "DOC 05",
+      "title": "War Room e carteira Pareto",
+      "description": "Rito War Room, Pareto Top-14 e plano de ativação por cliente.",
+      "owner": "CS",
+      "module": "Monetização",
+      "status": "ATIVO",
+      "lastUpdate": "2026-01-19",
+      "link": "https://intranet/pe2026/doc-05"
+    },
+    {
+      "id": "ART-DOC-06",
+      "docRef": "DOC 06",
+      "title": "OKRs corporativos",
+      "description": "OKRs por pilar, KRs verificáveis e evidências obrigatórias.",
+      "owner": "Direção Executiva",
+      "module": "OKRs",
+      "status": "ATIVO",
+      "lastUpdate": "2026-01-22",
+      "link": "https://intranet/pe2026/doc-06"
+    },
+    {
+      "id": "ART-DOC-07",
+      "docRef": "DOC 07",
+      "title": "Governança e cadência",
+      "description": "WBR/MBR/QBR, registros DEC/RSK/EVID e padrões de qualidade.",
+      "owner": "Guardiã PE",
+      "module": "Governança",
+      "status": "ATIVO",
+      "lastUpdate": "2026-01-20",
+      "link": "https://intranet/pe2026/doc-07"
+    },
+    {
+      "id": "ART-DOC-08",
+      "docRef": "DOC 08",
+      "title": "Carteira de iniciativas",
+      "description": "WIP institucional, prioridades e critérios de alocação.",
+      "owner": "PMO",
+      "module": "Iniciativas",
+      "status": "ATIVO",
+      "lastUpdate": "2026-01-21",
+      "link": "https://intranet/pe2026/doc-08"
+    },
+    {
+      "id": "ART-DOC-09",
+      "docRef": "DOC 09",
+      "title": "Capacidade e orçamento",
+      "description": "Mapeamento de capacidade, orçamento vivo e replanejamento.",
+      "owner": "Financeiro",
+      "module": "Capacidade",
+      "status": "ATIVO",
+      "lastUpdate": "2026-01-22",
+      "link": "https://intranet/pe2026/doc-09"
+    },
+    {
+      "id": "ART-DOC-10",
+      "docRef": "DOC 10",
+      "title": "Plano de riscos críticos",
+      "description": "Mapa de riscos, gatilhos e planos de mitigação.",
+      "owner": "Direção Executiva",
+      "module": "Riscos",
+      "status": "EM_VALIDACAO",
+      "lastUpdate": "2026-01-19",
+      "link": "https://intranet/pe2026/doc-10"
+    },
+    {
+      "id": "ART-DOC-11",
+      "docRef": "DOC 11",
+      "title": "Módulos por área",
+      "description": "Desdobramento de OKRs por RH, MKT, Produto, Operação, CS, Comercial e Financeiro.",
+      "owner": "Direção Executiva",
+      "module": "Áreas",
+      "status": "ATIVO",
+      "lastUpdate": "2026-01-22",
+      "link": "https://intranet/pe2026/doc-11"
+    }
+  ],
+  "rbacRoles": [
+    {
+      "id": "RBAC-ADM",
+      "title": "Admin Master",
+      "level": "N0",
+      "scope": "Plataforma inteira",
+      "responsibilities": [
+        "Configurações globais e segurança",
+        "Gestão de usuários e perfis",
+        "Auditoria de acessos e compliance"
+      ]
+    },
+    {
+      "id": "RBAC-N1",
+      "title": "Direção Estratégica (N1)",
+      "level": "N1",
+      "scope": "Tese, pilares e cenários",
+      "responsibilities": [
+        "Aprovar tese estratégica e fronteiras",
+        "Validar pilares e temas",
+        "Revisar cenários e metas de longo prazo"
+      ]
+    },
+    {
+      "id": "RBAC-N2",
+      "title": "Direção Executiva (N2)",
+      "level": "N2",
+      "scope": "OKRs, carteira e orçamento",
+      "responsibilities": [
+        "Aprovar OKRs corporativos",
+        "Gerir carteira e orçamento vivo",
+        "Endereçar riscos críticos"
+      ]
+    },
+    {
+      "id": "RBAC-PE",
+      "title": "Guardiã do PE",
+      "level": "N2",
+      "scope": "Cadência e rastreabilidade",
+      "responsibilities": [
+        "Garantir cadência WBR/MBR/QBR",
+        "Auditar evidências e versionamento",
+        "Manter mapa de rastreabilidade"
+      ]
+    },
+    {
+      "id": "RBAC-LIDER",
+      "title": "Líder de Pilar/Área",
+      "level": "N3",
+      "scope": "Pilares e áreas",
+      "responsibilities": [
+        "Desdobrar OKRs e KPIs setoriais",
+        "Acompanhar execução e riscos",
+        "Validar evidências das equipes"
+      ]
+    },
+    {
+      "id": "RBAC-KR",
+      "title": "Responsável por KR/INIT",
+      "level": "N4",
+      "scope": "Execução",
+      "responsibilities": [
+        "Atualizar progresso de KRs",
+        "Registrar evidências e resultados",
+        "Sincronizar dependências de iniciativas"
+      ]
+    },
+    {
+      "id": "RBAC-EXEC",
+      "title": "Analista/Executor",
+      "level": "N5",
+      "scope": "Operação",
+      "responsibilities": [
+        "Atualizar tarefas e entregas",
+        "Sinalizar bloqueios",
+        "Apoiar coleta de evidências"
+      ]
+    },
+    {
+      "id": "RBAC-VIEW",
+      "title": "Viewer/Stakeholder",
+      "level": "N6",
+      "scope": "Leitura",
+      "responsibilities": [
+        "Acompanhar dashboards e relatórios",
+        "Garantir alinhamento com a tese",
+        "Registrar feedback estratégico"
+      ]
+    }
+  ],
+  "decisions": [
+    {
+      "id": "DEC-2026-001",
+      "title": "Ativar War Room Q1 para monetizacao",
+      "description": "Operar rito semanal com foco no Pareto Top-14, previsao 30/60/90 e agenda ativa.",
+      "date": "2026-01-22",
+      "owner": "Direcao Executiva",
+      "impact": "ALTO",
+      "status": "ATIVA",
+      "pillars": ["P2", "P3"],
+      "tags": ["monetizacao", "q1"]
+    },
+    {
+      "id": "DEC-2026-002",
+      "title": "Separacao gerencial Aero x Techdengue",
+      "description": "Implantar P&L gerencial por unidade e rotina de fechamento mensal ate dia 10.",
+      "date": "2026-01-20",
+      "owner": "Financeiro",
+      "impact": "ALTO",
+      "status": "ATIVA",
+      "pillars": ["P1", "P5"],
+      "tags": ["governanca", "sell-ready"]
+    },
+    {
+      "id": "DEC-2026-003",
+      "title": "Padrao minimo de evidencia para KRs",
+      "description": "Nenhum KR fecha sem evidencias verificaveis registradas e validadas.",
+      "date": "2026-01-18",
+      "owner": "Consultora Estrategica",
+      "impact": "MEDIO",
+      "status": "ATIVA",
+      "pillars": ["P1"],
+      "tags": ["evidencia", "rastreabilidade"]
+    }
+  ],
+  "risks": [
+    {
+      "id": "RSK-2026-01",
+      "title": "Janela regulatoria reduzir vazao",
+      "category": "Regulatorio",
+      "description": "Mudancas de prazo ou definicoes institucionais podem reduzir a execucao do saldo no Q1.",
+      "impact": "ALTO",
+      "probability": "MEDIA",
+      "exposure": "CRITICO",
+      "triggers": ["Queda de vazao por 2 semanas", "Agenda Pareto sem confirmacao"],
+      "mitigation": "Plano de choque Q1 + agenda institucional preventiva + provas por decisor.",
+      "contingency": "Replanejar capacidade e escalonar casos criticos.",
+      "owner": "Direcao Executiva",
+      "cadence": "Semanal",
+      "status": "ATIVO",
+      "kpis": ["C3", "P3.KPI-01"]
+    },
+    {
+      "id": "RSK-2026-02",
+      "title": "Ativacao insuficiente de demanda",
+      "category": "Relacionamento",
+      "description": "Contratos sob demanda nao convertem em execucao com velocidade suficiente.",
+      "impact": "ALTO",
+      "probability": "ALTA",
+      "exposure": "CRITICO",
+      "triggers": ["Baixa ativacao no Pareto", "Previsao 30/60/90 sem evidencia"],
+      "mitigation": "Plano por cliente Pareto + playbook de ativacao + kits de destrave.",
+      "contingency": "War Room com cadencia reforcada e realocacao de capacidade.",
+      "owner": "CS",
+      "cadence": "Semanal",
+      "status": "ATIVO",
+      "kpis": ["C4", "C5"]
+    },
+    {
+      "id": "RSK-2026-03",
+      "title": "Retrabalho operacional alto",
+      "category": "Operacao",
+      "description": "Falhas de padrao elevam custo e reduzem vazao em janelas criticas.",
+      "impact": "MEDIO",
+      "probability": "MEDIA",
+      "exposure": "ALTO",
+      "triggers": ["Retrabalho acima do limite por 2 ciclos", "Falhas repetidas no Pareto"],
+      "mitigation": "Checklists + auditoria interna + correcoes de causa raiz.",
+      "contingency": "Reduzir volume e estabilizar padrao.",
+      "owner": "Operacao",
+      "cadence": "Semanal",
+      "status": "ATIVO",
+      "kpis": ["A3", "P3.KPI-02"]
+    }
+  ],
+  "evidences": [
+    {
+      "id": "EVID-2026-001",
+      "title": "Ata War Room Q1 - Semana 1",
+      "type": "Ata",
+      "description": "Registro de decisoes, plano Pareto e previsao 30/60/90.",
+      "date": "2026-01-21",
+      "owner": "CS",
+      "related": ["DEC-2026-001", "RSK-2026-02"],
+      "link": "https://intranet/pe2026/atas/war-room-q1-semana-1",
+      "validated": true,
+      "validatedBy": "Guardiã PE",
+      "validatedAt": "2026-01-21"
+    },
+    {
+      "id": "EVID-2026-002",
+      "title": "Mapa de rastreabilidade v1",
+      "type": "Mapa",
+      "description": "OKR -> KR -> INIT -> KPI consolidado com dono e cadencia.",
+      "date": "2026-01-20",
+      "owner": "Consultora Estrategica",
+      "related": ["DEC-2026-003"],
+      "link": "https://intranet/pe2026/mapa-trc-v1",
+      "validated": true,
+      "validatedBy": "Guardiã PE",
+      "validatedAt": "2026-01-22"
+    },
+    {
+      "id": "EVID-2026-003",
+      "title": "Relatorio P&L por unidade - Jan",
+      "type": "Relatorio",
+      "description": "Fechamento gerencial por unidade Aero x Techdengue.",
+      "date": "2026-01-19",
+      "owner": "Financeiro",
+      "related": ["DEC-2026-002"],
+      "link": "https://intranet/pe2026/relatorios/pnl-jan",
+      "validated": true,
+      "validatedBy": "Guardiã PE",
+      "validatedAt": "2026-01-21"
+    },
+    {
+      "id": "EVID-2026-004",
+      "title": "Relatorio de saldo e aging Q1",
+      "type": "Relatorio",
+      "description": "Saldo atualizado, aging e projeções de execução.",
+      "date": "2026-01-21",
+      "owner": "CS",
+      "related": ["KR-P2-02"],
+      "link": "https://intranet/pe2026/relatorios/saldo-aging-q1",
+      "validated": true,
+      "validatedBy": "Guardiã PE",
+      "validatedAt": "2026-01-22"
+    },
+    {
+      "id": "EVID-2026-005",
+      "title": "Registro de alçadas e DEC formalizados",
+      "type": "Checklist",
+      "description": "Checklist de decisões e alçadas publicado.",
+      "date": "2026-01-22",
+      "owner": "Guardiã PE",
+      "related": ["DEC-2026-002"],
+      "link": "https://intranet/pe2026/checklists/alcadas-dec",
+      "validated": true,
+      "validatedBy": "Guardiã PE",
+      "validatedAt": "2026-01-22"
+    },
+    {
+      "id": "EVID-2026-006",
+      "title": "Ata MBR — riscos críticos",
+      "type": "Ata",
+      "description": "Ata MBR com revisão dos riscos críticos e gatilhos.",
+      "date": "2026-01-21",
+      "owner": "Direção Executiva",
+      "related": ["RSK-2026-01", "RSK-2026-02"],
+      "link": "https://intranet/pe2026/atas/mbr-riscos-q1",
+      "validated": true,
+      "validatedBy": "Guardiã PE",
+      "validatedAt": "2026-01-22"
+    },
+    {
+      "id": "EVID-2026-007",
+      "title": "Planejamento semanal de capacidade",
+      "type": "Plano",
+      "description": "Capacidade operacional semanal e aderência de squads.",
+      "date": "2026-01-21",
+      "owner": "Operação",
+      "related": ["KR-P3-02"],
+      "link": "https://intranet/pe2026/planos/capacidade-q1",
+      "validated": true,
+      "validatedBy": "Guardiã PE",
+      "validatedAt": "2026-01-22"
+    },
+    {
+      "id": "EVID-2026-008",
+      "title": "Relatório de margem operacional",
+      "type": "Relatorio",
+      "description": "Margem operacional consolidada e por unidade.",
+      "date": "2026-01-20",
+      "owner": "Financeiro",
+      "related": ["KR-P3-01"],
+      "link": "https://intranet/pe2026/relatorios/margem-operacional",
+      "validated": true,
+      "validatedBy": "Guardiã PE",
+      "validatedAt": "2026-01-22"
+    },
+    {
+      "id": "EVID-2026-009",
+      "title": "Relatório de evidências Pareto Top-14",
+      "type": "Relatorio",
+      "description": "Pacotes de evidências entregues para Top-14.",
+      "date": "2026-01-22",
+      "owner": "Produto/Dados",
+      "related": ["KR-P4-01"],
+      "link": "https://intranet/pe2026/relatorios/pareto-evidencias",
+      "validated": true,
+      "validatedBy": "Guardiã PE",
+      "validatedAt": "2026-01-22"
+    },
+    {
+      "id": "EVID-2026-010",
+      "title": "Publicação do painel de monetização",
+      "type": "Entrega",
+      "description": "Painel publicado com atualização semanal.",
+      "date": "2026-01-22",
+      "owner": "Produto/Dados",
+      "related": ["KR-P4-02"],
+      "link": "https://intranet/pe2026/painel-monetizacao",
+      "validated": true,
+      "validatedBy": "Guardiã PE",
+      "validatedAt": "2026-01-22"
+    },
+    {
+      "id": "EVID-2026-011",
+      "title": "Relatório de turnover anualizado",
+      "type": "Relatorio",
+      "description": "Turnover acumulado e plano de retenção ativo.",
+      "date": "2026-01-22",
+      "owner": "RH",
+      "related": ["KR-P5-01"],
+      "link": "https://intranet/pe2026/relatorios/turnover",
+      "validated": true,
+      "validatedBy": "Guardiã PE",
+      "validatedAt": "2026-01-22"
+    },
+    {
+      "id": "EVID-2026-012",
+      "title": "Relatório de aderência a rituais de liderança",
+      "type": "Relatorio",
+      "description": "Aderência consolidada dos rituais e agenda de reforço.",
+      "date": "2026-01-22",
+      "owner": "RH",
+      "related": ["KR-P5-02"],
+      "link": "https://intranet/pe2026/relatorios/rituais-lideranca",
+      "validated": true,
+      "validatedBy": "Guardiã PE",
+      "validatedAt": "2026-01-22"
+    }
+  ],
+  "versionLogs": [
+    {
+      "id": "LOG-REV-001",
+      "entityType": "KPI",
+      "entityId": "P1.KPI-01",
+      "version": "v1.1",
+      "date": "2026-01-20",
+      "owner": "Financeiro",
+      "summary": "Ajuste de definicao e fonte do P&L gerencial por unidade.",
+      "evidence": "EVID-2026-003"
+    },
+    {
+      "id": "LOG-REV-002",
+      "entityType": "OKR",
+      "entityId": "KR-P2-01",
+      "version": "v1.0",
+      "date": "2026-01-18",
+      "owner": "Direcao Executiva",
+      "summary": "Meta Q1 de execucao validada com War Room.",
+      "evidence": "EVID-2026-001"
+    },
+    {
+      "id": "LOG-REV-003",
+      "entityType": "INIT",
+      "entityId": "INIT-2026-001",
+      "version": "v1.2",
+      "date": "2026-01-21",
+      "owner": "CS",
+      "summary": "Atualizacao de dependencias e cronograma de ativacao.",
+      "evidence": "EVID-2026-001"
+    }
+  ],
+  "evidenceValidation": {
+    "policy": "Nenhuma entrega fecha sem evidencias verificadas.",
+    "lastAudit": "2026-01-21",
+    "validator": "Guardiã PE",
+    "pending": [],
+    "validated": [
+      "EVID-2026-001",
+      "EVID-2026-002",
+      "EVID-2026-003",
+      "EVID-2026-004",
+      "EVID-2026-005",
+      "EVID-2026-006",
+      "EVID-2026-007",
+      "EVID-2026-008",
+      "EVID-2026-009",
+      "EVID-2026-010",
+      "EVID-2026-011",
+      "EVID-2026-012"
+    ]
+  },
+  "cadenceRituals": [
+    {
+      "id": "WBR-01",
+      "title": "WBR Semanal",
+      "cadence": "Semanal",
+      "focus": "Placar, carteira, monetizacao e riscos criticos",
+      "participants": "Direcao + CS + Operacao + Financeiro",
+      "outputs": ["Ata WBR", "Lista de bloqueios", "Atualizacao de KPIs"]
+    },
+    {
+      "id": "MBR-01",
+      "title": "MBR Mensal",
+      "cadence": "Mensal",
+      "focus": "OKRs, capacidade, orcamento e riscos",
+      "participants": "Direcao + Heads",
+      "outputs": ["Relatorio MBR", "Revisao de metas", "Plano de ajustes"]
+    },
+    {
+      "id": "QBR-01",
+      "title": "QBR Trimestral",
+      "cadence": "Trimestral",
+      "focus": "Tese, cenarios e decisoes estrategicas",
+      "participants": "Direcao + Conselho",
+      "outputs": ["Ata QBR", "Decisoes estrategicas", "Atualizacao de tese"]
+    }
+  ],
+  "auditReports": [
+    {
+      "id": "AUD-01",
+      "title": "Relatorio P&L por unidade",
+      "cadence": "Mensal",
+      "owner": "Financeiro",
+      "scope": "Aero x Techdengue",
+      "lastUpdate": "2026-01-20",
+      "status": "OK"
+    },
+    {
+      "id": "AUD-02",
+      "title": "Relatorio de execucao e vazao",
+      "cadence": "Semanal",
+      "owner": "Operacao",
+      "scope": "Saldo, vazao e produtividade",
+      "lastUpdate": "2026-01-21",
+      "status": "ATENCAO"
+    },
+    {
+      "id": "AUD-03",
+      "title": "Relatorio de riscos criticos",
+      "cadence": "Mensal",
+      "owner": "Guardiã PE",
+      "scope": "RSK nivel 1/2/3",
+      "lastUpdate": "2026-01-19",
+      "status": "OK"
+    }
+  ],
+  "traceability": [
+    {
+      "id": "TRC-2026-001",
+      "pillar": "P2",
+      "subpillar": "P2.S2",
+      "objective": "Monetizar base contratual",
+      "kr": "KR-P2-03",
+      "initiative": "INIT-2026-001",
+      "evidences": ["EVID-2026-001"],
+      "kpis": ["C1", "C3", "C5"],
+      "status": "EM_ANDAMENTO"
+    },
+    {
+      "id": "TRC-2026-002",
+      "pillar": "P1",
+      "subpillar": "P1.S2",
+      "objective": "Separacao gerencial Aero x Techdengue",
+      "kr": "KR-P1-01",
+      "initiative": "INIT-2026-007",
+      "evidences": ["EVID-2026-003"],
+      "kpis": ["P1.KPI-01"],
+      "status": "EM_ANDAMENTO"
+    },
+    {
+      "id": "TRC-2026-003",
+      "pillar": "P1",
+      "subpillar": "P1.S3",
+      "objective": "Disciplina de evidencias",
+      "kr": "KR-P1-04",
+      "initiative": "INIT-2026-006",
+      "evidences": ["EVID-2026-002"],
+      "kpis": ["P1.KPI-02"],
+      "status": "ATIVO"
+    }
+  ]
+}
