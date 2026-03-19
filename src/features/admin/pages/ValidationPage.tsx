@@ -295,8 +295,7 @@ export function ValidationPage() {
             variant="outline"
             onClick={() => {
               const report = generateMarkdownReport({
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                supabaseChecks: checks as any,
+                supabaseChecks: checks,
                 platformChecks,
                 userEmail: user?.email || 'unknown',
                 userRole: user?.profile?.role || 'unknown',

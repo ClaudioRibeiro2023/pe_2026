@@ -18,7 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/Card'
 import { Button } from '@/shared/ui/Button'
 import { Input } from '@/shared/ui/Input'
 import { useAreaBySlug, useAreaPlanByAreaSlug, usePlanActions, usePlanStats } from '../hooks'
-import { PlanStatusBadge } from '../components/StatusBadge'
+import { PlanStatusBadge, ActionStatusBadge } from '../components/StatusBadge'
 import { ProgressBar } from '../components/ProgressBar'
 import { ActionCard } from '../components/ActionCard'
 import { normalizeActionsData } from '../utils/dataNormalization'
@@ -284,8 +284,7 @@ export function AreaPlanPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-muted mb-1">Status</p>
-                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                    <PlanStatusBadge status={selectedAction.status as any} />
+                    <ActionStatusBadge status={selectedAction.status} />
                   </div>
                   <div>
                     <p className="text-sm text-muted mb-1">Responsável</p>
