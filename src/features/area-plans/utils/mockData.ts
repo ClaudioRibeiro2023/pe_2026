@@ -144,9 +144,13 @@ mockStore.plans = [
 ]
 
 // Expose mockStore on window for platform diagnostics (dev/preview only)
+declare global {
+  interface Window {
+    __mockStoreDebug?: typeof mockStore
+  }
+}
 if (typeof window !== 'undefined') {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).__mockStoreDebug = mockStore
+  window.__mockStoreDebug = mockStore
 }
 
 // Export aliases for backward compatibility

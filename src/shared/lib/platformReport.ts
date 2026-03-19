@@ -140,11 +140,9 @@ export function runPlatformReport(userRole?: UserRole): PlatformCheck[] {
     // Dynamic import would be async; we'll check synchronously via window
     // These checks verify the mockStore has data after initialization
     const checks = [
-      /* eslint-disable @typescript-eslint/no-explicit-any */
-      { name: 'mockStore.actions', check: () => { const m = (window as any).__mockStoreDebug; return m?.actions?.length ?? -1 } },
-      { name: 'mockStore.plans', check: () => { const m = (window as any).__mockStoreDebug; return m?.plans?.length ?? -1 } },
-      { name: 'mockStore.areas', check: () => { const m = (window as any).__mockStoreDebug; return m?.areas?.length ?? -1 } },
-      /* eslint-enable @typescript-eslint/no-explicit-any */
+      { name: 'mockStore.actions', check: () => { const m = window.__mockStoreDebug; return m?.actions?.length ?? -1 } },
+      { name: 'mockStore.plans', check: () => { const m = window.__mockStoreDebug; return m?.plans?.length ?? -1 } },
+      { name: 'mockStore.areas', check: () => { const m = window.__mockStoreDebug; return m?.areas?.length ?? -1 } },
     ]
 
     for (const { name, check } of checks) {

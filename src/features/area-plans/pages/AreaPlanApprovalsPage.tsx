@@ -121,8 +121,7 @@ export function AreaPlanApprovalsPage() {
                   mime_type: '',
                   submitted_by: selectedEvidence.submitted_by,
                   submitted_at: selectedEvidence.submitted_at,
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  status: selectedEvidence.evidence_status as any,
+                  status: selectedEvidence.evidence_status,
                 }}
                 userRole={userRole as 'admin' | 'gestor' | 'direcao' | 'colaborador'}
                 onClose={() => setSelectedEvidenceId(null)}
