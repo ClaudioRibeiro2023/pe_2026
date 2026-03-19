@@ -70,11 +70,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
   const [roleOverride, setRoleOverride] = useState<UserRole | null>(() => {
+    if (!import.meta.env.DEV) return null
     if (typeof window === 'undefined') return null
     return (window.localStorage.getItem('pe2026-role-override') as UserRole) || null
   })
 
   const handleSetRoleOverride = useCallback((role: UserRole | null) => {
+    if (!import.meta.env.DEV) return
     setRoleOverride(role)
     if (role) {
       window.localStorage.setItem('pe2026-role-override', role)
