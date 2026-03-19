@@ -109,6 +109,7 @@ export function VirtualizedList<T>({
 }
 
 // Hook para detectar quando usar virtualização
+// eslint-disable-next-line react-refresh/only-export-components
 export function useVirtualizationThreshold(itemCount: number, threshold = 50) {
   const [shouldVirtualize, setShouldVirtualize] = useState(false)
 

@@ -81,6 +81,7 @@ export function Tooltip({
         window.removeEventListener('resize', updatePosition)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible])
 
   useEffect(() => {

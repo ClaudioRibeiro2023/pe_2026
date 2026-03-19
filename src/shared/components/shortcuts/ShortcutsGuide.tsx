@@ -107,6 +107,7 @@ export function ShortcutsGuide({ open, onClose }: ShortcutsGuideProps) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useShortcutsGuide() {
   const [open, setOpen] = useState(false)
 

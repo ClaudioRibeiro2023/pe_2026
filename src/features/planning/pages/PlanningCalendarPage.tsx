@@ -130,8 +130,8 @@ export function PlanningCalendarPage() {
     })
   }, [planProgress])
 
-  const handlePrevMonth = () => setCurrentDate(subMonths(currentDate, 1))
-  const handleNextMonth = () => setCurrentDate(addMonths(currentDate, 1))
+  const handlePrevMonth = useCallback(() => setCurrentDate(d => subMonths(d, 1)), [])
+  const handleNextMonth = useCallback(() => setCurrentDate(d => addMonths(d, 1)), [])
 
   /* Keyboard navigation (roving tabindex) */
   const handleGridKeyDown = useCallback((e: KeyboardEvent<HTMLDivElement>) => {

@@ -52,7 +52,7 @@ export function FileUpload({
         title: 'Upload concluído',
         message: 'O arquivo foi enviado com sucesso.',
       })
-    } catch (error) {
+    } catch (_error) {
       addToast({
         type: 'error',
         title: 'Erro no upload',

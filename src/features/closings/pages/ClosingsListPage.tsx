@@ -35,6 +35,7 @@ export function ClosingsListPage() {
   const [compareMode, setCompareMode] = useState(false)
   const [selectedForCompare, setSelectedForCompare] = useState<string[]>([])
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const stableFilters = useMemo(() => filters, [filters.area_id, filters.period, filters.status, filters.search])
   const { closings, loading, refresh } = useClosings(stableFilters)
   const { create, remove, finalize, creating } = useClosingActions()

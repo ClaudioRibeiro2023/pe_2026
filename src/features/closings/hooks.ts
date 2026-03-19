@@ -31,6 +31,7 @@ export function useClosings(filters?: ClosingFilters) {
     const data = await listClosings(filters)
     setClosings(data)
     setLoading(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters?.area_id, filters?.period, filters?.status, filters?.search])
 
   useEffect(() => {

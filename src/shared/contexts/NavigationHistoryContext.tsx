@@ -90,6 +90,7 @@ export function NavigationHistoryProvider({ children }: NavigationHistoryProvide
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useNavigationHistory() {
   const context = useContext(NavigationHistoryContext)
   if (!context) {

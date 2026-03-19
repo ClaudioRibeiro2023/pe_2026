@@ -21,6 +21,7 @@ interface AreaContextValue {
 
 const AreaContext = createContext<AreaContextValue | null>(null)
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAreaContext() {
   const context = useContext(AreaContext)
   if (!context) {
@@ -29,6 +30,7 @@ export function useAreaContext() {
   return context
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useOptionalAreaContext() {
   return useContext(AreaContext)
 }

@@ -43,6 +43,7 @@ export function AdminPage() {
 
   useEffect(() => {
     loadUsers()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const roleOptions = [

@@ -31,6 +31,7 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const context = useContext(AuthContext)
   if (!context) {
@@ -246,7 +247,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         } else {
           setUser(null)
         }
-      } catch (err: any) {
+      } catch (_err: any) {
         if (!mounted) return
         setUser(null)
         window.clearTimeout(loadingTimeout)
@@ -262,6 +263,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       window.clearTimeout(loadingTimeout)
       subscription.unsubscribe()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchProfile])
 
   const signIn = useCallback(

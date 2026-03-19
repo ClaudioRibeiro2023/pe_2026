@@ -21,7 +21,7 @@ module.exports = {
     '@typescript-eslint/no-empty-object-type': 'off',
     '@typescript-eslint/no-unused-vars': [
       'warn',
-      { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
     ],
     'no-unsafe-finally': 'off',
     'react-hooks/exhaustive-deps': 'warn',

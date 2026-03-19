@@ -21,6 +21,7 @@ const ToastContainer = lazy(() =>
   import('./ToastContainer').then((m) => ({ default: m.ToastContainer }))
 )
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useToast() {
   const context = useContext(ToastContext)
   if (!context) {

@@ -222,7 +222,7 @@ export function ValidationPage() {
       const { error } = await supabase.storage.getBucket('action-evidences')
       if (error) throw error
       updateCheck('storage-bucket', { status: 'passed', message: 'Bucket disponível' })
-    } catch (e: any) {
+    } catch (_e: any) {
       updateCheck('storage-bucket', { status: 'warning', message: 'Bucket não encontrado ou sem acesso' })
     }
 

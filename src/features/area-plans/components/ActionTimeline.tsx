@@ -11,7 +11,7 @@ interface ActionTimelineProps {
 }
 
 export function ActionTimeline({ actions, onActionClick }: ActionTimelineProps) {
-  const today = new Date()
+  const today = useMemo(() => new Date(), [])
   
   const { startDate, endDate, months } = useMemo(() => {
     const dates = actions

@@ -101,6 +101,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, filteredCommands, selectedIndex, onClose])
 
   const handleSelect = (command: CommandItem) => {

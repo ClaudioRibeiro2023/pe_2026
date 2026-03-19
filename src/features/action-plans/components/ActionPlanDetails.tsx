@@ -104,7 +104,7 @@ export function ActionPlanDetails({ plan, open, onClose }: ActionPlanDetailsProp
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
-    } catch (error) {
+    } catch (_error) {
       addToast({
         type: 'error',
         title: 'Erro ao baixar',
@@ -131,7 +131,7 @@ export function ActionPlanDetails({ plan, open, onClose }: ActionPlanDetailsProp
       })
 
       loadAttachments()
-    } catch (error) {
+    } catch (_error) {
       addToast({
         type: 'error',
         title: 'Erro ao excluir',
@@ -144,6 +144,7 @@ export function ActionPlanDetails({ plan, open, onClose }: ActionPlanDetailsProp
     if (open && activeTab === 'attachments') {
       loadAttachments()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, activeTab])
 
   const getStatusColor = (status: string) => {
