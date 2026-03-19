@@ -23,7 +23,7 @@ import {
   useUpdateIndicator,
   useDeleteIndicator,
 } from '../hooks'
-import type { Indicator } from '../types'
+import type { Indicator, IndicatorFormData } from '../types'
 import type { IndicatorFormSchema } from '../schemas'
 
 const IndicatorForm = lazy(() =>
@@ -180,8 +180,7 @@ export function IndicatorsPage() {
 
   const handleCreate = async (data: IndicatorFormSchema) => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await createMutation.mutateAsync(data as any)
+      await createMutation.mutateAsync(data as IndicatorFormData)
       setCreateModalOpen(false)
       addToast({
         type: 'success',
@@ -201,8 +200,7 @@ export function IndicatorsPage() {
     if (!editingIndicator) return
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await updateMutation.mutateAsync({ id: editingIndicator.id, data: data as any })
+      await updateMutation.mutateAsync({ id: editingIndicator.id, data: data as Partial<IndicatorFormData> })
       setEditingIndicator(null)
       addToast({
         type: 'success',

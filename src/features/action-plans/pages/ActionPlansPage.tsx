@@ -35,7 +35,7 @@ import {
   useUpdateActionPlan,
   useDeleteActionPlan,
 } from '../hooks'
-import type { ActionPlan } from '../types'
+import type { ActionPlan, ActionPlanFormData } from '../types'
 import type { ActionPlanFormSchema } from '../schemas'
 
 const ActionPlanDetails = lazy(() =>
@@ -255,8 +255,7 @@ export function ActionPlansPage() {
 
   const handleCreate = async (data: ActionPlanFormSchema) => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await createMutation.mutateAsync(data as any)
+      await createMutation.mutateAsync(data as Partial<ActionPlanFormData>)
       setCreateModalOpen(false)
       addToast({
         type: 'success',
@@ -276,8 +275,7 @@ export function ActionPlansPage() {
     if (!editingPlan) return
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await updateMutation.mutateAsync({ id: editingPlan.id, data: data as any })
+      await updateMutation.mutateAsync({ id: editingPlan.id, data: data as Partial<ActionPlanFormData> })
       setEditingPlan(null)
       addToast({
         type: 'success',

@@ -23,7 +23,7 @@ import {
   useUpdateGoal,
   useDeleteGoal,
 } from '../hooks'
-import type { Goal } from '../types'
+import type { Goal, GoalFormData } from '../types'
 import type { GoalFormSchema } from '../schemas'
 
 const GoalForm = lazy(() =>
@@ -195,8 +195,7 @@ export function GoalsPage() {
 
   const handleCreate = async (data: GoalFormSchema) => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await createMutation.mutateAsync(data as any)
+      await createMutation.mutateAsync(data as GoalFormData)
       setCreateModalOpen(false)
       addToast({
         type: 'success',
