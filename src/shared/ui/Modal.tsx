@@ -9,7 +9,7 @@ export interface ModalProps {
   title?: string
   description?: string
   children: ReactNode
-  size?: 'sm' | 'md' | 'lg' | 'xl'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl'
   showCloseButton?: boolean
 }
 
@@ -47,6 +47,7 @@ export function Modal({
     md: 'max-w-md',
     lg: 'max-w-lg',
     xl: 'max-w-xl',
+    '2xl': 'max-w-2xl',
   }
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -61,7 +62,7 @@ export function Modal({
     >
       <div
         className={cn(
-          'w-full bg-surface text-foreground rounded-xl shadow-xl animate-in zoom-in-95 duration-200',
+          'w-full max-h-[90vh] flex flex-col bg-surface text-foreground rounded-xl shadow-xl animate-in zoom-in-95 duration-200',
           sizes[size]
         )}
         role="dialog"
@@ -105,7 +106,7 @@ export function Modal({
         )}
 
         {/* Content */}
-        <div className="px-6 py-4">{children}</div>
+        <div className="px-6 py-4 overflow-y-auto">{children}</div>
       </div>
     </div>
   )

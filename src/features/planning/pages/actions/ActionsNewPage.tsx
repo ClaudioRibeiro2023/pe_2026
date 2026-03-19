@@ -17,18 +17,20 @@ export function ActionsNewPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" onClick={() => navigate(ROUTES.PLANNING_ACTIONS_MANAGE)}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Voltar
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Criar Novo Plano</h1>
-          <p className="text-muted">Inicie um novo plano de ação para uma área</p>
-        </div>
-      </div>
-
       {!showWizard && (
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" onClick={() => navigate(ROUTES.PLANNING_ACTIONS_MANAGE)}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar
+          </Button>
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Criar Novo Plano</h1>
+            <p className="text-muted">Inicie um novo plano de ação para uma área</p>
+          </div>
+        </div>
+      )}
+
+      {!showWizard ? (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -44,13 +46,13 @@ export function ActionsNewPage() {
             </Button>
           </CardContent>
         </Card>
+      ) : (
+        <UnifiedPlanWizard
+          open={showWizard}
+          onClose={handleClose}
+          year={new Date().getFullYear()}
+        />
       )}
-
-      <UnifiedPlanWizard
-        open={showWizard}
-        onClose={handleClose}
-        year={new Date().getFullYear()}
-      />
     </div>
   )
 }

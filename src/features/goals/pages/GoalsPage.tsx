@@ -435,7 +435,7 @@ export function GoalsPage() {
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         title="Nova Meta"
-        size="lg"
+        size="xl"
       >
         <Suspense
           fallback={
@@ -457,7 +457,7 @@ export function GoalsPage() {
         open={!!editingGoal}
         onClose={() => setEditingGoal(null)}
         title="Editar Meta"
-        size="lg"
+        size="xl"
       >
         {editingGoal && (
           <Suspense

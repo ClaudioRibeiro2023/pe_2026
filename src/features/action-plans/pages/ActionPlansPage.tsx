@@ -672,7 +672,7 @@ export function ActionPlansPage() {
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         title="Novo Plano de Ação"
-        size="lg"
+        size="xl"
       >
         <Suspense
           fallback={
@@ -694,7 +694,7 @@ export function ActionPlansPage() {
         open={!!editingPlan}
         onClose={() => setEditingPlan(null)}
         title="Editar Plano de Ação"
-        size="lg"
+        size="xl"
       >
         {editingPlan && (
           <Suspense

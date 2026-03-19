@@ -412,7 +412,7 @@ export function IndicatorsPage() {
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         title="Novo Indicador"
-        size="lg"
+        size="xl"
       >
         <Suspense
           fallback={
@@ -434,7 +434,7 @@ export function IndicatorsPage() {
         open={!!editingIndicator}
         onClose={() => setEditingIndicator(null)}
         title="Editar Indicador"
-        size="lg"
+        size="xl"
       >
         {editingIndicator && (
           <Suspense

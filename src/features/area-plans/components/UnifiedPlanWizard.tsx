@@ -232,7 +232,7 @@ export function UnifiedPlanWizard({ open, onClose, defaultAreaId, year = new Dat
   }
 
   return (
-    <LazyModal open={open} onClose={onClose} size="lg">
+    <LazyModal open={open} onClose={onClose} size="2xl">
       <div className="space-y-6">
         {/* Header */}
         <div>
@@ -243,21 +243,30 @@ export function UnifiedPlanWizard({ open, onClose, defaultAreaId, year = new Dat
         </div>
 
         {/* Progress */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center">
           {STEPS.map((step, index) => (
-            <div key={step} className="flex items-center">
-              <div
-                className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium transition-colors ${
-                  index <= currentStepIndex
-                    ? 'bg-primary-500 text-white'
-                    : 'bg-accent text-muted'
-                }`}
-              >
-                {STEP_ICONS[step]}
+            <div key={step} className={`flex items-center ${index < STEPS.length - 1 ? 'flex-1' : ''}`}>
+              <div className="flex flex-col items-center gap-1">
+                <div
+                  className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full text-sm font-medium transition-colors ${
+                    index <= currentStepIndex
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-accent text-muted'
+                  }`}
+                >
+                  {STEP_ICONS[step]}
+                </div>
+                <span
+                  className={`text-[10px] sm:text-xs font-medium whitespace-nowrap ${
+                    step === currentStep ? 'text-primary-600' : 'text-muted'
+                  }`}
+                >
+                  {STEP_LABELS[step]}
+                </span>
               </div>
               {index < STEPS.length - 1 && (
                 <div
-                  className={`w-12 h-0.5 mx-2 transition-colors ${
+                  className={`flex-1 h-0.5 mx-2 sm:mx-3 mb-5 transition-colors ${
                     index < currentStepIndex ? 'bg-primary-500' : 'bg-accent'
                   }`}
                 />
@@ -266,28 +275,13 @@ export function UnifiedPlanWizard({ open, onClose, defaultAreaId, year = new Dat
           ))}
         </div>
 
-        {/* Step Labels */}
-        <div className="flex justify-between px-1">
-          {STEPS.map((step) => (
-            <div key={step} className="text-xs text-center">
-              <div
-                className={`font-medium ${
-                  step === currentStep ? 'text-primary-600' : 'text-muted'
-                }`}
-              >
-                {STEP_LABELS[step]}
-              </div>
-            </div>
-          ))}
-        </div>
-
         {/* Content */}
-        <div className="min-h-[300px]">
+        <div className="min-h-[200px] sm:min-h-[300px]">
           {renderStepContent()}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-4 border-t">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-4 border-t">
           <Button
             variant="outline"
             onClick={onClose}
