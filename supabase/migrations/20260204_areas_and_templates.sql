@@ -19,6 +19,9 @@ CREATE TABLE IF NOT EXISTS public.areas (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Adicionar coluna color se tabela já existir sem ela
+ALTER TABLE public.areas ADD COLUMN IF NOT EXISTS color TEXT DEFAULT '#3B82F6';
+
 -- Índices
 CREATE INDEX IF NOT EXISTS idx_areas_slug ON public.areas(slug);
 
@@ -199,6 +202,14 @@ CREATE TABLE IF NOT EXISTS public.plan_actions (
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
 );
+
+-- Adicionar colunas que podem estar faltando em tabela existente
+ALTER TABLE public.plan_actions ADD COLUMN IF NOT EXISTS parent_action_id UUID REFERENCES public.plan_actions(id);
+ALTER TABLE public.plan_actions ADD COLUMN IF NOT EXISTS node_type TEXT DEFAULT 'acao';
+ALTER TABLE public.plan_actions ADD COLUMN IF NOT EXISTS cost_estimate NUMERIC(12,2);
+ALTER TABLE public.plan_actions ADD COLUMN IF NOT EXISTS cost_actual NUMERIC(12,2);
+ALTER TABLE public.plan_actions ADD COLUMN IF NOT EXISTS cost_type TEXT;
+ALTER TABLE public.plan_actions ADD COLUMN IF NOT EXISTS currency TEXT DEFAULT 'BRL';
 
 -- Índices
 CREATE INDEX IF NOT EXISTS idx_plan_actions_plan ON public.plan_actions(plan_id);

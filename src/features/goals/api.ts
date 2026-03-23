@@ -3,71 +3,105 @@ import type { Goal, GoalFormData } from './types'
 
 const mockGoals: Goal[] = [
   {
-    id: '1',
-    title: 'Receita Mensal',
-    description: 'Meta de receita para o mês',
-    target_value: 100000,
-    current_value: 75000,
+    id: 'goal-receita-base-2026',
+    title: 'Receita cenário base 2026',
+    description: 'Atingir a receita anual do cenário base aprovado no PE2026',
+    target_value: 11440000,
+    current_value: 4052693,
     unit: 'R$',
-    category: 'vendas',
-    period: 'monthly',
+    category: 'financeiro',
+    period: 'yearly',
     start_date: '2026-01-01',
-    end_date: '2026-01-31',
+    end_date: '2026-12-31',
     status: 'active',
     user_id: 'demo-user',
-    created_at: '2026-01-01T10:00:00Z',
-    updated_at: '2026-01-15T10:00:00Z',
+    created_at: '2026-03-01T10:00:00Z',
+    updated_at: '2026-03-01T10:00:00Z',
   },
   {
-    id: '2',
-    title: 'Novos Clientes',
-    description: 'Captação de novos clientes no trimestre',
-    target_value: 50,
-    current_value: 32,
-    unit: 'clientes',
-    category: 'vendas',
+    id: 'goal-q1-hectares-fixos',
+    title: 'Entregar Q1 fixo de 50.438 ha',
+    description: 'Garantir a execução do volume mínimo já contratado no primeiro trimestre',
+    target_value: 50438,
+    current_value: 28800,
+    unit: 'ha',
+    category: 'monetizacao',
     period: 'quarterly',
     start_date: '2026-01-01',
     end_date: '2026-03-31',
     status: 'active',
     user_id: 'demo-user',
-    created_at: '2026-01-01T10:00:00Z',
-    updated_at: '2026-01-15T10:00:00Z',
+    created_at: '2026-03-01T10:00:00Z',
+    updated_at: '2026-03-01T10:00:00Z',
   },
   {
-    id: '3',
-    title: 'Satisfação do Cliente',
-    description: 'NPS acima de 80%',
-    target_value: 80,
-    current_value: 85,
+    id: 'goal-margem-operacional',
+    title: 'Sustentar margem operacional ≥ 30%',
+    description: 'Manter a margem anual dentro do guardrail principal do placar institucional',
+    target_value: 30,
+    current_value: 30.4,
     unit: '%',
-    category: 'qualidade',
-    period: 'monthly',
+    category: 'guardrail',
+    period: 'yearly',
     start_date: '2026-01-01',
-    end_date: '2026-01-31',
-    status: 'completed',
+    end_date: '2026-12-31',
+    status: 'active',
     user_id: 'demo-user',
-    created_at: '2026-01-01T10:00:00Z',
-    updated_at: '2026-01-15T10:00:00Z',
+    created_at: '2026-03-01T10:00:00Z',
+    updated_at: '2026-03-01T10:00:00Z',
+  },
+  {
+    id: 'goal-turnover-2026',
+    title: 'Manter turnover anual ≤ 35%',
+    description: 'Meta de saúde organizacional ligada ao OKR de pessoas e liderança',
+    target_value: 35,
+    current_value: 28,
+    unit: '%',
+    category: 'pessoas',
+    period: 'yearly',
+    start_date: '2026-01-01',
+    end_date: '2026-12-31',
+    status: 'active',
+    user_id: 'demo-user',
+    created_at: '2026-03-01T10:00:00Z',
+    updated_at: '2026-03-01T10:00:00Z',
   },
 ]
 
+function resolveGoalsSource(action: string): 'supabase' | 'mock' {
+  if (isSupabaseConfigured()) {
+    return 'supabase'
+  }
+
+  console.warn(`[goals] Supabase unavailable — using mock fallback for ${action}.`)
+  return 'mock'
+}
+
 export async function fetchGoals(): Promise<Goal[]> {
-  if (!isSupabaseConfigured()) {
+  if (resolveGoalsSource('fetchGoals') === 'mock') {
     return mockGoals
   }
 
-  const { data, error } = await supabase
-    .from('goals')
-    .select('*')
-    .order('created_at', { ascending: false })
+  try {
+    const { data, error } = await supabase
+      .from('goals')
+      .select('*')
+      .order('created_at', { ascending: false })
 
-  if (error) throw error
-  return data || []
+    if (error) throw error
+    return data || []
+  } catch (error) {
+    if (import.meta.env.DEV && !isSupabaseConfigured()) {
+      console.warn('[goals] Supabase request failed, falling back to DEV mock data.')
+      return mockGoals
+    }
+
+    throw error
+  }
 }
 
 export async function createGoal(goal: GoalFormData): Promise<Goal> {
-  if (!isSupabaseConfigured()) {
+  const createMockGoal = (): Goal => {
     const newGoal: Goal = {
       id: String(Date.now()),
       ...goal,
@@ -80,31 +114,44 @@ export async function createGoal(goal: GoalFormData): Promise<Goal> {
     return newGoal
   }
 
-  const { data: userData, error: userError } = await supabase.auth.getUser()
-  if (userError) throw userError
-  if (!userData.user) throw new Error('Usuário não autenticado')
+  if (resolveGoalsSource('createGoal') === 'mock') {
+    return createMockGoal()
+  }
 
-  const { data, error } = await supabase
-    .from('goals')
-    .insert([
-      {
-        ...goal,
-        description: goal.description || null,
-        user_id: userData.user.id,
-      },
-    ])
-    .select()
-    .single()
+  try {
+    const { data: userData, error: userError } = await supabase.auth.getUser()
+    if (userError) throw userError
+    if (!userData.user) throw new Error('Usuário não autenticado')
 
-  if (error) throw error
-  return data
+    const { data, error } = await supabase
+      .from('goals')
+      .insert([
+        {
+          ...goal,
+          description: goal.description || null,
+          user_id: userData.user.id,
+        },
+      ])
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  } catch (error) {
+    if (import.meta.env.DEV && !isSupabaseConfigured()) {
+      console.warn('[goals] Supabase request failed, using DEV mock create.')
+      return createMockGoal()
+    }
+
+    throw error
+  }
 }
 
 export async function updateGoal(id: string, goal: Partial<GoalFormData>): Promise<Goal> {
-  if (!isSupabaseConfigured()) {
+  const updateMockGoal = (): Goal => {
     const index = mockGoals.findIndex((g) => g.id === id)
     if (index === -1) throw new Error('Meta não encontrada')
-    
+
     mockGoals[index] = {
       ...mockGoals[index],
       ...goal,
@@ -113,19 +160,32 @@ export async function updateGoal(id: string, goal: Partial<GoalFormData>): Promi
     return mockGoals[index]
   }
 
-  const { data, error } = await supabase
-    .from('goals')
-    .update(goal)
-    .eq('id', id)
-    .select()
-    .single()
+  if (resolveGoalsSource('updateGoal') === 'mock') {
+    return updateMockGoal()
+  }
 
-  if (error) throw error
-  return data
+  try {
+    const { data, error } = await supabase
+      .from('goals')
+      .update(goal)
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  } catch (error) {
+    if (import.meta.env.DEV && !isSupabaseConfigured()) {
+      console.warn('[goals] Supabase request failed, using DEV mock update.')
+      return updateMockGoal()
+    }
+
+    throw error
+  }
 }
 
 export async function deleteGoal(id: string): Promise<void> {
-  if (!isSupabaseConfigured()) {
+  const deleteMockGoal = () => {
     const index = mockGoals.findIndex((g) => g.id === id)
     if (index !== -1) {
       mockGoals.splice(index, 1)
@@ -133,10 +193,25 @@ export async function deleteGoal(id: string): Promise<void> {
     return
   }
 
-  const { error } = await supabase
-    .from('goals')
-    .delete()
-    .eq('id', id)
+  if (resolveGoalsSource('deleteGoal') === 'mock') {
+    deleteMockGoal()
+    return
+  }
 
-  if (error) throw error
+  try {
+    const { error } = await supabase
+      .from('goals')
+      .delete()
+      .eq('id', id)
+
+    if (error) throw error
+  } catch (error) {
+    if (import.meta.env.DEV && !isSupabaseConfigured()) {
+      console.warn('[goals] Supabase request failed, using DEV mock delete.')
+      deleteMockGoal()
+      return
+    }
+
+    throw error
+  }
 }

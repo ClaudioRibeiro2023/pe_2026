@@ -4,9 +4,9 @@ import { InfoTooltip } from '@/shared/ui/InfoTooltip'
 import { EmptyState } from '@/shared/ui/EmptyState'
 import { ErrorState } from '@/shared/ui/ErrorState'
 import { PageLoader } from '@/shared/ui/Loader'
-import { useStrategicContext } from '@/features/strategy/hooks'
+import { useStrategicRisks } from '@/features/area-plans/hooks'
 
-const levelConfig = {
+const levelConfig: Record<string, { gradient: string; light: string; border: string; text: string; icon: typeof ShieldAlert }> = {
   CRITICO: {
     gradient: 'from-danger-500 to-danger-600',
     light: 'bg-danger-50',
@@ -14,17 +14,24 @@ const levelConfig = {
     text: 'text-danger-700',
     icon: ShieldAlert,
   },
-  ATENCAO: {
+  ALTO: {
     gradient: 'from-warning-500 to-warning-600',
     light: 'bg-warning-50',
     border: 'border-warning-200',
     text: 'text-warning-700',
     icon: AlertTriangle,
   },
+  MONITORADO: {
+    gradient: 'from-primary-400 to-primary-500',
+    light: 'bg-primary-50',
+    border: 'border-primary-200',
+    text: 'text-primary-700',
+    icon: Target,
+  },
 }
 
 export function StrategyRisksPage() {
-  const { data, isLoading, isError, error, refetch } = useStrategicContext()
+  const { data: risks, isLoading, isError, error, refetch } = useStrategicRisks()
 
   if (isLoading) {
     return <PageLoader text="Carregando alertas e riscos..." />
@@ -42,28 +49,17 @@ export function StrategyRisksPage() {
     )
   }
 
-  if (!data) {
-    return (
-      <EmptyState
-        title="Sem dados de riscos"
-        description="Não foi possível encontrar o contexto estratégico."
-      />
-    )
-  }
-
-  const alerts = data.alertasCriticos
+  const alerts = risks ?? []
 
   const sortedAlerts = [...alerts].sort((a, b) => {
-    const aCritical = a.nivel === 'CRITICO'
-    const bCritical = b.nivel === 'CRITICO'
-    if (aCritical === bCritical) return 0
-    return aCritical ? -1 : 1
+    const order: Record<string, number> = { CRITICO: 0, ALTO: 1, MONITORADO: 2 }
+    return (order[a.severity] ?? 9) - (order[b.severity] ?? 9)
   })
 
-  const criticalCount = alerts.filter((a) => a.nivel === 'CRITICO').length
-  const attentionCount = alerts.filter((a) => a.nivel !== 'CRITICO').length
+  const criticalCount = alerts.filter((a) => a.severity === 'CRITICO').length
+  const attentionCount = alerts.filter((a) => a.severity === 'ALTO').length
 
-  if (!alerts || alerts.length === 0) {
+  if (alerts.length === 0) {
     return (
       <EmptyState
         title="Sem alertas"
@@ -119,7 +115,7 @@ export function StrategyRisksPage() {
         <InfoTooltip
           title="Total de Alertas"
           description="Quantidade total de alertas críticos em aberto."
-          details={`${alerts.length} alertas catalogados`}
+          details={`${alerts.length} riscos catalogados (DOC 10 v2)`}
         >
           <Card className="bg-gradient-to-br from-accent to-white">
             <CardContent className="p-4">
@@ -139,7 +135,7 @@ export function StrategyRisksPage() {
         <InfoTooltip
           title="Categorias"
           description="Diversidade de categorias de risco monitoradas."
-          details={`${new Set(alerts.map((a) => a.categoria)).size} categorias distintas`}
+          details={`${new Set(alerts.map((a) => a.category)).size} categorias distintas`}
         >
           <Card className="bg-gradient-to-br from-primary-50 to-white border-primary-100">
             <CardContent className="p-4">
@@ -149,7 +145,7 @@ export function StrategyRisksPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-foreground">
-                    {new Set(alerts.map((a) => a.categoria)).size}
+                    {new Set(alerts.map((a) => a.category)).size}
                   </p>
                   <p className="text-xs text-muted">Categorias</p>
                 </div>
@@ -162,15 +158,15 @@ export function StrategyRisksPage() {
       {/* Alerts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {sortedAlerts.map((alert) => {
-          const config = levelConfig[alert.nivel as keyof typeof levelConfig] || levelConfig.ATENCAO
+          const config = levelConfig[alert.severity] ?? levelConfig.MONITORADO
           const Icon = config.icon
 
           return (
             <InfoTooltip
               key={alert.id}
-              title={alert.titulo}
-              description={`Categoria ${alert.categoria} · Métrica ${alert.metrica}`}
-              details={`Risco: ${alert.risco} · Ação: ${alert.acaoRequerida} · Prazo: ${alert.prazo}`}
+              title={alert.title}
+              description={`Categoria ${alert.category} · Código ${alert.code}`}
+              details={`Impacto: ${alert.impact} · Probabilidade: ${alert.probability} · Pilar: ${alert.pillar_code}`}
             >
               <Card
                 className={`overflow-hidden border-2 ${config.border} hover:shadow-lg transition-all`}
@@ -183,12 +179,12 @@ export function StrategyRisksPage() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <div>
-                        <p className="font-semibold line-clamp-1">{alert.titulo}</p>
-                        <p className="text-xs text-white/80 mt-0.5">{alert.categoria}</p>
+                        <p className="font-semibold line-clamp-1">{alert.title}</p>
+                        <p className="text-xs text-white/80 mt-0.5">{alert.category}</p>
                       </div>
                     </div>
                     <span className="px-2 py-1 text-xs font-bold bg-white/20 rounded shrink-0">
-                      {alert.nivel}
+                      {alert.severity}
                     </span>
                   </div>
                 </div>
@@ -197,35 +193,35 @@ export function StrategyRisksPage() {
                 <CardContent className="p-5 space-y-4">
                   {/* Metric */}
                   <div className={`p-3 rounded-lg ${config.light}`}>
-                    <p className="text-xs font-medium text-muted mb-1">Métrica</p>
-                    <p className={`font-semibold ${config.text}`}>{alert.metrica}</p>
+                    <p className="text-xs font-medium text-muted mb-1">Código</p>
+                    <p className={`font-semibold ${config.text}`}>{alert.code}</p>
                   </div>
 
                   {/* Risk */}
                   <div>
-                    <p className="text-xs font-medium text-muted mb-1">Risco</p>
-                    <p className="text-sm text-foreground">{alert.risco}</p>
+                    <p className="text-xs font-medium text-muted mb-1">Descrição</p>
+                    <p className="text-sm text-foreground">{alert.description}</p>
                   </div>
 
                   {/* Required Action */}
                   <div className="p-3 rounded-lg bg-accent/50 border border-border">
-                    <p className="text-xs font-medium text-muted mb-1">Ação Requerida</p>
-                    <p className="text-sm text-foreground">{alert.acaoRequerida}</p>
+                    <p className="text-xs font-medium text-muted mb-1">Mitigação</p>
+                    <p className="text-sm text-foreground">{alert.mitigation}</p>
                   </div>
 
                   {/* Footer Info */}
                   <div className="grid grid-cols-3 gap-3 pt-3 border-t border-border">
                     <div>
-                      <p className="text-xs text-muted">Prazo</p>
-                      <p className="text-sm font-medium text-foreground">{alert.prazo}</p>
+                      <p className="text-xs text-muted">Cadência</p>
+                      <p className="text-sm font-medium text-foreground">{alert.review_cadence}</p>
                     </div>
                     <div>
                       <p className="text-xs text-muted">Impacto</p>
-                      <p className="text-sm font-medium text-foreground">{alert.impacto}</p>
+                      <p className="text-sm font-medium text-foreground">{alert.impact}</p>
                     </div>
                     <div>
                       <p className="text-xs text-muted">Probabilidade</p>
-                      <p className="text-sm font-medium text-foreground">{alert.probabilidade}</p>
+                      <p className="text-sm font-medium text-foreground">{alert.probability}</p>
                     </div>
                   </div>
                 </CardContent>

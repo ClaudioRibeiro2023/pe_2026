@@ -59,9 +59,11 @@ CREATE INDEX IF NOT EXISTS idx_profiles_area_id ON public.profiles(area_id);
 
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "profiles_select_own" ON public.profiles;
 CREATE POLICY "profiles_select_own" ON public.profiles
   FOR SELECT USING (auth.uid() = user_id OR public.is_admin());
 
+DROP POLICY IF EXISTS "profiles_update_own" ON public.profiles;
 CREATE POLICY "profiles_update_own" ON public.profiles
   FOR UPDATE USING (auth.uid() = user_id OR public.is_admin());
 
@@ -91,15 +93,19 @@ CREATE INDEX IF NOT EXISTS idx_areas_slug ON public.areas(slug);
 
 ALTER TABLE public.areas ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "areas_select_all" ON public.areas;
 CREATE POLICY "areas_select_all" ON public.areas
   FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "areas_insert_admin" ON public.areas;
 CREATE POLICY "areas_insert_admin" ON public.areas
   FOR INSERT WITH CHECK (public.is_admin());
 
+DROP POLICY IF EXISTS "areas_update_admin" ON public.areas;
 CREATE POLICY "areas_update_admin" ON public.areas
   FOR UPDATE USING (public.is_admin());
 
+DROP POLICY IF EXISTS "areas_delete_admin" ON public.areas;
 CREATE POLICY "areas_delete_admin" ON public.areas
   FOR DELETE USING (public.is_admin());
 
@@ -124,13 +130,29 @@ CREATE TABLE IF NOT EXISTS public.pillars (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Compatibilidade: adicionar colunas se a tabela já existir sem elas
+ALTER TABLE public.pillars ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT now();
+ALTER TABLE public.pillars ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT now();
+
+-- Compatibilidade: adicionar constraint UNIQUE se não existir
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'pillars_code_key'
+  ) THEN
+    ALTER TABLE public.pillars ADD CONSTRAINT pillars_code_key UNIQUE (code);
+  END IF;
+END $$;
+
 CREATE INDEX IF NOT EXISTS idx_pillars_code ON public.pillars(code);
 
 ALTER TABLE public.pillars ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "pillars_select_all" ON public.pillars;
 CREATE POLICY "pillars_select_all" ON public.pillars
   FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "pillars_modify_admin" ON public.pillars;
 CREATE POLICY "pillars_modify_admin" ON public.pillars
   FOR ALL USING (public.is_admin());
 
@@ -150,13 +172,29 @@ CREATE TABLE IF NOT EXISTS public.subpillars (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Compatibilidade: adicionar colunas se a tabela já existir sem elas
+ALTER TABLE public.subpillars ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT now();
+ALTER TABLE public.subpillars ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT now();
+
+-- Compatibilidade: adicionar constraint UNIQUE se não existir
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'subpillars_code_key'
+  ) THEN
+    ALTER TABLE public.subpillars ADD CONSTRAINT subpillars_code_key UNIQUE (code);
+  END IF;
+END $$;
+
 CREATE INDEX IF NOT EXISTS idx_subpillars_pillar ON public.subpillars(pillar_id);
 
 ALTER TABLE public.subpillars ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "subpillars_select_all" ON public.subpillars;
 CREATE POLICY "subpillars_select_all" ON public.subpillars
   FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "subpillars_modify_admin" ON public.subpillars;
 CREATE POLICY "subpillars_modify_admin" ON public.subpillars
   FOR ALL USING (public.is_admin());
 
@@ -181,9 +219,11 @@ ALTER TABLE public.plan_templates ADD COLUMN IF NOT EXISTS color TEXT DEFAULT '#
 
 ALTER TABLE public.plan_templates ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "plan_templates_select_all" ON public.plan_templates;
 CREATE POLICY "plan_templates_select_all" ON public.plan_templates
   FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "plan_templates_modify_admin" ON public.plan_templates;
 CREATE POLICY "plan_templates_modify_admin" ON public.plan_templates
   FOR ALL USING (public.is_admin());
 
@@ -208,13 +248,20 @@ CREATE TABLE IF NOT EXISTS public.corporate_okrs (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Compatibilidade: adicionar colunas se a tabela já existir sem elas
+ALTER TABLE public.corporate_okrs ADD COLUMN IF NOT EXISTS owner TEXT;
+ALTER TABLE public.corporate_okrs ADD COLUMN IF NOT EXISTS priority TEXT DEFAULT 'Alta';
+ALTER TABLE public.corporate_okrs ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'EM_ANDAMENTO';
+
 CREATE INDEX IF NOT EXISTS idx_corporate_okrs_pillar ON public.corporate_okrs(pillar_id);
 
 ALTER TABLE public.corporate_okrs ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "corporate_okrs_select_all" ON public.corporate_okrs;
 CREATE POLICY "corporate_okrs_select_all" ON public.corporate_okrs
   FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "corporate_okrs_modify_admin" ON public.corporate_okrs;
 CREATE POLICY "corporate_okrs_modify_admin" ON public.corporate_okrs
   FOR ALL USING (public.is_admin());
 
@@ -232,13 +279,20 @@ CREATE TABLE IF NOT EXISTS public.key_results (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Compatibilidade: adicionar colunas se a tabela já existir sem elas
+ALTER TABLE public.key_results ADD COLUMN IF NOT EXISTS current_value TEXT;
+ALTER TABLE public.key_results ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'EM_ANDAMENTO';
+ALTER TABLE public.key_results ADD COLUMN IF NOT EXISTS due_date DATE;
+
 CREATE INDEX IF NOT EXISTS idx_key_results_okr ON public.key_results(okr_id);
 
 ALTER TABLE public.key_results ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "key_results_select_all" ON public.key_results;
 CREATE POLICY "key_results_select_all" ON public.key_results
   FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "key_results_modify_admin" ON public.key_results;
 CREATE POLICY "key_results_modify_admin" ON public.key_results
   FOR ALL USING (public.is_admin());
 
@@ -252,13 +306,20 @@ CREATE TABLE IF NOT EXISTS public.area_okrs (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Compatibilidade: adicionar colunas se a tabela já existir sem elas
+ALTER TABLE public.area_okrs ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'EM_ANDAMENTO';
+ALTER TABLE public.area_okrs ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT now();
+ALTER TABLE public.area_okrs ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT now();
+
 CREATE INDEX IF NOT EXISTS idx_area_okrs_area ON public.area_okrs(area_id);
 
 ALTER TABLE public.area_okrs ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "area_okrs_select_all" ON public.area_okrs;
 CREATE POLICY "area_okrs_select_all" ON public.area_okrs
   FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "area_okrs_modify_admin" ON public.area_okrs;
 CREATE POLICY "area_okrs_modify_admin" ON public.area_okrs
   FOR ALL USING (public.is_admin());
 
@@ -282,14 +343,27 @@ CREATE TABLE IF NOT EXISTS public.initiatives (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Compatibilidade: adicionar colunas se a tabela já existir sem elas
+ALTER TABLE public.initiatives ADD COLUMN IF NOT EXISTS type TEXT CHECK (type IN ('MET', 'SIS', 'ORG', 'PRO'));
+ALTER TABLE public.initiatives ADD COLUMN IF NOT EXISTS priority TEXT CHECK (priority IN ('P0', 'P1', 'P2'));
+ALTER TABLE public.initiatives ADD COLUMN IF NOT EXISTS okr_code TEXT;
+ALTER TABLE public.initiatives ADD COLUMN IF NOT EXISTS kr_code TEXT;
+ALTER TABLE public.initiatives ADD COLUMN IF NOT EXISTS sponsor TEXT;
+ALTER TABLE public.initiatives ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'EM_ANDAMENTO';
+ALTER TABLE public.initiatives ADD COLUMN IF NOT EXISTS start_date DATE;
+ALTER TABLE public.initiatives ADD COLUMN IF NOT EXISTS end_date DATE;
+ALTER TABLE public.initiatives ADD COLUMN IF NOT EXISTS effort TEXT CHECK (effort IN ('BAIXO', 'MEDIO', 'ALTO'));
+
 CREATE INDEX IF NOT EXISTS idx_initiatives_pillar ON public.initiatives(pillar_id);
 CREATE INDEX IF NOT EXISTS idx_initiatives_status ON public.initiatives(status);
 
 ALTER TABLE public.initiatives ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "initiatives_select_all" ON public.initiatives;
 CREATE POLICY "initiatives_select_all" ON public.initiatives
   FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "initiatives_modify_admin" ON public.initiatives;
 CREATE POLICY "initiatives_modify_admin" ON public.initiatives
   FOR ALL USING (public.is_admin());
 
@@ -571,12 +645,15 @@ CREATE INDEX IF NOT EXISTS idx_action_plans_created_by ON public.action_plans(cr
 
 ALTER TABLE public.action_plans ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "action_plans_select_auth" ON public.action_plans;
 CREATE POLICY "action_plans_select_auth" ON public.action_plans
   FOR SELECT TO authenticated USING (true);
 
+DROP POLICY IF EXISTS "action_plans_insert_auth" ON public.action_plans;
 CREATE POLICY "action_plans_insert_auth" ON public.action_plans
   FOR INSERT TO authenticated WITH CHECK (auth.uid() = created_by);
 
+DROP POLICY IF EXISTS "action_plans_update_auth" ON public.action_plans;
 CREATE POLICY "action_plans_update_auth" ON public.action_plans
   FOR UPDATE TO authenticated USING (auth.uid() = created_by OR public.is_admin());
 
@@ -597,9 +674,11 @@ CREATE TABLE IF NOT EXISTS public.comments (
 
 ALTER TABLE public.comments ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "comments_select_auth" ON public.comments;
 CREATE POLICY "comments_select_auth" ON public.comments
   FOR SELECT TO authenticated USING (true);
 
+DROP POLICY IF EXISTS "comments_insert_auth" ON public.comments;
 CREATE POLICY "comments_insert_auth" ON public.comments
   FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
 
@@ -622,9 +701,11 @@ ALTER TABLE public.attachments ADD COLUMN IF NOT EXISTS uploaded_by UUID REFEREN
 
 ALTER TABLE public.attachments ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "attachments_select_auth" ON public.attachments;
 CREATE POLICY "attachments_select_auth" ON public.attachments
   FOR SELECT TO authenticated USING (true);
 
+DROP POLICY IF EXISTS "attachments_insert_auth" ON public.attachments;
 CREATE POLICY "attachments_insert_auth" ON public.attachments
   FOR INSERT TO authenticated WITH CHECK (auth.uid() = uploaded_by);
 
@@ -643,6 +724,7 @@ CREATE TABLE IF NOT EXISTS public.context_store (
 );
 
 -- Compatibilidade: adicionar colunas se a tabela já existir sem elas
+ALTER TABLE public.context_store ADD COLUMN IF NOT EXISTS context_type TEXT;
 ALTER TABLE public.context_store ADD COLUMN IF NOT EXISTS version INTEGER DEFAULT 1;
 ALTER TABLE public.context_store ADD COLUMN IF NOT EXISTS updated_by UUID REFERENCES auth.users(id);
 
@@ -650,9 +732,11 @@ CREATE INDEX IF NOT EXISTS idx_context_store_type ON public.context_store(contex
 
 ALTER TABLE public.context_store ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "context_store_select_auth" ON public.context_store;
 CREATE POLICY "context_store_select_auth" ON public.context_store
   FOR SELECT TO authenticated USING (true);
 
+DROP POLICY IF EXISTS "context_store_modify_admin" ON public.context_store;
 CREATE POLICY "context_store_modify_admin" ON public.context_store
   FOR ALL USING (public.is_admin());
 
@@ -675,9 +759,11 @@ ALTER TABLE public.goals ADD COLUMN IF NOT EXISTS created_by UUID REFERENCES aut
 
 ALTER TABLE public.goals ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "goals_select_auth" ON public.goals;
 CREATE POLICY "goals_select_auth" ON public.goals
   FOR SELECT TO authenticated USING (true);
 
+DROP POLICY IF EXISTS "goals_modify_admin" ON public.goals;
 CREATE POLICY "goals_modify_admin" ON public.goals
   FOR ALL USING (public.is_admin());
 
@@ -700,9 +786,11 @@ ALTER TABLE public.indicators ADD COLUMN IF NOT EXISTS goal_id UUID REFERENCES p
 
 ALTER TABLE public.indicators ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "indicators_select_auth" ON public.indicators;
 CREATE POLICY "indicators_select_auth" ON public.indicators
   FOR SELECT TO authenticated USING (true);
 
+DROP POLICY IF EXISTS "indicators_modify_admin" ON public.indicators;
 CREATE POLICY "indicators_modify_admin" ON public.indicators
   FOR ALL USING (public.is_admin());
 
@@ -770,23 +858,28 @@ $$;
 -- ============================================================
 
 -- Políticas para area_plans
+DROP POLICY IF EXISTS "area_plans_select" ON public.area_plans;
 CREATE POLICY "area_plans_select" ON public.area_plans
   FOR SELECT USING (public.can_access_plan(area_id));
 
+DROP POLICY IF EXISTS "area_plans_insert" ON public.area_plans;
 CREATE POLICY "area_plans_insert" ON public.area_plans
   FOR INSERT WITH CHECK (
     public.is_admin() OR (public.is_area_manager() AND area_id = public.user_area_id())
   );
 
+DROP POLICY IF EXISTS "area_plans_update" ON public.area_plans;
 CREATE POLICY "area_plans_update" ON public.area_plans
   FOR UPDATE USING (
     public.can_access_plan(area_id) AND (public.is_admin() OR public.is_area_manager())
   );
 
+DROP POLICY IF EXISTS "area_plans_delete" ON public.area_plans;
 CREATE POLICY "area_plans_delete" ON public.area_plans
   FOR DELETE USING (public.is_admin());
 
 -- Políticas para plan_actions
+DROP POLICY IF EXISTS "plan_actions_select" ON public.plan_actions;
 CREATE POLICY "plan_actions_select" ON public.plan_actions
   FOR SELECT USING (
     EXISTS (
@@ -795,6 +888,7 @@ CREATE POLICY "plan_actions_select" ON public.plan_actions
     )
   );
 
+DROP POLICY IF EXISTS "plan_actions_insert" ON public.plan_actions;
 CREATE POLICY "plan_actions_insert" ON public.plan_actions
   FOR INSERT WITH CHECK (
     EXISTS (
@@ -803,6 +897,7 @@ CREATE POLICY "plan_actions_insert" ON public.plan_actions
     )
   );
 
+DROP POLICY IF EXISTS "plan_actions_update" ON public.plan_actions;
 CREATE POLICY "plan_actions_update" ON public.plan_actions
   FOR UPDATE USING (
     EXISTS (
@@ -811,12 +906,14 @@ CREATE POLICY "plan_actions_update" ON public.plan_actions
     )
   );
 
+DROP POLICY IF EXISTS "plan_actions_delete" ON public.plan_actions;
 CREATE POLICY "plan_actions_delete" ON public.plan_actions
   FOR DELETE USING (
     public.is_admin() OR public.is_area_manager()
   );
 
 -- Políticas para subtasks, evidences, comments, risks
+DROP POLICY IF EXISTS "action_subtasks_all" ON public.action_subtasks;
 CREATE POLICY "action_subtasks_all" ON public.action_subtasks
   FOR ALL USING (
     EXISTS (
@@ -826,6 +923,7 @@ CREATE POLICY "action_subtasks_all" ON public.action_subtasks
     )
   );
 
+DROP POLICY IF EXISTS "action_evidences_all" ON public.action_evidences;
 CREATE POLICY "action_evidences_all" ON public.action_evidences
   FOR ALL USING (
     EXISTS (
@@ -835,11 +933,13 @@ CREATE POLICY "action_evidences_all" ON public.action_evidences
     )
   );
 
+DROP POLICY IF EXISTS "evidence_approvals_all" ON public.evidence_approvals;
 CREATE POLICY "evidence_approvals_all" ON public.evidence_approvals
   FOR ALL USING (
     public.is_admin() OR public.is_area_manager()
   );
 
+DROP POLICY IF EXISTS "action_comments_all" ON public.action_comments;
 CREATE POLICY "action_comments_all" ON public.action_comments
   FOR ALL USING (
     EXISTS (
@@ -849,6 +949,7 @@ CREATE POLICY "action_comments_all" ON public.action_comments
     )
   );
 
+DROP POLICY IF EXISTS "action_risks_all" ON public.action_risks;
 CREATE POLICY "action_risks_all" ON public.action_risks
   FOR ALL USING (
     EXISTS (
@@ -858,6 +959,7 @@ CREATE POLICY "action_risks_all" ON public.action_risks
     )
   );
 
+DROP POLICY IF EXISTS "action_dependencies_all" ON public.action_dependencies;
 CREATE POLICY "action_dependencies_all" ON public.action_dependencies
   FOR ALL USING (
     EXISTS (
@@ -867,6 +969,7 @@ CREATE POLICY "action_dependencies_all" ON public.action_dependencies
     )
   );
 
+DROP POLICY IF EXISTS "action_history_select" ON public.action_history;
 CREATE POLICY "action_history_select" ON public.action_history
   FOR SELECT USING (
     EXISTS (
@@ -1337,6 +1440,7 @@ JOIN public.plan_actions pa ON pa.plan_id = ap.id
 JOIN public.pillars p ON p.id = pa.pillar_id
 GROUP BY ap.area_id, a.name, ap.year, p.id, p.code, p.title;
 
+DROP VIEW IF EXISTS public.vw_evidence_backlog;
 CREATE OR REPLACE VIEW public.vw_evidence_backlog AS
 SELECT 
   ae.id AS evidence_id,

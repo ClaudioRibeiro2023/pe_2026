@@ -1,11 +1,11 @@
-import { Wallet } from '@/shared/ui/icons'
+import { Wallet, TrendingUp } from '@/shared/ui/icons'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/Card'
 import { EmptyState } from '@/shared/ui/EmptyState'
 import { ErrorState } from '@/shared/ui/ErrorState'
 import { PageLoader } from '@/shared/ui/Loader'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/Table'
 import { formatCurrency, formatNumber, formatDate } from '@/shared/lib/format'
-import { useFinanceContext } from '@/features/finance/hooks'
+import { useFinanceContext, useFinancialScenarios } from '@/features/finance/hooks'
 
 const statusStyles: Record<string, string> = {
   OK: 'bg-success-100 text-success-700',
@@ -13,8 +13,15 @@ const statusStyles: Record<string, string> = {
   CRITICO: 'bg-danger-100 text-danger-700',
 }
 
+const scenarioStyles: Record<string, { badge: string; label: string }> = {
+  BASE:       { badge: 'bg-blue-100 text-blue-700',   label: 'Base' },
+  OTIMISTA:   { badge: 'bg-success-100 text-success-700', label: 'Otimista' },
+  PESSIMISTA: { badge: 'bg-danger-100 text-danger-700',   label: 'Pessimista' },
+}
+
 export function FinancePage() {
   const { data, isLoading, isError, error, refetch } = useFinanceContext()
+  const { data: scenarios } = useFinancialScenarios()
 
   if (isLoading) {
     return <PageLoader text="Carregando financeiro..." />
@@ -159,6 +166,47 @@ export function FinancePage() {
           </Table>
         </CardContent>
       </Card>
+      {scenarios && scenarios.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
+              Cenários Financeiros PE2026
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Cenário</TableHead>
+                  <TableHead>Prob.</TableHead>
+                  <TableHead>Receita projetada</TableHead>
+                  <TableHead>Margem</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {scenarios.map((s) => {
+                  const style = scenarioStyles[s.code] ?? { badge: 'bg-accent text-muted', label: s.label }
+                  return (
+                    <TableRow key={s.id}>
+                      <TableCell className="font-medium">{s.description ?? s.label}</TableCell>
+                      <TableCell>{formatNumber(s.probability_pct, 0)}%</TableCell>
+                      <TableCell>{formatCurrency(s.revenue_target)}</TableCell>
+                      <TableCell>{formatNumber(s.margin_target, 1)}%</TableCell>
+                      <TableCell>
+                        <span className={`px-2 py-1 text-xs font-medium rounded ${style.badge}`}>
+                          {style.label}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

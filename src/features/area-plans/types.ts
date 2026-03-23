@@ -37,6 +37,14 @@ export type RiskLevel = 'BAIXO' | 'MEDIO' | 'ALTO' | 'CRITICO'
 
 export type OkrPriority = 'Crítica' | 'Alta' | 'Média' | 'Baixa'
 
+export type RiskSeverity = 'CRITICO' | 'ALTO' | 'MONITORADO'
+
+export type RiskStatus = 'ATIVO' | 'MITIGADO' | 'ACEITO' | 'ENCERRADO'
+
+export type FinancialScenarioCode = 'PESSIMISTA' | 'BASE' | 'OTIMISTA'
+
+export type InitiativeStatusExtended = InitiativeStatus | 'NAO_INICIADA'
+
 // ============================================================
 // ENTIDADES BASE
 // ============================================================
@@ -68,9 +76,62 @@ export interface Subpillar {
   frontier: string | null
 }
 
+export interface Motor {
+  id: string
+  code: string
+  title: string
+  description: string | null
+  pillar_code: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface StrategicTheme {
+  id: string
+  code: string
+  title: string
+  description: string | null
+  pillar_codes: string[]
+  priority: number
+  created_at: string
+  updated_at: string
+}
+
+export interface StrategicRisk {
+  id: string
+  code: string
+  title: string
+  description: string | null
+  category: string | null
+  severity: RiskSeverity
+  probability: 'ALTO' | 'MEDIO' | 'BAIXO'
+  impact: 'CRITICO' | 'ALTO' | 'MEDIO' | 'BAIXO'
+  owner: string | null
+  mitigation: string | null
+  pillar_code: string | null
+  status: RiskStatus
+  review_cadence: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface FinancialScenario {
+  id: string
+  code: FinancialScenarioCode
+  label: string
+  probability_pct: number
+  revenue_target: number
+  margin_target: number
+  description: string | null
+  is_reference: boolean
+  created_at: string
+  updated_at: string
+}
+
 export interface CorporateOkr {
   id: string
   pillar_id: string | null
+  code: string | null
   objective: string
   owner: string | null
   priority: OkrPriority | null
@@ -85,6 +146,10 @@ export interface KeyResult {
   code: string
   title: string
   target: string | null
+  current_value?: string | null
+  current_value_numeric?: number | null
+  target_numeric?: number | null
+  unit?: string | null
   status: OkrStatus
   due_date: string | null
 }
@@ -109,13 +174,17 @@ export interface Initiative {
   kr_code: string | null
   owner: string | null
   sponsor: string | null
-  status: InitiativeStatus
+  status: InitiativeStatus | InitiativeStatusExtended
   start_date: string | null
   end_date: string | null
   effort: InitiativeEffort | null
+  motor_id: string | null
+  motor_codes: string[] | null
+  budget_estimate: number | null
   created_at: string
   updated_at: string
   pillar?: Pillar
+  motor?: Motor
 }
 
 // ============================================================

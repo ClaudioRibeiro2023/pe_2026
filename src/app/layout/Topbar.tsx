@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, LogOut, User, ChevronDown, ChevronRight, Search, Moon, Sun, Bell } from '@/shared/ui/icons'
 import { useAuth } from '@/features/auth/AuthProvider'
@@ -20,6 +20,13 @@ export function Topbar({ onOpenSearch }: TopbarProps) {
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const location = useLocation()
+
+  // Fechar todos os menus flutuantes ao navegar para outra rota
+  useEffect(() => {
+    setMenuOpen(false)
+    setNotificationsOpen(false)
+    setMobileMenuOpen(false)
+  }, [location.pathname])
   const { sectionTitle } = getNavContext(location.pathname)
   const breadcrumbs = getBreadcrumbs(location.pathname)
   const quickAction = getQuickAction(location.pathname)
@@ -38,7 +45,7 @@ export function Topbar({ onOpenSearch }: TopbarProps) {
           <Menu className="h-5 w-5 text-muted" />
         </button>
         <div className="hidden sm:flex flex-col">
-          <span className="text-[11px] uppercase tracking-[0.18em] text-muted">
+          <span className="text-[11px] uppercase tracking-[0.18em] text-foreground/60 dark:text-foreground/50 font-medium">
             {sectionTitle}
           </span>
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground">

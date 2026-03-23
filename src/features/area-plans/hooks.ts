@@ -13,6 +13,7 @@ import type {
   CreateRiskData,
   UpdateRiskData,
   ActionFilters,
+  AreaPlan,
 } from './types'
 
 // ============================================================
@@ -318,7 +319,16 @@ export function usePlanByPackId(packId: string | undefined) {
 export function useGetOrCreatePlanForPack() {
   const queryClient = useQueryClient()
 
-  return useMutation({
+  return useMutation<
+    AreaPlan,
+    Error,
+    {
+      areaSlug: string
+      areaName: string
+      year: number
+      packId: string
+    }
+  >({
     mutationFn: (params: {
       areaSlug: string
       areaName: string
@@ -628,5 +638,76 @@ export function usePlanStats(planId: string) {
     queryKey: areaPlansKeys.planStats(planId),
     queryFn: () => api.fetchPlanStats(planId),
     enabled: !!planId,
+  })
+}
+
+// ============================================================
+// ENTIDADES CANÔNICAS PE2026
+// ============================================================
+
+export function useSubpillars(pillarId?: string) {
+  return useQuery({
+    queryKey: [...areaPlansKeys.all, 'subpillars', pillarId ?? 'all'],
+    queryFn: () => api.fetchSubpillars(pillarId),
+    staleTime: 1000 * 60 * 60,
+  })
+}
+
+export function useSubpillarsByPillarCode(pillarCode: string) {
+  return useQuery({
+    queryKey: [...areaPlansKeys.all, 'subpillars', 'by-code', pillarCode],
+    queryFn: () => api.fetchSubpillarsByPillarCode(pillarCode),
+    enabled: !!pillarCode,
+    staleTime: 1000 * 60 * 60,
+  })
+}
+
+export function useCorporateOkrs() {
+  return useQuery({
+    queryKey: [...areaPlansKeys.all, 'corporate-okrs'],
+    queryFn: api.fetchCorporateOkrs,
+    staleTime: 1000 * 60 * 60,
+  })
+}
+
+export function useKeyResults(okrId?: string) {
+  return useQuery({
+    queryKey: [...areaPlansKeys.all, 'key-results', okrId ?? 'all'],
+    queryFn: () => api.fetchKeyResults(okrId),
+    staleTime: 1000 * 60 * 60,
+  })
+}
+
+export function useMotors() {
+  return useQuery({
+    queryKey: [...areaPlansKeys.all, 'motors'],
+    queryFn: api.fetchMotors,
+    staleTime: 1000 * 60 * 60,
+  })
+}
+
+export function useStrategicThemes(pillarCode?: string) {
+  return useQuery({
+    queryKey: [...areaPlansKeys.all, 'strategic-themes', pillarCode ?? 'all'],
+    queryFn: pillarCode
+      ? () => api.fetchStrategicThemesByPillar(pillarCode)
+      : api.fetchStrategicThemes,
+    staleTime: 1000 * 60 * 60,
+  })
+}
+
+export function useStrategicRisks(severity?: string) {
+  return useQuery({
+    queryKey: [...areaPlansKeys.all, 'strategic-risks', severity ?? 'all'],
+    queryFn: () => api.fetchStrategicRisks(severity),
+    staleTime: 1000 * 60 * 60,
+  })
+}
+
+export function useFinancialScenarios() {
+  return useQuery({
+    queryKey: [...areaPlansKeys.all, 'financial-scenarios'],
+    queryFn: api.fetchFinancialScenarios,
+    staleTime: 1000 * 60 * 60,
   })
 }

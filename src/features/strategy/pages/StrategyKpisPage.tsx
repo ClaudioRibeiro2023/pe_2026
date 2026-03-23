@@ -1,4 +1,5 @@
 import { Gauge, TrendingUp, AlertTriangle, CheckCircle, ShieldAlert, Wallet } from '@/shared/ui/icons'
+import { PILLAR_COLORS } from '@/shared/config/pillarColors'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/Card'
 import { InfoTooltip } from '@/shared/ui/InfoTooltip'
 import { EmptyState } from '@/shared/ui/EmptyState'
@@ -13,13 +14,7 @@ const statusConfig: Record<string, { bg: string; text: string; border: string; i
   CRITICO: { bg: 'bg-danger-50', text: 'text-danger-700', border: 'border-danger-200', icon: ShieldAlert },
 }
 
-const pillarColors: Record<string, { gradient: string; light: string }> = {
-  P1: { gradient: 'from-blue-500 to-blue-600', light: 'bg-blue-50' },
-  P2: { gradient: 'from-emerald-500 to-emerald-600', light: 'bg-emerald-50' },
-  P3: { gradient: 'from-amber-500 to-amber-600', light: 'bg-amber-50' },
-  P4: { gradient: 'from-violet-500 to-violet-600', light: 'bg-violet-50' },
-  P5: { gradient: 'from-rose-500 to-rose-600', light: 'bg-rose-50' },
-}
+const pillarColors = PILLAR_COLORS
 
 export function StrategyKpisPage() {
   const { data, isLoading, isError, error, refetch } = useScoreboardContext()

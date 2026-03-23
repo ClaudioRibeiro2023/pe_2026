@@ -100,9 +100,9 @@ export const componentClasses = {
   // Button variants
   button: {
     primary: `
-      bg-blue-600 text-white px-4 py-2 rounded-lg
-      hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-      disabled:bg-blue-300 disabled:cursor-not-allowed
+      bg-primary-600 text-white px-4 py-2 rounded-lg
+      hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+      disabled:bg-primary-300 disabled:cursor-not-allowed
       transition-colors duration-200
     `,
     secondary: `
@@ -124,9 +124,9 @@ export const componentClasses = {
       transition-colors duration-200
     `,
     danger: `
-      bg-red-600 text-white px-4 py-2 rounded-lg
-      hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2
-      disabled:bg-red-300 disabled:cursor-not-allowed
+      bg-danger-600 text-white px-4 py-2 rounded-lg
+      hover:bg-danger-700 focus:ring-2 focus:ring-danger-500 focus:ring-offset-2
+      disabled:bg-danger-300 disabled:cursor-not-allowed
       transition-colors duration-200
     `,
   },

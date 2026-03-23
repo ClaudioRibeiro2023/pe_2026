@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { cn } from '@/shared/lib/cn'
 import { ROUTES } from '@/shared/config/routes'
 import { routePreloaders } from '@/app/routePreloaders'
@@ -31,9 +31,15 @@ function SidebarItem({
   collapsed: boolean
   onPreload: (href: string) => void
 }) {
+  const location = useLocation()
   const [isOpen, setIsOpen] = useState(item.defaultOpen ?? false)
   const Icon = item.icon
   const hasSubItems = item.subItems && item.subItems.length > 0
+
+  // Detectar se algum subitem está ativo para destacar o pai
+  const hasActiveChild = item.subItems?.some(
+    (sub) => location.pathname === sub.href || location.pathname.startsWith(`${sub.href}/`)
+  ) ?? false
 
   // If collapsed and has subitems, just show the parent icon that navigates to first subitem
   if (collapsed && hasSubItems) {
@@ -48,7 +54,7 @@ function SidebarItem({
           cn(
             'flex items-center gap-2.5 px-2 py-2 rounded-md text-sm font-medium transition-colors justify-center',
             isActive
-              ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400'
+              ? 'nav-item-active'
               : 'text-muted hover:text-foreground hover:bg-accent'
           )
         }
@@ -74,7 +80,7 @@ function SidebarItem({
           cn(
             'flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm font-medium transition-colors',
             isActive
-              ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400'
+              ? 'nav-item-active'
               : 'text-muted hover:text-foreground hover:bg-accent',
             collapsed && 'justify-center px-2'
           )
@@ -93,19 +99,21 @@ function SidebarItem({
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           'w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm font-medium transition-colors',
-          'text-muted hover:text-foreground hover:bg-accent'
+          hasActiveChild
+            ? 'text-primary-600 dark:text-primary-400 hover:bg-accent'
+            : 'text-muted hover:text-foreground hover:bg-accent'
         )}
       >
         <Icon className="h-4 w-4 flex-shrink-0" />
         <span className="flex-1 text-left">{item.label}</span>
         {isOpen ? (
-          <ChevronDown className="h-3.5 w-3.5 text-muted" />
+          <ChevronDown className={cn('h-3.5 w-3.5', hasActiveChild ? 'text-primary-500' : 'text-muted')} />
         ) : (
-          <ChevronRight className="h-3.5 w-3.5 text-muted" />
+          <ChevronRight className={cn('h-3.5 w-3.5', hasActiveChild ? 'text-primary-500' : 'text-muted')} />
         )}
       </button>
       {isOpen && (
-        <div className="mt-1 ml-4 pl-2 border-l border-border space-y-0.5">
+        <div className="mt-1 ml-4 pl-2 border-l border-primary-200 dark:border-primary-800/50 space-y-0.5">
           {item.subItems!.map((subItem) => {
             const SubIcon = subItem.icon
             return (
@@ -118,7 +126,7 @@ function SidebarItem({
                   cn(
                     'flex items-center gap-2 px-2 py-1.5 rounded-md text-sm transition-colors',
                     isActive
-                      ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400'
+                      ? 'nav-item-active'
                       : 'text-muted hover:text-foreground hover:bg-accent/50'
                   )
                 }

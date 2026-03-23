@@ -1,3 +1,41 @@
+import { getSupabaseRuntimeState, supabase, assertSupabaseAvailableForProd } from '@/shared/lib/supabaseClient'
+import * as mockApi from './api-mock'
+import type {
+  ActionComment,
+  ActionEvidence,
+  ActionFilters,
+  ActionHistory,
+  ActionRisk,
+  ActionSubtask,
+  Area,
+  AreaOkr,
+  AreaPillarProgress,
+  AreaPlan,
+  AreaPlanProgress,
+  CreateAreaPlanData,
+  CreateCommentData,
+  CreateEvidenceData,
+  CreatePlanActionData,
+  CreateRiskData,
+  CreateSubtaskData,
+  EvidenceBacklogItem,
+  FinancialScenario,
+  Initiative,
+  KeyResult,
+  Motor,
+  Pillar,
+  Subpillar,
+  CorporateOkr,
+  StrategicRisk,
+  StrategicTheme,
+  PlanAction,
+  UpdateAreaPlanData,
+  UpdateCommentData,
+  UpdatePlanActionData,
+  UpdateRiskData,
+  UpdateSubtaskData,
+} from './types'
+
 /**
  * API do Módulo de Planos de Ação
  * 
@@ -12,41 +50,40 @@
 // ============================================================
 // MODO MOCK - Re-exporta todas as funções do api-mock.ts
 // ============================================================
-export * from './api-mock'
+function resolveAreaPlansSource(operation: string): 'mock' | 'supabase' {
+  const state = getSupabaseRuntimeState()
 
-// ============================================================
-// MODO SUPABASE (comentado - descomentar para usar Supabase)
-// ============================================================
-/*
-import { supabase, isSupabaseConfigured } from '@/shared/lib/supabaseClient'
-import type {
-  Area,
-  AreaPlan,
-  PlanAction,
-  ActionSubtask,
-  ActionEvidence,
-  ActionComment,
-  ActionHistory,
-  ActionRisk,
-  Pillar,
-  AreaOkr,
-  Initiative,
-  AreaPlanProgress,
-  AreaPillarProgress,
-  EvidenceBacklogItem,
-  CreateAreaPlanData,
-  UpdateAreaPlanData,
-  CreatePlanActionData,
-  UpdatePlanActionData,
-  CreateSubtaskData,
-  UpdateSubtaskData,
-  CreateEvidenceData,
-  CreateCommentData,
-  UpdateCommentData,
-  CreateRiskData,
-  UpdateRiskData,
-  ActionFilters,
-} from './types'
+  if (state.shouldUseSupabase) {
+    return 'supabase'
+  }
+
+  if (state.canUseMockFallback) {
+    console.info(`[Area Plans API] ${operation}: usando mock em ${state.environment}`)
+    return 'mock'
+  }
+
+  // Lança erro explícito — bloqueia fallback silencioso em PROD
+  assertSupabaseAvailableForProd(operation)
+
+  const reason = state.isConfigured ? 'serviço inacessível' : 'variáveis de ambiente ausentes'
+  throw new Error(`[Area Plans API] ${operation}: Supabase indisponível (${reason})`)
+}
+
+export async function fetchAreas(): Promise<Area[]> {
+  if (resolveAreaPlansSource('fetchAreas') === 'mock') {
+    return mockApi.fetchAreas()
+  }
+
+  return fetchAreas_supabase()
+}
+
+export async function fetchAreaBySlug(slug: string): Promise<Area | null> {
+  if (resolveAreaPlansSource('fetchAreaBySlug') === 'mock') {
+    return mockApi.fetchAreaBySlug(slug)
+  }
+
+  return fetchAreaBySlug_supabase(slug)
+}
 
 // ÁREAS - MODO SUPABASE
 export async function fetchAreas_supabase(): Promise<Area[]> {
@@ -75,6 +112,10 @@ export async function fetchAreaBySlug_supabase(slug: string): Promise<Area | nul
 // ============================================================
 
 export async function fetchPillars(): Promise<Pillar[]> {
+  if (resolveAreaPlansSource('fetchPillars') === 'mock') {
+    return mockApi.fetchPillars()
+  }
+
   const { data, error } = await supabase
     .from('pillars')
     .select('*')
@@ -89,6 +130,10 @@ export async function fetchPillars(): Promise<Pillar[]> {
 // ============================================================
 
 export async function fetchAreaOkrs(areaId: string): Promise<AreaOkr[]> {
+  if (resolveAreaPlansSource('fetchAreaOkrs') === 'mock') {
+    return mockApi.fetchAreaOkrs(areaId)
+  }
+
   const { data, error } = await supabase
     .from('area_okrs')
     .select('*')
@@ -104,6 +149,10 @@ export async function fetchAreaOkrs(areaId: string): Promise<AreaOkr[]> {
 // ============================================================
 
 export async function fetchInitiatives(): Promise<Initiative[]> {
+  if (resolveAreaPlansSource('fetchInitiatives') === 'mock') {
+    return mockApi.fetchInitiatives()
+  }
+
   const { data, error } = await supabase
     .from('initiatives')
     .select(`
@@ -121,6 +170,10 @@ export async function fetchInitiatives(): Promise<Initiative[]> {
 // ============================================================
 
 export async function fetchAreaPlans(year?: number): Promise<AreaPlan[]> {
+  if (resolveAreaPlansSource('fetchAreaPlans') === 'mock') {
+    return mockApi.fetchAreaPlans(year)
+  }
+
   let query = supabase
     .from('area_plans')
     .select(`
@@ -140,6 +193,10 @@ export async function fetchAreaPlans(year?: number): Promise<AreaPlan[]> {
 }
 
 export async function fetchAreaPlanByAreaSlug(areaSlug: string, year: number): Promise<AreaPlan | null> {
+  if (resolveAreaPlansSource('fetchAreaPlanByAreaSlug') === 'mock') {
+    return mockApi.fetchAreaPlanByAreaSlug(areaSlug, year)
+  }
+
   const { data, error } = await supabase
     .from('area_plans')
     .select(`
@@ -155,6 +212,10 @@ export async function fetchAreaPlanByAreaSlug(areaSlug: string, year: number): P
 }
 
 export async function fetchAreaPlanById(planId: string): Promise<AreaPlan | null> {
+  if (resolveAreaPlansSource('fetchAreaPlanById') === 'mock') {
+    return mockApi.fetchAreaPlanById(planId)
+  }
+
   const { data, error } = await supabase
     .from('area_plans')
     .select(`
@@ -168,12 +229,115 @@ export async function fetchAreaPlanById(planId: string): Promise<AreaPlan | null
   return data
 }
 
+export async function fetchPlanByPackId(packId: string): Promise<AreaPlan | null> {
+  if (resolveAreaPlansSource('fetchPlanByPackId') === 'mock') {
+    return mockApi.fetchPlanByPackId(packId)
+  }
+
+  const { data, error } = await supabase
+    .from('area_plans')
+    .select(`
+      *,
+      area:areas(*)
+    `)
+    .eq('pack_id', packId)
+    .single()
+
+  if (error && error.code !== 'PGRST116') throw error
+  return data
+}
+
+export async function getOrCreatePlanForPack(params: {
+  areaSlug: string
+  areaName: string
+  year: number
+  packId: string
+}): Promise<AreaPlan> {
+  if (resolveAreaPlansSource('getOrCreatePlanForPack') === 'mock') {
+    return mockApi.getOrCreatePlanForPack(params)
+  }
+
+  const { data: area, error: areaError } = await supabase
+    .from('areas')
+    .select('*')
+    .eq('slug', params.areaSlug)
+    .single()
+
+  if (areaError && areaError.code !== 'PGRST116') throw areaError
+  if (!area) throw new Error(`Área não encontrada: ${params.areaSlug}`)
+
+  const { data: existingPlan, error: existingPlanError } = await supabase
+    .from('area_plans')
+    .select(`
+      *,
+      area:areas(*)
+    `)
+    .eq('area_id', area.id)
+    .eq('year', params.year)
+    .eq('pack_id', params.packId)
+    .single()
+
+  if (existingPlanError && existingPlanError.code !== 'PGRST116') throw existingPlanError
+  if (existingPlan) return existingPlan
+
+  try {
+    const { data: user } = await supabase.auth.getUser()
+
+    if (!user.user) {
+      if (!getSupabaseRuntimeState().canUseMockFallback) {
+        throw new Error('[Area Plans API] getOrCreatePlanForPack: usuário não autenticado')
+      }
+
+      return {
+        id: `plan-${Date.now()}`,
+        pack_id: params.packId,
+        area_id: area.id,
+        year: params.year,
+        title: `Plano ${params.areaName} ${params.year} - Strategic Pack`,
+        description: `Plano gerado a partir do Strategic Pack ${params.year}`,
+        status: 'RASCUNHO',
+        template_id: null,
+        created_by: 'dev-user',
+        manager_approved_by: null,
+        manager_approved_at: null,
+        direction_approved_by: null,
+        direction_approved_at: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        area,
+      }
+    }
+
+    const { data: plan, error: planError } = await supabase
+      .from('area_plans')
+      .insert({
+        area_id: area.id,
+        year: params.year,
+        title: `Plano ${params.areaName} ${params.year} - Strategic Pack`,
+        description: `Plano gerado a partir do Strategic Pack ${params.year}`,
+        status: 'RASCUNHO',
+        created_by: user.user.id,
+        pack_id: params.packId,
+      })
+      .select(`
+        *,
+        area:areas(*)
+      `)
+      .single()
+
+    if (planError) throw planError
+    return plan
+  } catch (err) {
+    console.error('[Area Plans API] Erro ao obter ou criar plano por pack:', err)
+    throw err
+  }
+}
+
 export async function createAreaPlan(data: CreateAreaPlanData): Promise<AreaPlan> {
-  // Modo mock para desenvolvimento sem autenticação
-  if (!isSupabaseConfigured()) {
-    console.info('[Area Plans API] Supabase não configurado, usando mock para criar plano')
+  if (resolveAreaPlansSource('createAreaPlan') === 'mock') {
     const mockPlan: AreaPlan = {
       id: `plan-${Date.now()}`,
+      pack_id: null,
       area_id: data.area_id,
       year: data.year,
       title: data.title,
@@ -194,11 +358,15 @@ export async function createAreaPlan(data: CreateAreaPlanData): Promise<AreaPlan
   try {
     const { data: user } = await supabase.auth.getUser()
     
-    // Fallback para desenvolvimento sem autenticação
     if (!user.user) {
+      if (!getSupabaseRuntimeState().canUseMockFallback) {
+        throw new Error('[Area Plans API] createAreaPlan: usuário não autenticado')
+      }
+
       console.warn('[Area Plans API] Usuário não autenticado, criando plano em modo desenvolvimento')
       const mockPlan: AreaPlan = {
         id: `plan-${Date.now()}`,
+        pack_id: null,
         area_id: data.area_id,
         year: data.year,
         title: data.title,
@@ -1004,4 +1172,189 @@ export async function fetchPlanStats(planId: string): Promise<{
 
   return stats
 }
-*/
+
+// ============================================================
+// SUBPILARES
+// ============================================================
+
+export async function fetchSubpillars(pillarId?: string): Promise<Subpillar[]> {
+  if (resolveAreaPlansSource('fetchSubpillars') === 'mock') {
+    return mockApi.fetchSubpillars(pillarId)
+  }
+
+  let query = supabase.from('subpillars').select('*').order('code')
+  if (pillarId) query = query.eq('pillar_id', pillarId)
+  const { data, error } = await query
+  if (error) throw error
+  return data || []
+}
+
+export async function fetchSubpillarsByPillarCode(pillarCode: string): Promise<Subpillar[]> {
+  if (resolveAreaPlansSource('fetchSubpillarsByPillarCode') === 'mock') {
+    return mockApi.fetchSubpillarsByPillarCode(pillarCode)
+  }
+
+  const { data, error } = await supabase
+    .from('subpillars')
+    .select('*, pillar:pillars!inner(code)')
+    .eq('pillars.code', pillarCode)
+    .order('code')
+  if (error) throw error
+  return data || []
+}
+
+// ============================================================
+// OKRs CORPORATIVOS + KEY RESULTS
+// ============================================================
+
+export async function fetchCorporateOkrs(): Promise<CorporateOkr[]> {
+  if (resolveAreaPlansSource('fetchCorporateOkrs') === 'mock') {
+    return mockApi.fetchCorporateOkrs()
+  }
+
+  const { data, error } = await supabase
+    .from('corporate_okrs')
+    .select('*, pillar:pillars(*), key_results(*)')
+    .order('code')
+  if (error) throw error
+  return data || []
+}
+
+export async function fetchKeyResults(okrId?: string): Promise<KeyResult[]> {
+  if (resolveAreaPlansSource('fetchKeyResults') === 'mock') {
+    return mockApi.fetchKeyResults(okrId)
+  }
+
+  let query = supabase.from('key_results').select('*').order('code')
+  if (okrId) query = query.eq('okr_id', okrId)
+  const { data, error } = await query
+  if (error) throw error
+  return data || []
+}
+
+export async function fetchKeyResultByCode(code: string): Promise<KeyResult | null> {
+  if (resolveAreaPlansSource('fetchKeyResultByCode') === 'mock') {
+    return mockApi.fetchKeyResultByCode(code)
+  }
+
+  const { data, error } = await supabase
+    .from('key_results').select('*').eq('code', code).single()
+  if (error && error.code !== 'PGRST116') throw error
+  return data
+}
+
+// ============================================================
+// MOTORES ESTRATÉGICOS
+// ============================================================
+
+export async function fetchMotors(): Promise<Motor[]> {
+  if (resolveAreaPlansSource('fetchMotors') === 'mock') {
+    return mockApi.fetchMotors()
+  }
+
+  const { data, error } = await supabase
+    .from('motors').select('*').order('code')
+  if (error) throw error
+  return data || []
+}
+
+export async function fetchMotorByCode(code: string): Promise<Motor | null> {
+  if (resolveAreaPlansSource('fetchMotorByCode') === 'mock') {
+    return mockApi.fetchMotorByCode(code)
+  }
+
+  const { data, error } = await supabase
+    .from('motors').select('*').eq('code', code).single()
+  if (error && error.code !== 'PGRST116') throw error
+  return data
+}
+
+// ============================================================
+// TEMAS ESTRATÉGICOS
+// ============================================================
+
+export async function fetchStrategicThemes(): Promise<StrategicTheme[]> {
+  if (resolveAreaPlansSource('fetchStrategicThemes') === 'mock') {
+    return mockApi.fetchStrategicThemes()
+  }
+
+  const { data, error } = await supabase
+    .from('strategic_themes').select('*').order('priority').order('code')
+  if (error) throw error
+  return data || []
+}
+
+export async function fetchStrategicThemesByPillar(pillarCode: string): Promise<StrategicTheme[]> {
+  if (resolveAreaPlansSource('fetchStrategicThemesByPillar') === 'mock') {
+    return mockApi.fetchStrategicThemesByPillar(pillarCode)
+  }
+
+  const { data, error } = await supabase
+    .from('strategic_themes').select('*').contains('pillar_codes', [pillarCode]).order('priority')
+  if (error) throw error
+  return data || []
+}
+
+// ============================================================
+// RISCOS ESTRATÉGICOS
+// ============================================================
+
+export async function fetchStrategicRisks(severity?: string): Promise<StrategicRisk[]> {
+  if (resolveAreaPlansSource('fetchStrategicRisks') === 'mock') {
+    return mockApi.fetchStrategicRisks(severity)
+  }
+
+  let query = supabase.from('strategic_risks').select('*').order('severity').order('code')
+  if (severity) query = query.eq('severity', severity)
+  const { data, error } = await query
+  if (error) throw error
+  return data || []
+}
+
+export async function fetchStrategicRiskByCode(code: string): Promise<StrategicRisk | null> {
+  if (resolveAreaPlansSource('fetchStrategicRiskByCode') === 'mock') {
+    return mockApi.fetchStrategicRiskByCode(code)
+  }
+
+  const { data, error } = await supabase
+    .from('strategic_risks').select('*').eq('code', code).single()
+  if (error && error.code !== 'PGRST116') throw error
+  return data
+}
+
+// ============================================================
+// CENÁRIOS FINANCEIROS
+// ============================================================
+
+export async function fetchFinancialScenarios(): Promise<FinancialScenario[]> {
+  if (resolveAreaPlansSource('fetchFinancialScenarios') === 'mock') {
+    return mockApi.fetchFinancialScenarios()
+  }
+
+  const { data, error } = await supabase
+    .from('financial_scenarios').select('*').order('probability_pct')
+  if (error) throw error
+  return data || []
+}
+
+export async function fetchReferenceScenario(): Promise<FinancialScenario | null> {
+  if (resolveAreaPlansSource('fetchReferenceScenario') === 'mock') {
+    return mockApi.fetchReferenceScenario()
+  }
+
+  const { data, error } = await supabase
+    .from('financial_scenarios').select('*').eq('is_reference', true).single()
+  if (error && error.code !== 'PGRST116') throw error
+  return data
+}
+
+export async function fetchFinancialScenarioByCode(code: string): Promise<FinancialScenario | null> {
+  if (resolveAreaPlansSource('fetchFinancialScenarioByCode') === 'mock') {
+    return mockApi.fetchFinancialScenarioByCode(code)
+  }
+
+  const { data, error } = await supabase
+    .from('financial_scenarios').select('*').eq('code', code).single()
+  if (error && error.code !== 'PGRST116') throw error
+  return data
+}

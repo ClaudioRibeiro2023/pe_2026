@@ -11,7 +11,8 @@ export interface Indicator extends BaseEntity {
   category: string
   trend: IndicatorTrend | null
   date: string
-  user_id: string
+  user_id: string | null
+  is_canonical?: boolean
 }
 
 export interface IndicatorFormData {

@@ -9,7 +9,7 @@
     "q1Priority": "60-70% da capacidade gerencial em monetizacao",
     "constraints": [
       "Capacidade finita de equipes e janelas climaticas",
-      "Execucao por demanda gera picos se nao houver ativacao",
+      "Execucao por demanda gera picos se nao houver coordenacao entre CS e Comercial",
       "Qualidade e margem sao limites de seguranca"
     ]
   },
@@ -17,9 +17,9 @@
     {
       "quarter": "Q1",
       "distribution": {
-        "operacao": "45-55%",
-        "ativacao": "20-25%",
-        "produtoDados": "10-15%",
+        "operacoes": "45-55%",
+        "cs": "20-25%",
+        "pd": "10-15%",
         "comercialMarketing": "5-10%",
         "governanca": "10-15%"
       }
@@ -27,9 +27,9 @@
     {
       "quarter": "Q2",
       "distribution": {
-        "operacao": "40-50%",
-        "ativacao": "15-20%",
-        "produtoDados": "15-20%",
+        "operacoes": "40-50%",
+        "cs": "15-20%",
+        "pd": "15-20%",
         "comercialMarketing": "10-15%",
         "governanca": "10-15%"
       }
@@ -37,9 +37,9 @@
     {
       "quarter": "Q3",
       "distribution": {
-        "operacao": "35-45%",
-        "ativacao": "15-20%",
-        "produtoDados": "20-25%",
+        "operacoes": "35-45%",
+        "cs": "15-20%",
+        "pd": "20-25%",
         "comercialMarketing": "10-15%",
         "governanca": "10-15%"
       }
@@ -47,9 +47,9 @@
     {
       "quarter": "Q4",
       "distribution": {
-        "operacao": "35-45%",
-        "ativacao": "15-20%",
-        "produtoDados": "15-20%",
+        "operacoes": "35-45%",
+        "cs": "15-20%",
+        "pd": "15-20%",
         "comercialMarketing": "10-15%",
         "governanca": "10-15%"
       }
@@ -63,19 +63,19 @@
   "tacticalReinforcement": [
     {
       "id": "TR-01",
-      "area": "Operacao",
+      "area": "Operação",
       "action": "Reforco temporario de equipe no Q1",
       "rationale": "Evitar perda de janela e manter vazao"
     },
     {
       "id": "TR-02",
-      "area": "CS",
+      "area": "CS / Relacionamento",
       "action": "Dono por contratante Pareto",
       "rationale": "Ativacao de demanda com responsavel claro"
     },
     {
       "id": "TR-03",
-      "area": "Produto/Dados",
+      "area": "P&D / Produto / Dados",
       "action": "Painel de monetizacao e provas rapidas",
       "rationale": "Destravar decisao do cliente"
     }

@@ -1,5 +1,5 @@
 // API para Strategic Pack - Supabase com fallback para Mock
-import { supabase, isSupabaseConfigured } from '@/shared/lib/supabaseClient'
+import { getSupabaseRuntimeState, supabase } from '@/shared/lib/supabaseClient'
 import * as mockApi from './api-mock'
 import type {
   AreaStrategicPack,
@@ -15,12 +15,28 @@ import type {
   PackFull,
 } from './types'
 
+function shouldUseMockStrategicPack(operation: string): boolean {
+  const state = getSupabaseRuntimeState()
+
+  if (state.shouldUseSupabase) {
+    return false
+  }
+
+  if (state.canUseMockFallback) {
+    console.info(`[Strategic Pack API] ${operation}: usando mock em ${state.environment}`)
+    return true
+  }
+
+  const reason = state.isConfigured ? 'serviço inacessível' : 'variáveis de ambiente ausentes'
+  throw new Error(`[Strategic Pack API] ${operation}: Supabase indisponível (${reason})`)
+}
+
 // ============================================================
 // PACK API
 // ============================================================
 
 export async function fetchPack(areaSlug: string, year: number): Promise<AreaStrategicPack | null> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('fetchPack')) {
     return mockApi.fetchPack(areaSlug, year)
   }
 
@@ -34,14 +50,14 @@ export async function fetchPack(areaSlug: string, year: number): Promise<AreaStr
   if (error) {
     if (error.code === 'PGRST116') return null // No rows found
     console.error('[Strategic Pack API] fetchPack error:', error)
-    return mockApi.fetchPack(areaSlug, year)
+    throw error
   }
 
   return data as AreaStrategicPack
 }
 
 export async function fetchPackFull(areaSlug: string, year: number): Promise<PackFull | null> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('fetchPackFull')) {
     return mockApi.fetchPackFull(areaSlug, year)
   }
 
@@ -65,7 +81,7 @@ export async function fetchPackFull(areaSlug: string, year: number): Promise<Pac
 }
 
 export async function createPack(data: CreatePackData): Promise<AreaStrategicPack> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('createPack')) {
     return mockApi.createPack(data)
   }
 
@@ -91,7 +107,7 @@ export async function createPack(data: CreatePackData): Promise<AreaStrategicPac
 }
 
 export async function updatePack(packId: string, data: UpdatePackData): Promise<AreaStrategicPack> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('updatePack')) {
     return mockApi.updatePack(packId, data)
   }
 
@@ -118,7 +134,7 @@ export async function updatePack(packId: string, data: UpdatePackData): Promise<
 // ============================================================
 
 export async function fetchSections(packId: string): Promise<AreaPackSection[]> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('fetchSections')) {
     return mockApi.fetchSections(packId)
   }
 
@@ -130,14 +146,14 @@ export async function fetchSections(packId: string): Promise<AreaPackSection[]> 
 
   if (error) {
     console.error('[Strategic Pack API] fetchSections error:', error)
-    return mockApi.fetchSections(packId)
+    throw error
   }
 
   return data as AreaPackSection[]
 }
 
 export async function fetchSection(sectionId: string): Promise<AreaPackSection | null> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('fetchSection')) {
     return mockApi.fetchSection(sectionId)
   }
 
@@ -149,7 +165,7 @@ export async function fetchSection(sectionId: string): Promise<AreaPackSection |
 
   if (error) {
     console.error('[Strategic Pack API] fetchSection error:', error)
-    return null
+    throw error
   }
 
   return data as AreaPackSection
@@ -160,7 +176,7 @@ export async function updateSection(
   data: UpdateSectionData,
   actor?: string
 ): Promise<AreaPackSection> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('updateSection')) {
     return mockApi.updateSection(sectionId, data, actor)
   }
 
@@ -188,7 +204,7 @@ export async function updateSectionStructuredData(
   patch: Record<string, unknown>,
   actor?: string
 ): Promise<AreaPackSection> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('updateSectionStructuredData')) {
     return mockApi.updateSectionStructuredData(sectionId, patch, actor)
   }
 
@@ -233,7 +249,7 @@ export async function updateSectionStructuredData(
 // ============================================================
 
 export async function fetchAttachments(packId: string, sectionId?: string): Promise<PackAttachment[]> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('fetchAttachments')) {
     return mockApi.fetchAttachments(packId, sectionId)
   }
 
@@ -250,7 +266,7 @@ export async function fetchAttachments(packId: string, sectionId?: string): Prom
 
   if (error) {
     console.error('[Strategic Pack API] fetchAttachments error:', error)
-    return mockApi.fetchAttachments(packId, sectionId)
+    throw error
   }
 
   return data as PackAttachment[]
@@ -263,7 +279,7 @@ export async function uploadAttachment(
   tags?: string[],
   actor?: string
 ): Promise<PackAttachment> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('uploadAttachment')) {
     // For mock, just create the attachment record without actual upload
     return mockApi.createAttachment({
       pack_id: packId,
@@ -323,7 +339,7 @@ export async function uploadAttachment(
 }
 
 export async function deleteAttachment(attachmentId: string, actor?: string): Promise<void> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('deleteAttachment')) {
     return mockApi.deleteAttachment(attachmentId, actor)
   }
 
@@ -356,7 +372,7 @@ export async function deleteAttachment(attachmentId: string, actor?: string): Pr
 // ============================================================
 
 export async function fetchComments(packId: string, sectionId?: string): Promise<PackComment[]> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('fetchComments')) {
     return mockApi.fetchComments(packId, sectionId)
   }
 
@@ -373,14 +389,14 @@ export async function fetchComments(packId: string, sectionId?: string): Promise
 
   if (error) {
     console.error('[Strategic Pack API] fetchComments error:', error)
-    return mockApi.fetchComments(packId, sectionId)
+    throw error
   }
 
   return data as PackComment[]
 }
 
 export async function createComment(data: CreateCommentData, actor: string): Promise<PackComment> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('createComment')) {
     return mockApi.createComment(data, actor)
   }
 
@@ -405,7 +421,7 @@ export async function createComment(data: CreateCommentData, actor: string): Pro
 }
 
 export async function resolveComment(commentId: string, actor: string): Promise<PackComment> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('resolveComment')) {
     return mockApi.resolveComment(commentId, actor)
   }
 
@@ -433,7 +449,7 @@ export async function resolveComment(commentId: string, actor: string): Promise<
 // ============================================================
 
 export async function fetchChangelog(packId: string): Promise<PackChangeLog[]> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('fetchChangelog')) {
     return mockApi.fetchChangelog(packId)
   }
 
@@ -445,7 +461,7 @@ export async function fetchChangelog(packId: string): Promise<PackChangeLog[]> {
 
   if (error) {
     console.error('[Strategic Pack API] fetchChangelog error:', error)
-    return mockApi.fetchChangelog(packId)
+    throw error
   }
 
   return data as PackChangeLog[]
@@ -456,7 +472,7 @@ export async function fetchChangelog(packId: string): Promise<PackChangeLog[]> {
 // ============================================================
 
 export async function fetchReferences(packId: string): Promise<PackReference[]> {
-  if (!isSupabaseConfigured()) {
+  if (shouldUseMockStrategicPack('fetchReferences')) {
     return mockApi.fetchReferences(packId)
   }
 
@@ -467,7 +483,7 @@ export async function fetchReferences(packId: string): Promise<PackReference[]> 
 
   if (error) {
     console.error('[Strategic Pack API] fetchReferences error:', error)
-    return mockApi.fetchReferences(packId)
+    throw error
   }
 
   return data as PackReference[]

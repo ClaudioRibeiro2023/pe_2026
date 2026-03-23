@@ -23,6 +23,14 @@ release/
 
 # Supabase temp
 .supabase_tmp
+supabase/.branches/
+supabase/.temp/
+
+# Netlify
+.netlify/
+
+# Windsurf
+.windsurf/
 
 # Editor
 .vscode/*
@@ -50,6 +58,7 @@ coverage/
 test-results/
 playwright-report/
 blob-report/
+e2e/.auth-state.json
 
 # Bundle analysis
 dist/bundle-report.html

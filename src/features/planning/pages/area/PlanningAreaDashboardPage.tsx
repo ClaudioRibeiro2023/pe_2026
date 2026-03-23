@@ -2,17 +2,12 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Building2, LayoutGrid, Calendar, ListIcon, FileCheck, Shield, Target } from '@/shared/ui/icons'
 import { Button } from '@/shared/ui/Button'
 import { Card, CardContent } from '@/shared/ui/Card'
-import { PageHeader } from '@/shared/ui/PageHeader'
-import type { Crumb } from '@/shared/ui/Breadcrumbs'
+import { PageLoader } from '@/shared/ui/Loader'
 import { useAreaBySlug } from '@/features/areas/hooks'
 import { AreaPlanPage } from '@/features/area-plans/pages/AreaPlanPage'
 import { useLastArea } from '../../hooks/useLastArea'
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 
-function humanizeSlug(slug: string): string {
-  const map: Record<string, string> = { rh: 'RH', ti: 'TI', mkt: 'Marketing', fin: 'Financeiro', ops: 'Operações' }
-  return map[slug] || slug.charAt(0).toUpperCase() + slug.slice(1)
-}
 
 interface QuickLinkProps {
   icon: React.ReactNode
@@ -50,15 +45,6 @@ export function PlanningAreaDashboardPage() {
   const { data: area, isLoading: areaLoading } = useAreaBySlug(areaSlug)
   const { setLastArea } = useLastArea()
 
-  const areaLabel = humanizeSlug(areaSlug || '')
-
-  const breadcrumbs: Crumb[] = useMemo(() => [
-    { label: 'Home', href: '/dashboard' },
-    { label: 'Planejamento', href: '/planning' },
-    { label: areaLabel, href: `/planning/${areaSlug}` },
-    { label: 'Dashboard' },
-  ], [areaSlug, areaLabel])
-
   // Salvar área atual no localStorage
   useEffect(() => {
     if (areaSlug) {
@@ -67,11 +53,7 @@ export function PlanningAreaDashboardPage() {
   }, [areaSlug, setLastArea])
 
   if (areaLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" />
-      </div>
-    )
+    return <PageLoader text="Carregando área..." />
   }
 
   if (!area) {
@@ -135,12 +117,6 @@ export function PlanningAreaDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={`Área ${areaLabel} — Dashboard`}
-        description={`Visão geral e acesso rápido para a área ${areaLabel}`}
-        breadcrumbs={breadcrumbs}
-      />
-
       {/* Quick Links */}
       <div>
         <h2 className="text-sm font-medium text-muted mb-3">Acesso rápido</h2>

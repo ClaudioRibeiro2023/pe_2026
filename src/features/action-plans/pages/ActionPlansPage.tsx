@@ -70,43 +70,43 @@ export function ActionPlansPage() {
   const { exportData } = useExport()
 
   const simulatedPlan = {
-    title: 'Plano Diretor 2026',
-    subtitle: 'Transformação digital e eficiência operacional com foco em impacto mensurável.',
-    owner: 'Gabriela Martins',
-    sponsor: 'Comitê Executivo',
-    deadline: '2026-11-30',
-    budget: 3250000,
-    progress: 62,
+    title: 'Portfólio executivo PE2026',
+    subtitle: 'Monetização da base contratual, escala com margem e preparação para transação com disciplina de execução.',
+    owner: 'Direção Executiva',
+    sponsor: 'Cláudio Ribeiro + Comitê Executivo',
+    deadline: '2026-12-15',
+    budget: 8002000,
+    progress: 64,
     programs: 6,
-    okrs: 9,
+    okrs: 5,
     initiatives: [
       {
-        title: 'Automação de processos críticos',
-        owner: 'Operações',
-        progress: 72,
+        title: 'Sala de Situação Pareto Top-14 + forecast 30/60/90',
+        owner: 'CS / Relacionamento',
+        progress: 55,
         status: 'Em andamento',
       },
       {
-        title: 'Analytics preditivo e forecast',
-        owner: 'BI & Dados',
-        progress: 54,
+        title: 'Painel de monetização e evidências executivas',
+        owner: 'P&D / Produto / Dados',
+        progress: 52,
         status: 'Em andamento',
       },
       {
-        title: 'Governança de dados & compliance',
-        owner: 'Jurídico',
-        progress: 38,
+        title: 'DRE gerencial por unidade e separação Aero × Techdengue',
+        owner: 'Financeiro',
+        progress: 61,
         status: 'Planejado',
       },
     ],
     kpis: [
-      { label: 'ROI estimado', value: '2,4x' },
-      { label: 'Economia anual', value: formatCurrency(1800000) },
-      { label: 'Engajamento interno', value: '↑ 18%' },
+      { label: 'Receita cenário base', value: formatCurrency(11440000) },
+      { label: 'Guardrail de margem', value: '≥ 30%' },
+      { label: 'Q1 contratado fixo', value: '50.438 ha' },
     ],
     risks: [
-      { label: 'Dependência de fornecedores críticos', level: 'Moderado' },
-      { label: 'Aderência ao change management', level: 'Alto' },
+      { label: 'RSK-02 Ativação abaixo do necessário para monetização', level: 'Alto' },
+      { label: 'RSK-03 Capacidade operacional crítica no Q1', level: 'Moderado' },
     ],
   }
 
@@ -574,8 +574,9 @@ export function ActionPlansPage() {
                   onChange={(value) => setFilter('status', value === 'all' ? '' : value)}
                   options={[
                     { value: 'all', label: 'Todos' },
-                    { value: 'pending', label: 'Pendente' },
+                    { value: 'planned', label: 'Planejado' },
                     { value: 'in_progress', label: 'Em Andamento' },
+                    { value: 'blocked', label: 'Bloqueado' },
                     { value: 'completed', label: 'Concluído' },
                     { value: 'cancelled', label: 'Cancelado' },
                   ]}
@@ -589,7 +590,7 @@ export function ActionPlansPage() {
                     { value: 'low', label: 'Baixa' },
                     { value: 'medium', label: 'Média' },
                     { value: 'high', label: 'Alta' },
-                    { value: 'urgent', label: 'Urgente' },
+                    { value: 'critical', label: 'Crítica' },
                   ]}
                 />
                 {hasActiveFilters && (

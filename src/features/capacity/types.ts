@@ -25,9 +25,9 @@ export interface QuarterlyMix {
 }
 
 export interface CapacityDistribution {
-  operacao: string
-  ativacao: string
-  produtoDados: string
+  operacoes: string
+  cs: string
+  pd: string
   comercialMarketing: string
   governanca: string
 }

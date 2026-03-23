@@ -3,11 +3,11 @@ import { AreaSubnav } from '../components/AreaSubnav'
 import { AreaProvider, useAreaContext } from '../contexts/AreaContext'
 
 function PlanningAreaLayoutContent() {
-  const { area, areaSlug } = useAreaContext()
+  const { areaSlug } = useAreaContext()
 
   return (
     <div className="flex flex-col h-full">
-      <AreaSubnav areaSlug={areaSlug} areaName={area?.name} />
+      <AreaSubnav areaSlug={areaSlug} />
       <div className="flex-1 overflow-auto">
         <Outlet />
       </div>

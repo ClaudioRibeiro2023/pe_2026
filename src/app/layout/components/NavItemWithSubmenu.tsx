@@ -39,7 +39,7 @@ export function NavItemWithSubmenu({ item, collapsed, onPreload }: NavItemWithSu
           cn(
             'nav-item group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200',
             isActive
-              ? 'nav-item-active bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
+              ? 'nav-item-active'
               : 'text-muted hover:text-foreground hover:bg-accent'
           )
         }
@@ -62,7 +62,7 @@ export function NavItemWithSubmenu({ item, collapsed, onPreload }: NavItemWithSu
         className={cn(
           'nav-item group flex w-full items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200',
           hasActiveChild
-            ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400'
+            ? 'text-primary-600 dark:text-primary-400 hover:bg-accent'
             : 'text-muted hover:text-foreground hover:bg-accent'
         )}
       >
@@ -92,7 +92,7 @@ export function NavItemWithSubmenu({ item, collapsed, onPreload }: NavItemWithSu
             transition={{ duration: 0.2, ease: 'easeInOut' }}
             className="overflow-hidden"
           >
-            <div className="ml-4 pl-4 border-l border-border/60 space-y-1 py-1">
+            <div className="ml-4 pl-4 border-l border-primary-200 dark:border-primary-800/50 space-y-1 py-1">
               {item.subItems.map((subItem) => (
                 <SubItemLink
                   key={subItem.href}
@@ -120,7 +120,7 @@ export function NavItemWithSubmenu({ item, collapsed, onPreload }: NavItemWithSu
                   cn(
                     'flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors',
                     isActive
-                      ? 'bg-primary-100 text-primary-700 font-medium'
+                      ? 'nav-item-active'
                       : 'text-muted hover:text-foreground hover:bg-accent'
                   )
                 }
@@ -152,7 +152,7 @@ function SubItemLink({ subItem, onPreload }: SubItemLinkProps) {
         cn(
           'flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg transition-all duration-200',
           isActive
-            ? 'bg-primary-100 text-primary-700 font-medium dark:bg-primary-900/30 dark:text-primary-400'
+            ? 'nav-item-active'
             : 'text-muted hover:text-foreground hover:bg-accent/70'
         )
       }

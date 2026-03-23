@@ -117,17 +117,17 @@
     --success-600: 34 197 94;
     --danger-600: 239 68 68;
     --warning-600: 251 146 60;
-    --nav-section: 148 163 184;
+    --nav-section: 100 116 139;
     --nav-item-text: 203 213 225;
     --nav-item-hover-bg: 51 65 85;
     --nav-item-hover-text: 248 250 252;
-    --nav-item-active-bg: 30 58 138;
-    --nav-item-active-text: 147 197 253;
+    --nav-item-active-bg: 37 99 235;
+    --nav-item-active-text: 255 255 255;
     --nav-icon-bg: 51 65 85;
     --nav-icon-text: 148 163 184;
-    --nav-icon-active-bg: 30 58 138;
-    --nav-icon-active-text: 147 197 253;
-    --nav-icon-active-border: 59 130 246;
+    --nav-icon-active-bg: 37 99 235;
+    --nav-icon-active-text: 255 255 255;
+    --nav-icon-active-border: 96 165 250;
   }
 }
 

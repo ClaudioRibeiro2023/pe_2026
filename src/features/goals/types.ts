@@ -15,7 +15,8 @@ export interface Goal extends BaseEntity {
   start_date: string
   end_date: string
   status: GoalStatus
-  user_id: string
+  user_id: string | null
+  is_canonical?: boolean
 }
 
 export interface GoalFormData {

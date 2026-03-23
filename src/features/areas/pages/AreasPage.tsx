@@ -38,8 +38,28 @@ const moduleStatusStyles: Record<string, string> = {
 }
 
 const areaLabelMap: Record<string, string> = {
-  Marketing: 'MKT',
+  Marketing: 'Marketing',
   Operacao: 'Operação',
+  'RH / Pessoas': 'RH / Pessoas',
+  'P&D / Produto / Dados': 'P&D / Produto / Dados',
+  'CS / Relacionamento': 'CS / Relacionamento',
+  Comercial: 'Comercial',
+  Financeiro: 'Financeiro',
+}
+
+const areaSlugMap: Record<string, string> = {
+  RH: 'rh',
+  'RH / Pessoas': 'rh',
+  Marketing: 'marketing',
+  MKT: 'marketing',
+  'P&D / Produto / Dados': 'pd',
+  'P&D': 'pd',
+  Operacao: 'operacoes',
+  Operação: 'operacoes',
+  'CS / Relacionamento': 'cs',
+  CS: 'cs',
+  Comercial: 'comercial',
+  Financeiro: 'financeiro',
 }
 
 export function AreasPage() {
@@ -108,7 +128,7 @@ export function AreasPage() {
           const areaLabel = areaLabelMap[area.area] ?? area.area
           const areaModules = area.modules ?? []
 
-          const areaSlug = area.area.toLowerCase().replace(/\s+/g, '-')
+          const areaSlug = areaSlugMap[area.area] ?? area.area.toLowerCase().replace(/\s+/g, '-')
 
           return (
             <Card key={area.area} className="border border-border hover:border-primary-300 transition-colors">

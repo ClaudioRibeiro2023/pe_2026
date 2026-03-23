@@ -1,97 +1,142 @@
 {
   "metadata": {
-    "version": "3.0",
-    "lastUpdate": "2026-01-14",
-    "source": "Analise_Estrategica_2025_Validada.md + PE2026_Metas_Final.md"
+    "version": "3.1",
+    "lastUpdate": "2026-03-01",
+    "source": "DOC 02 v2 + DOC 04 + DOC 06 v2 + DOC 07 v2 + DOC 11"
   },
   "pillars": [
     {
       "id": "P1",
-      "title": "Estrutura corporativa e governança",
-      "frontier": "Governança, separação Aero x Techdengue e padrão sell-ready.",
+      "title": "Estrutura Corporativa, Governança e Preparação para Transação",
+      "frontier": "Organização gerenciável, auditável e pronta para separação Aero × Techdengue.",
       "subpillars": [
         {
           "id": "P1.S1",
-          "title": "Governança e compliance",
-          "frontier": "Rituais, decisões e controles de qualidade contínuos."
+          "title": "Governança e cadências de gestão",
+          "frontier": "WBR, MBR, QBR e War Room com decisões rastreáveis."
         },
         {
           "id": "P1.S2",
-          "title": "Finanças por unidade",
-          "frontier": "P&L gerencial e disciplina de reporting por unidade."
+          "title": "Finanças por unidade e DRE gerencial",
+          "frontier": "Apuração econômica por unidade com fechamento disciplinado."
         },
         {
           "id": "P1.S3",
-          "title": "Rastreabilidade e evidências",
-          "frontier": "Mapas de rastreabilidade e evidências verificáveis."
+          "title": "Rastreabilidade, evidências e formalizações",
+          "frontier": "DEC-*, EVID-* e MAP-TRC operando como padrão mínimo."
+        },
+        {
+          "id": "P1.S4",
+          "title": "Preparação para transação e separação",
+          "frontier": "Separação Aero × Techdengue por fases e prontidão sell-ready."
         }
       ]
     },
     {
       "id": "P2",
-      "title": "Crescimento e diversificação",
-      "frontier": "Monetização previsível e carteira diversificada.",
+      "title": "Crescimento, Expansão e Diversificação",
+      "frontier": "Expandir com tese, reduzir concentração e monetizar a base contratual.",
       "subpillars": [
         {
           "id": "P2.S1",
-          "title": "Monetização Q1",
-          "frontier": "War Room e execução do saldo com previsibilidade."
+          "title": "Monetização da base contratual",
+          "frontier": "Contrato → demanda → agenda → execução → caixa com previsibilidade."
         },
         {
           "id": "P2.S2",
-          "title": "Novos contratos",
-          "frontier": "Pipeline robusto e diversificado."
+          "title": "Pareto Top-14 e ativação",
+          "frontier": "Sala de Situação com foco em ativação e redução de saldo."
+        },
+        {
+          "id": "P2.S3",
+          "title": "Expansão e permanência",
+          "frontier": "Aumentar vazão com agenda confirmada e forecast 30/60/90."
+        },
+        {
+          "id": "P2.S4",
+          "title": "Diversificação com tese",
+          "frontier": "Pipeline comercial disciplinado, ICP e redução de concentração."
         }
       ]
     },
     {
       "id": "P3",
-      "title": "Excelência operacional",
-      "frontier": "Escala com qualidade, capacidade e margem sustentadas.",
+      "title": "Excelência Operacional e Escala com Margem",
+      "frontier": "Executar com qualidade, produtividade, margem e prontidão.",
       "subpillars": [
         {
           "id": "P3.S1",
-          "title": "Capacidade e escala",
-          "frontier": "Planejamento operacional e produtividade."
+          "title": "Capacidade e planejamento semanal",
+          "frontier": "Planejamento operacional contínuo com leitura de gargalos."
         },
         {
           "id": "P3.S2",
-          "title": "Qualidade e padronização",
-          "frontier": "Processos replicáveis e auditoria interna."
+          "title": "Qualidade e SLA",
+          "frontier": "Padrão mínimo auditável para execução e entrega."
+        },
+        {
+          "id": "P3.S3",
+          "title": "Produtividade e margem",
+          "frontier": "Escalar mantendo margem operacional ≥ 30%."
+        },
+        {
+          "id": "P3.S4",
+          "title": "Integração entre áreas de execução",
+          "frontier": "Operação, CS e Dados sincronizados em pontos de passagem."
         }
       ]
     },
     {
       "id": "P4",
-      "title": "Produto, dados e IA",
-      "frontier": "Provas de valor e automação orientada a resultados.",
+      "title": "Produto, Dados e IA como Vantagem Defensável",
+      "frontier": "Transformar tecnologia em vantagem competitiva duradoura.",
       "subpillars": [
         {
           "id": "P4.S1",
-          "title": "Prova de valor",
-          "frontier": "Biblioteca de evidências e painéis por cliente."
+          "title": "Evidência e prova de valor",
+          "frontier": "Biblioteca de evidências e relatórios executivos por ciclo."
         },
         {
           "id": "P4.S2",
+          "title": "Painel de monetização e inteligência de gestão",
+          "frontier": "Saldo, vazão e previsão 30/60/90 em painel executivo."
+        },
+        {
+          "id": "P4.S3",
           "title": "Automação aplicada",
-          "frontier": "Eficiência operacional e uso de IA com governança."
+          "frontier": "Automação e IA com governança e ganho mensurável."
+        },
+        {
+          "id": "P4.S4",
+          "title": "Produto como ativo defensável",
+          "frontier": "Aumentar lock-in e prova recorrente de valor para o mercado."
         }
       ]
     },
     {
       "id": "P5",
-      "title": "Pessoas e liderança",
-      "frontier": "Densidade intelectual, liderança e cultura sustentável.",
+      "title": "Pessoas, Liderança e Capacidade Intelectual",
+      "frontier": "Capacidade de sustentar crescimento com método e densidade intelectual.",
       "subpillars": [
         {
           "id": "P5.S1",
-          "title": "People analytics",
-          "frontier": "Indicadores de clima, retenção e performance."
+          "title": "Saúde organizacional e retenção",
+          "frontier": "Turnover, engajamento e saúde organizacional monitorados."
         },
         {
           "id": "P5.S2",
-          "title": "Rituais de liderança",
-          "frontier": "Cadência e desenvolvimento de líderes."
+          "title": "Liderança e rituais mínimos",
+          "frontier": "Cadência mínima de liderança e desenvolvimento aplicado."
+        },
+        {
+          "id": "P5.S3",
+          "title": "Posições-chave e sucessão",
+          "frontier": "Cobertura das posições críticas e sucessão mínima."
+        },
+        {
+          "id": "P5.S4",
+          "title": "Onboarding e densidade intelectual",
+          "frontier": "Onboarding mensurável e transferência de conhecimento."
         }
       ]
     }
@@ -99,80 +144,98 @@
   "themes": [
     {
       "id": "TH-01",
-      "title": "Governança mínima e rastreável",
-      "description": "Padrões e evidências obrigatórias para decisões e execução.",
+      "title": "Separação Aero × Techdengue",
+      "description": "Definir e operar a separação gerencial, econômica e decisória entre as unidades.",
       "pillar": "P1"
     },
     {
       "id": "TH-02",
-      "title": "Monetização com previsibilidade",
-      "description": "War Room, Pareto ativo e plano de ativação por cliente.",
-      "pillar": "P2"
+      "title": "Techdengue sell-ready",
+      "description": "Preparar a unidade para leitura auditável, governável e transacionável.",
+      "pillar": "P1"
     },
     {
       "id": "TH-03",
-      "title": "Escala com qualidade",
-      "description": "Processos padronizados, auditoria interna e produtividade.",
-      "pillar": "P3"
+      "title": "Monetização da base contratual",
+      "description": "Converter saldo contratado em demanda, agenda, execução e caixa previsíveis.",
+      "pillar": "P2"
     },
     {
       "id": "TH-04",
-      "title": "Produto como prova de valor",
-      "description": "Evidências, painéis e automação aplicada.",
-      "pillar": "P4"
+      "title": "Expansão com permanência",
+      "description": "Expandir preservando qualidade, ativação e renovação da base.",
+      "pillar": "P2"
     },
     {
       "id": "TH-05",
-      "title": "Liderança e pessoas",
-      "description": "Rituais de liderança, clima e retenção.",
+      "title": "Diversificação Aero",
+      "description": "Reduzir concentração com tese comercial, ICP e novos clientes.",
+      "pillar": "P2"
+    },
+    {
+      "id": "TH-06",
+      "title": "Densidade intelectual",
+      "description": "Criar capacidade humana e intelectual para sustentar escala com método.",
       "pillar": "P5"
+    },
+    {
+      "id": "TH-07",
+      "title": "Governança e disciplina de gestão",
+      "description": "Formalizar cadências, registros e disciplina de execução na rotina da empresa.",
+      "pillar": "P3"
+    },
+    {
+      "id": "TH-08",
+      "title": "Produto, Dados e IA",
+      "description": "Usar produto, dados e IA como prova de valor e vantagem defensável.",
+      "pillar": "P4"
     }
   ],
   "objectives": [
     {
       "id": "OBJ-01",
-      "title": "Implementar governança corporativa e separação gerencial",
+      "title": "Implantar padrão de empresa auditável e preparada para separação",
       "pillar": "P1",
       "theme": "TH-01",
       "owner": "Direção Executiva",
       "linkedOkrs": ["OKR-P1"],
-      "krs": ["KR-P1-01", "KR-P1-02", "KR-P1-03"]
+      "krs": ["KR-P1-01", "KR-P1-02", "KR-P1-03", "KR-P1-04", "KR-P1-05"]
     },
     {
       "id": "OBJ-02",
-      "title": "Monetizar base contratual com previsibilidade",
+      "title": "Monetizar a base contratual com previsibilidade e tese",
       "pillar": "P2",
-      "theme": "TH-02",
-      "owner": "Direção Executiva",
+      "theme": "TH-03",
+      "owner": "Direção Executiva + CS / Relacionamento",
       "linkedOkrs": ["OKR-P2"],
-      "krs": ["KR-P2-01", "KR-P2-02", "KR-P2-03"]
+      "krs": ["KR-P2-01", "KR-P2-02", "KR-P2-03", "KR-P2-04", "KR-P2-05"]
     },
     {
       "id": "OBJ-03",
-      "title": "Escalar operação com qualidade e margem",
+      "title": "Escalar a operação com margem, qualidade e prontidão",
       "pillar": "P3",
-      "theme": "TH-03",
+      "theme": "TH-07",
       "owner": "Operação",
       "linkedOkrs": ["OKR-P3"],
-      "krs": ["KR-P3-01", "KR-P3-02"]
+      "krs": ["KR-P3-01", "KR-P3-02", "KR-P3-03", "KR-P3-04", "KR-P3-05"]
     },
     {
       "id": "OBJ-04",
-      "title": "Produto e dados como prova de valor",
+      "title": "Transformar produto, dados e IA em vantagem defensável",
       "pillar": "P4",
-      "theme": "TH-04",
-      "owner": "Produto/Dados",
+      "theme": "TH-08",
+      "owner": "Direção Executiva",
       "linkedOkrs": ["OKR-P4"],
-      "krs": ["KR-P4-01", "KR-P4-02"]
+      "krs": ["KR-P4-01", "KR-P4-02", "KR-P4-03", "KR-P4-04", "KR-P4-05"]
     },
     {
       "id": "OBJ-05",
-      "title": "Fortalecer liderança e densidade intelectual",
+      "title": "Fortalecer liderança, retenção e capacidade intelectual",
       "pillar": "P5",
-      "theme": "TH-05",
-      "owner": "RH",
+      "theme": "TH-06",
+      "owner": "RH / Pessoas",
       "linkedOkrs": ["OKR-P5"],
-      "krs": ["KR-P5-01", "KR-P5-02"]
+      "krs": ["KR-P5-01", "KR-P5-02", "KR-P5-03", "KR-P5-04", "KR-P5-05"]
     }
   ],
   "performance2025": {

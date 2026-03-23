@@ -7,13 +7,45 @@ import { mockStore, generateId, now } from './utils/mockData'
 import './utils/mockActions' // Carrega os dados mock de ações
 import type {
   Area, AreaPlan, PlanAction, ActionSubtask, ActionEvidence,
-  ActionComment, ActionHistory, ActionRisk, Pillar, AreaOkr, Initiative,
+  ActionComment, ActionHistory, ActionRisk, Pillar, Subpillar, AreaOkr, Initiative,
+  CorporateOkr, KeyResult, Motor, StrategicTheme, StrategicRisk, FinancialScenario,
   AreaPlanProgress, AreaPillarProgress, EvidenceBacklogItem,
   CreateAreaPlanData, UpdateAreaPlanData, CreatePlanActionData, UpdatePlanActionData,
   CreateSubtaskData, UpdateSubtaskData, CreateEvidenceData,
   CreateCommentData, UpdateCommentData, CreateRiskData, UpdateRiskData, ActionFilters,
   ActionStatus,
 } from './types'
+
+ const CANONICAL_ID_BY_LEGACY_ID: Record<string, string> = {
+  'area-mkt': 'area-marketing',
+  'area-ops': 'area-operacoes',
+  'plan-mkt-2026': 'plan-marketing-2026',
+  'plan-ops-2026': 'plan-operacoes-2026',
+  'pack-mkt-2026': 'pack-marketing-2026',
+  'pack-ops-2026': 'pack-operacoes-2026',
+  'area-okr-mkt-1': 'area-okr-marketing-1',
+  'area-okr-mkt-2': 'area-okr-marketing-2',
+  'area-okr-ops-1': 'area-okr-operacoes-1',
+  'area-okr-ops-2': 'area-okr-operacoes-2',
+ }
+
+ function normalizeMockId(id: string | null | undefined): string | null | undefined {
+  if (!id) return id
+  return CANONICAL_ID_BY_LEGACY_ID[id] ?? id
+ }
+
+ function matchesMockId(candidate: string | null | undefined, requested: string | null | undefined): boolean {
+  return normalizeMockId(candidate) === normalizeMockId(requested)
+ }
+
+ function normalizeActionReferences(action: PlanAction): PlanAction {
+  return {
+    ...action,
+    plan_id: normalizeMockId(action.plan_id) || action.plan_id,
+    area_okr_id: normalizeMockId(action.area_okr_id) || action.area_okr_id,
+    pack_id: normalizeMockId(action.pack_id) || action.pack_id,
+  }
+ }
 
 // ============================================================
 // ÁREAS
@@ -44,7 +76,7 @@ export async function fetchPillars(): Promise<Pillar[]> {
 
 export async function fetchAreaOkrs(areaId: string): Promise<AreaOkr[]> {
   console.info('[Mock API] fetchAreaOkrs:', areaId)
-  return mockStore.areaOkrs.filter(o => o.area_id === areaId)
+  return mockStore.areaOkrs.filter(o => matchesMockId(o.area_id, areaId))
 }
 
 // ============================================================
@@ -86,7 +118,7 @@ export async function fetchAreaPlanByAreaSlug(areaSlug: string, year: number): P
 
 export async function fetchAreaPlanById(planId: string): Promise<AreaPlan | null> {
   console.info('[Mock API] fetchAreaPlanById:', planId)
-  const plan = mockStore.plans.find(p => p.id === planId)
+  const plan = mockStore.plans.find(p => matchesMockId(p.id, planId))
   if (!plan) return null
   return { ...plan, area: mockStore.areas.find(a => a.id === plan.area_id) }
 }
@@ -101,7 +133,7 @@ export async function createAreaPlan(data: CreateAreaPlanData & { pack_id?: stri
     description: data.description || null,
     status: 'RASCUNHO',
     template_id: data.template_id || null,
-    pack_id: data.pack_id || null,
+    pack_id: normalizeMockId(data.pack_id) || null,
     created_by: 'mock-user',
     manager_approved_by: null,
     manager_approved_at: null,
@@ -131,7 +163,7 @@ export async function getOrCreatePlanForPack(params: {
   
   // Buscar plano existente por (area_id, year, pack_id)
   const existingPlan = mockStore.plans.find(
-    p => p.area_id === area.id && p.year === params.year && p.pack_id === params.packId
+    p => p.area_id === area.id && p.year === params.year && matchesMockId(p.pack_id, params.packId)
   )
   
   if (existingPlan) {
@@ -154,22 +186,26 @@ export async function getOrCreatePlanForPack(params: {
 
 export async function fetchPlanByPackId(packId: string): Promise<AreaPlan | null> {
   console.info('[Mock API] fetchPlanByPackId:', packId)
-  const plan = mockStore.plans.find(p => p.pack_id === packId)
+  const plan = mockStore.plans.find(p => matchesMockId(p.pack_id, packId))
   if (!plan) return null
   return { ...plan, area: mockStore.areas.find(a => a.id === plan.area_id) }
 }
 
 export async function updateAreaPlan(planId: string, data: UpdateAreaPlanData): Promise<AreaPlan> {
   console.info('[Mock API] updateAreaPlan:', planId, data)
-  const index = mockStore.plans.findIndex(p => p.id === planId)
+  const index = mockStore.plans.findIndex(p => matchesMockId(p.id, planId))
   if (index === -1) throw new Error('Plano não encontrado')
-  mockStore.plans[index] = { ...mockStore.plans[index], ...data, updated_at: now() }
+  mockStore.plans[index] = {
+    ...mockStore.plans[index],
+    ...data,
+    updated_at: now(),
+  }
   return { ...mockStore.plans[index], area: mockStore.areas.find(a => a.id === mockStore.plans[index].area_id) }
 }
 
 export async function deleteAreaPlan(planId: string): Promise<void> {
   console.info('[Mock API] deleteAreaPlan:', planId)
-  const index = mockStore.plans.findIndex(p => p.id === planId)
+  const index = mockStore.plans.findIndex(p => matchesMockId(p.id, planId))
   if (index !== -1) mockStore.plans.splice(index, 1)
 }
 
@@ -179,7 +215,7 @@ export async function deleteAreaPlan(planId: string): Promise<void> {
 
 export async function approvePlanAsManager(planId: string): Promise<{ success: boolean; message?: string }> {
   console.info('[Mock API] approvePlanAsManager:', planId)
-  const index = mockStore.plans.findIndex(p => p.id === planId)
+  const index = mockStore.plans.findIndex(p => matchesMockId(p.id, planId))
   if (index === -1) return { success: false, message: 'Plano não encontrado' }
   mockStore.plans[index].manager_approved_by = 'mock-manager'
   mockStore.plans[index].manager_approved_at = now()
@@ -190,7 +226,7 @@ export async function approvePlanAsManager(planId: string): Promise<{ success: b
 
 export async function approvePlanAsDirection(planId: string): Promise<{ success: boolean; message?: string }> {
   console.info('[Mock API] approvePlanAsDirection:', planId)
-  const index = mockStore.plans.findIndex(p => p.id === planId)
+  const index = mockStore.plans.findIndex(p => matchesMockId(p.id, planId))
   if (index === -1) return { success: false, message: 'Plano não encontrado' }
   mockStore.plans[index].direction_approved_by = 'mock-director'
   mockStore.plans[index].direction_approved_at = now()
@@ -201,7 +237,7 @@ export async function approvePlanAsDirection(planId: string): Promise<{ success:
 
 export async function rejectPlan(planId: string, reason?: string): Promise<{ success: boolean; message?: string }> {
   console.info('[Mock API] rejectPlan:', planId, reason)
-  const index = mockStore.plans.findIndex(p => p.id === planId)
+  const index = mockStore.plans.findIndex(p => matchesMockId(p.id, planId))
   if (index === -1) return { success: false, message: 'Plano não encontrado' }
   mockStore.plans[index].status = 'RASCUNHO'
   mockStore.plans[index].updated_at = now()
@@ -218,7 +254,7 @@ export async function fetchPlanActions(
   pagination?: { page: number; limit: number }
 ): Promise<PlanAction[] | { data: PlanAction[]; total: number }> {
   console.info('[Mock API] fetchPlanActions:', planId, filters, pagination)
-  let actions = mockStore.actions.filter(a => a.plan_id === planId)
+  let actions = mockStore.actions.filter(a => matchesMockId(a.plan_id, planId))
   
   if (filters) {
     if (filters.status?.length) actions = actions.filter(a => filters.status!.includes(a.status))
@@ -236,7 +272,7 @@ export async function fetchPlanActions(
   }
   
   const enrichedActions = actions.map(action => ({
-    ...action,
+    ...normalizeActionReferences(action),
     pillar: mockStore.pillars.find(p => p.id === action.pillar_id),
     subtasks: mockStore.subtasks.filter(s => s.action_id === action.id),
   }))
@@ -256,7 +292,7 @@ export async function fetchActionById(actionId: string): Promise<PlanAction | nu
   const action = mockStore.actions.find(a => a.id === actionId)
   if (!action) return null
   return {
-    ...action,
+    ...normalizeActionReferences(action),
     pillar: mockStore.pillars.find(p => p.id === action.pillar_id),
     subtasks: mockStore.subtasks.filter(s => s.action_id === action.id),
     evidences: mockStore.evidences.filter(e => e.action_id === action.id),
@@ -269,12 +305,12 @@ export async function createPlanAction(data: CreatePlanActionData): Promise<Plan
   console.info('[Mock API] createPlanAction:', data)
   const newAction: PlanAction = {
     id: generateId('action'),
-    plan_id: data.plan_id,
+    plan_id: normalizeMockId(data.plan_id) || data.plan_id,
     pillar_id: data.pillar_id || null,
-    area_okr_id: data.area_okr_id || null,
+    area_okr_id: normalizeMockId(data.area_okr_id) || null,
     initiative_id: data.initiative_id || null,
     parent_action_id: data.parent_action_id || null,
-    pack_id: data.pack_id || null,
+    pack_id: normalizeMockId(data.pack_id) || null,
     program_key: data.program_key || null,
     objective_key: data.objective_key || null,
     section_id: data.section_id || null,
@@ -311,7 +347,7 @@ export async function createPlanAction(data: CreatePlanActionData): Promise<Plan
     changed_at: now(),
   })
   
-  return newAction
+  return normalizeActionReferences(newAction)
 }
 
 export async function updatePlanAction(actionId: string, data: UpdatePlanActionData): Promise<PlanAction> {
@@ -320,7 +356,13 @@ export async function updatePlanAction(actionId: string, data: UpdatePlanActionD
   if (index === -1) throw new Error('Ação não encontrada')
   
   const oldAction = { ...mockStore.actions[index] }
-  mockStore.actions[index] = { ...mockStore.actions[index], ...data, updated_at: now() }
+  mockStore.actions[index] = {
+    ...mockStore.actions[index],
+    ...data,
+    area_okr_id: normalizeMockId(data.area_okr_id) || (data.area_okr_id === null ? null : mockStore.actions[index].area_okr_id),
+    pack_id: normalizeMockId(data.pack_id) || (data.pack_id === null ? null : mockStore.actions[index].pack_id),
+    updated_at: now(),
+  }
   
   // Registrar mudanças no histórico
   Object.keys(data).forEach(key => {
@@ -339,7 +381,7 @@ export async function updatePlanAction(actionId: string, data: UpdatePlanActionD
     }
   })
   
-  return mockStore.actions[index]
+  return normalizeActionReferences(mockStore.actions[index])
 }
 
 export async function deletePlanAction(actionId: string): Promise<void> {
@@ -360,17 +402,23 @@ export async function updateActionStatus(actionId: string, status: string): Prom
 
 export async function fetchActionsByPackId(packId: string): Promise<PlanAction[]> {
   console.info('[Mock API] fetchActionsByPackId:', packId)
-  return mockStore.actions.filter(a => a.pack_id === packId)
+  return mockStore.actions
+    .filter(a => matchesMockId(a.pack_id, packId))
+    .map(action => normalizeActionReferences(action))
 }
 
 export async function fetchActionsByProgramKey(packId: string, programKey: string): Promise<PlanAction[]> {
   console.info('[Mock API] fetchActionsByProgramKey:', packId, programKey)
-  return mockStore.actions.filter(a => a.pack_id === packId && a.program_key === programKey)
+  return mockStore.actions
+    .filter(a => matchesMockId(a.pack_id, packId) && a.program_key === programKey)
+    .map(action => normalizeActionReferences(action))
 }
 
 export async function fetchActionsByObjectiveKey(packId: string, objectiveKey: string): Promise<PlanAction[]> {
   console.info('[Mock API] fetchActionsByObjectiveKey:', packId, objectiveKey)
-  return mockStore.actions.filter(a => a.pack_id === packId && a.objective_key === objectiveKey)
+  return mockStore.actions
+    .filter(a => matchesMockId(a.pack_id, packId) && a.objective_key === objectiveKey)
+    .map(action => normalizeActionReferences(action))
 }
 
 // ============================================================
@@ -590,7 +638,7 @@ export async function fetchAreaPlanProgress(year?: number): Promise<AreaPlanProg
   
   return plans.map(plan => {
     const area = mockStore.areas.find(a => a.id === plan.area_id)!
-    const actions = mockStore.actions.filter(a => a.plan_id === plan.id)
+    const actions = mockStore.actions.filter(a => matchesMockId(a.plan_id, plan.id))
     
     const totalActions = actions.length
     const completedActions = actions.filter(a => a.status === 'CONCLUIDA').length
@@ -625,11 +673,11 @@ export async function fetchAreaPlanProgress(year?: number): Promise<AreaPlanProg
 
 export async function fetchAreaPillarProgress(areaId: string, year: number): Promise<AreaPillarProgress[]> {
   console.info('[Mock API] fetchAreaPillarProgress:', areaId, year)
-  const area = mockStore.areas.find(a => a.id === areaId)
-  const plan = mockStore.plans.find(p => p.area_id === areaId && p.year === year)
+  const area = mockStore.areas.find(a => matchesMockId(a.id, areaId))
+  const plan = mockStore.plans.find(p => matchesMockId(p.area_id, areaId) && p.year === year)
   if (!plan || !area) return []
   
-  const actions = mockStore.actions.filter(a => a.plan_id === plan.id)
+  const actions = mockStore.actions.filter(a => matchesMockId(a.plan_id, plan.id))
   const pillarMap = new Map<string, AreaPillarProgress>()
   
   mockStore.pillars.forEach(pillar => {
@@ -659,7 +707,7 @@ export async function fetchEvidenceBacklog(): Promise<EvidenceBacklogItem[]> {
     .filter(e => e.status === 'PENDENTE' || e.status === 'APROVADA_GESTOR')
     .map(e => {
       const action = mockStore.actions.find(a => a.id === e.action_id)
-      const plan = action ? mockStore.plans.find(p => p.id === action.plan_id) : null
+      const plan = action ? mockStore.plans.find(p => matchesMockId(p.id, action.plan_id)) : null
       const area = plan ? mockStore.areas.find(a => a.id === plan.area_id) : null
       
       return {
@@ -694,7 +742,7 @@ export async function fetchPlanStats(planId: string): Promise<{
   totalCostActual: number
 }> {
   console.info('[Mock API] fetchPlanStats:', planId)
-  const actions = mockStore.actions.filter(a => a.plan_id === planId)
+  const actions = mockStore.actions.filter(a => matchesMockId(a.plan_id, planId))
   const today = new Date().toISOString().split('T')[0]
   const completed = actions.filter(a => a.status === 'CONCLUIDA').length
   
@@ -711,4 +759,108 @@ export async function fetchPlanStats(planId: string): Promise<{
     totalCostEstimate: actions.reduce((sum, a) => sum + (a.cost_estimate || 0), 0),
     totalCostActual: actions.reduce((sum, a) => sum + (a.cost_actual || 0), 0),
   }
+}
+
+// ============================================================
+// SUBPILARES
+// ============================================================
+
+export async function fetchSubpillars(pillarId?: string): Promise<Subpillar[]> {
+  console.info('[Mock API] fetchSubpillars', pillarId ?? 'all')
+  if (pillarId) {
+    return mockStore.subpillars.filter(sp => sp.pillar_id === pillarId)
+  }
+  return [...mockStore.subpillars]
+}
+
+export async function fetchSubpillarsByPillarCode(pillarCode: string): Promise<Subpillar[]> {
+  const pillar = mockStore.pillars.find(p => p.code === pillarCode)
+  if (!pillar) return []
+  return mockStore.subpillars.filter(sp => sp.pillar_id === pillar.id)
+}
+
+// ============================================================
+// OKRs CORPORATIVOS + KEY RESULTS
+// ============================================================
+
+export async function fetchCorporateOkrs(): Promise<CorporateOkr[]> {
+  console.info('[Mock API] fetchCorporateOkrs')
+  return mockStore.corporateOkrs.map(okr => ({
+    ...okr,
+    pillar: mockStore.pillars.find(p => p.id === okr.pillar_id),
+    key_results: mockStore.keyResults.filter(kr => kr.okr_id === okr.id),
+  }))
+}
+
+export async function fetchKeyResults(okrId?: string): Promise<KeyResult[]> {
+  console.info('[Mock API] fetchKeyResults', okrId ?? 'all')
+  if (okrId) {
+    return mockStore.keyResults.filter(kr => kr.okr_id === okrId)
+  }
+  return [...mockStore.keyResults]
+}
+
+export async function fetchKeyResultByCode(code: string): Promise<KeyResult | null> {
+  return mockStore.keyResults.find(kr => kr.code === code) ?? null
+}
+
+// ============================================================
+// MOTORES ESTRATÉGICOS
+// ============================================================
+
+export async function fetchMotors(): Promise<Motor[]> {
+  console.info('[Mock API] fetchMotors')
+  return [...mockStore.motors]
+}
+
+export async function fetchMotorByCode(code: string): Promise<Motor | null> {
+  return mockStore.motors.find(m => m.code === code) ?? null
+}
+
+// ============================================================
+// TEMAS ESTRATÉGICOS
+// ============================================================
+
+export async function fetchStrategicThemes(): Promise<StrategicTheme[]> {
+  console.info('[Mock API] fetchStrategicThemes')
+  return [...mockStore.strategicThemes].sort((a, b) => a.priority - b.priority)
+}
+
+export async function fetchStrategicThemesByPillar(pillarCode: string): Promise<StrategicTheme[]> {
+  return mockStore.strategicThemes.filter(th => th.pillar_codes.includes(pillarCode))
+}
+
+// ============================================================
+// RISCOS ESTRATÉGICOS
+// ============================================================
+
+export async function fetchStrategicRisks(severity?: string): Promise<StrategicRisk[]> {
+  console.info('[Mock API] fetchStrategicRisks', severity ?? 'all')
+  const order: Record<string, number> = { CRITICO: 0, ALTO: 1, MONITORADO: 2 }
+  let risks = [...mockStore.strategicRisks]
+  if (severity) {
+    risks = risks.filter(r => r.severity === severity)
+  }
+  return risks.sort((a, b) => (order[a.severity] ?? 9) - (order[b.severity] ?? 9))
+}
+
+export async function fetchStrategicRiskByCode(code: string): Promise<StrategicRisk | null> {
+  return mockStore.strategicRisks.find(r => r.code === code) ?? null
+}
+
+// ============================================================
+// CENÁRIOS FINANCEIROS
+// ============================================================
+
+export async function fetchFinancialScenarios(): Promise<FinancialScenario[]> {
+  console.info('[Mock API] fetchFinancialScenarios')
+  return [...mockStore.financialScenarios]
+}
+
+export async function fetchReferenceScenario(): Promise<FinancialScenario | null> {
+  return mockStore.financialScenarios.find(s => s.is_reference) ?? null
+}
+
+export async function fetchFinancialScenarioByCode(code: string): Promise<FinancialScenario | null> {
+  return mockStore.financialScenarios.find(s => s.code === code) ?? null
 }

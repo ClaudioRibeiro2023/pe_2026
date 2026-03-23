@@ -34,6 +34,14 @@ export interface DataHealthMetric {
   issues: string[]
 }
 
+export interface ModuleStatus {
+  module: string
+  enabled: boolean
+  source: string
+  updated_at: string | null
+  label?: string
+}
+
 export interface BenchmarkData {
   id: string
   metric: string

@@ -77,26 +77,26 @@
       "status": "Agenda confirmada"
     }
   ],
-  "activationPlans": [
+  "activations": [
     {
       "id": "ACT-2026-01",
       "contratante": "Municipio A",
-      "owner": "CS",
+      "owner": "CS / Relacionamento",
       "status": "ATIVO",
       "agenda30": 1200,
       "agenda60": 1800,
-      "agenda90": 2500,
-      "nextAction": "Reuniao com secretaria para agenda Q1",
+      "agenda90": 2200,
+      "nextAction": "Confirmar agenda técnica e patrocinio local",
       "evidence": "EVID-2026-001"
     },
     {
       "id": "ACT-2026-02",
       "contratante": "Consorcio C",
-      "owner": "CS",
+      "owner": "CS / Relacionamento",
       "status": "EM_RISCO",
       "agenda30": 600,
       "agenda60": 900,
-      "agenda90": 1400,
+      "agenda90": 1500,
       "nextAction": "Escalonar patrocinio institucional",
       "evidence": "EVID-2026-004"
     }
@@ -106,7 +106,7 @@
       "id": "INT-01",
       "interface": "Contrato -> Demanda",
       "cadence": "Semanal",
-      "owners": "CS + Direcao",
+      "owners": "CS / Relacionamento + Direção Executiva",
       "inputs": ["Saldo por contratante", "Mapa de stakeholders", "Pareto Top-14"],
       "outputs": ["Plano de ativacao", "Agenda 30/60/90", "EVID de contato"]
     },
@@ -114,7 +114,7 @@
       "id": "INT-02",
       "interface": "Demanda -> Execucao",
       "cadence": "Semanal",
-      "owners": "CS + Operacao",
+      "owners": "CS / Relacionamento + Operação",
       "inputs": ["Agenda confirmada", "Prioridade Pareto", "Capacidade operacional"],
       "outputs": ["Pipeline operacional", "Cronograma", "Checklist de preparo"]
     },
@@ -122,7 +122,7 @@
       "id": "INT-03",
       "interface": "Execucao -> Caixa",
       "cadence": "Quinzenal",
-      "owners": "Operacao + Financeiro",
+      "owners": "Operação + Financeiro",
       "inputs": ["Execucao realizada", "Documentacao de faturamento"],
       "outputs": ["Faturamento emitido", "Plano de cobranca", "Previsao de caixa"]
     },
@@ -130,7 +130,7 @@
       "id": "INT-04",
       "interface": "Execucao -> Prova de valor",
       "cadence": "Quinzenal",
-      "owners": "Produto/Dados + CS",
+      "owners": "P&D / Produto / Dados + CS / Relacionamento",
       "inputs": ["Dados de execucao", "Resultados entregues"],
       "outputs": ["Relatorio executivo", "Insights", "Material de decisao"]
     }

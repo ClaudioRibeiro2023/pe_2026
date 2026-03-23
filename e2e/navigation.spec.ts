@@ -23,6 +23,8 @@ const protectedRoutes = [
 ]
 
 test.describe('Navigation — Route Guards', () => {
+  test.skip(!process.env.E2E_TEST_EMAIL, 'Requires Supabase auth mode — run via: npm run test:e2e:local')
+
   for (const route of protectedRoutes) {
     test(`${route} redirects to login when unauthenticated`, async ({ page }) => {
       // Collect console errors
@@ -43,6 +45,7 @@ test.describe('Navigation — Route Guards', () => {
 
 test.describe('Navigation — Public Routes', () => {
   test('root redirects to dashboard then login', async ({ page }) => {
+    test.skip(!process.env.E2E_TEST_EMAIL, 'Requires Supabase auth mode')
     await page.goto('/')
     await page.waitForLoadState('networkidle')
     // Should end up at /login (via /dashboard redirect chain)
@@ -50,6 +53,7 @@ test.describe('Navigation — Public Routes', () => {
   })
 
   test('login page renders without errors', async ({ page }) => {
+    test.skip(!process.env.E2E_TEST_EMAIL, 'Requires Supabase auth mode — demo user redirects /login to /dashboard')
     const jsErrors: string[] = []
     page.on('pageerror', (err) => jsErrors.push(err.message))
 

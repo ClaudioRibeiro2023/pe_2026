@@ -4,6 +4,22 @@
 
 import { mockStore } from './mockData'
 
+const CANONICAL_ID_BY_LEGACY_ID: Record<string, string> = {
+  'plan-mkt-2026': 'plan-marketing-2026',
+  'plan-ops-2026': 'plan-operacoes-2026',
+  'pack-mkt-2026': 'pack-marketing-2026',
+  'pack-ops-2026': 'pack-operacoes-2026',
+  'area-okr-mkt-1': 'area-okr-marketing-1',
+  'area-okr-mkt-2': 'area-okr-marketing-2',
+  'area-okr-ops-1': 'area-okr-operacoes-1',
+  'area-okr-ops-2': 'area-okr-operacoes-2',
+}
+
+const normalizeMockId = (id: string | null | undefined): string | null | undefined => {
+  if (!id) return id
+  return CANONICAL_ID_BY_LEGACY_ID[id] ?? id
+}
+
 // ============================================================
 // AÇÕES (50+ ações em vários status)
 // ============================================================
@@ -98,10 +114,10 @@ mockStore.actions = [
   { id: 'OPS-LEA-08', plan_id: 'plan-ops-2026', pillar_id: 'pillar-1', area_okr_id: 'area-okr-ops-2', initiative_id: 'init-2', parent_action_id: null, pack_id: 'pack-ops-2026', program_key: 'lean', objective_key: 'OP3', section_id: null, node_type: 'acao', title: 'Treinamento Lean para gestores', description: 'Capacitacao de 15 gestores operacionais', status: 'EM_ANDAMENTO', priority: 'P1', responsible: 'Patricia Almeida', assigned_to: 'user-9', start_date: '2026-02-15', due_date: '2026-05-31', completed_at: null, progress: 30, evidence_required: true, notes: '5 de 15 treinados', cost_estimate: 40000, cost_actual: 12000, cost_type: 'OPEX', currency: 'BRL', created_at: '2026-02-15T00:00:00Z', updated_at: '2026-03-20T00:00:00Z' },
 
   // ========== TI 2026 ==========
-  { id: 'action-ti-1', plan_id: 'plan-ti-2026', pillar_id: 'pillar-2', area_okr_id: 'area-okr-ti-1', initiative_id: 'init-3', parent_action_id: null, pack_id: null, program_key: null, objective_key: null, section_id: null, node_type: 'acao', title: 'Migrar ERP para cloud', description: 'Migração do SAP para Azure', status: 'EM_ANDAMENTO', priority: 'P0', responsible: 'Carlos Mendes', assigned_to: 'user-4', start_date: '2026-01-15', due_date: '2026-09-30', completed_at: null, progress: 35, evidence_required: true, notes: 'Fase de preparação concluída', cost_estimate: 500000, cost_actual: 175000, cost_type: 'CAPEX', currency: 'BRL', created_at: '2026-01-15T00:00:00Z', updated_at: '2026-03-01T00:00:00Z' },
-  { id: 'action-ti-2', plan_id: 'plan-ti-2026', pillar_id: 'pillar-2', area_okr_id: 'area-okr-ti-2', initiative_id: 'init-4', parent_action_id: null, pack_id: null, program_key: null, objective_key: null, section_id: null, node_type: 'acao', title: 'Implementar Zero Trust Security', description: 'Deploy de arquitetura Zero Trust', status: 'AGUARDANDO_EVIDENCIA', priority: 'P0', responsible: 'Lucas Oliveira', assigned_to: 'user-10', start_date: '2026-02-01', due_date: '2026-06-30', completed_at: null, progress: 75, evidence_required: true, notes: 'Aguardando auditoria', cost_estimate: 250000, cost_actual: 220000, cost_type: 'CAPEX', currency: 'BRL', created_at: '2026-02-01T00:00:00Z', updated_at: '2026-03-20T00:00:00Z' },
-  { id: 'action-ti-3', plan_id: 'plan-ti-2026', pillar_id: 'pillar-2', area_okr_id: 'area-okr-ti-1', initiative_id: 'init-3', parent_action_id: null, pack_id: null, program_key: null, objective_key: null, section_id: null, node_type: 'acao', title: 'Modernizar infraestrutura de rede', description: 'Upgrade de switches e firewalls', status: 'CONCLUIDA', priority: 'P1', responsible: 'Carlos Mendes', assigned_to: 'user-4', start_date: '2026-01-05', due_date: '2026-03-31', completed_at: '2026-03-15T00:00:00Z', progress: 100, evidence_required: true, notes: 'Infraestrutura atualizada', cost_estimate: 350000, cost_actual: 340000, cost_type: 'CAPEX', currency: 'BRL', created_at: '2026-01-05T00:00:00Z', updated_at: '2026-03-15T00:00:00Z' },
-  { id: 'action-ti-4', plan_id: 'plan-ti-2026', pillar_id: 'pillar-2', area_okr_id: 'area-okr-ti-2', initiative_id: 'init-4', parent_action_id: null, pack_id: null, program_key: null, objective_key: null, section_id: null, node_type: 'acao', title: 'Implementar SOC 24x7', description: 'Centro de operações de segurança', status: 'PENDENTE', priority: 'P1', responsible: 'Lucas Oliveira', assigned_to: 'user-10', start_date: '2026-07-01', due_date: '2026-12-31', completed_at: null, progress: 0, evidence_required: true, notes: null, cost_estimate: 400000, cost_actual: 0, cost_type: 'OPEX', currency: 'BRL', created_at: '2026-01-10T00:00:00Z', updated_at: '2026-01-10T00:00:00Z' },
+  { id: 'PD-PAI-01', plan_id: 'plan-pd-2026', pillar_id: 'pillar-4', area_okr_id: 'area-okr-pd-1', initiative_id: null, parent_action_id: null, pack_id: 'pack-pd-2026', program_key: 'painel', objective_key: 'O1', section_id: null, node_type: 'acao', title: 'Consolidar painel executivo de monetização', description: 'Unificar saldo, vazão e forecast 30/60/90 em um painel único para leitura executiva.', status: 'EM_ANDAMENTO', priority: 'P0', responsible: 'Direção Executiva', assigned_to: 'user-4', start_date: '2026-01-15', due_date: '2026-09-30', completed_at: null, progress: 35, evidence_required: true, notes: 'Versão inicial do painel disponível para validação executiva.', cost_estimate: 500000, cost_actual: 175000, cost_type: 'CAPEX', currency: 'BRL', created_at: '2026-01-15T00:00:00Z', updated_at: '2026-03-01T00:00:00Z' },
+  { id: 'PD-DAD-02', plan_id: 'plan-pd-2026', pillar_id: 'pillar-4', area_okr_id: 'area-okr-pd-1', initiative_id: null, parent_action_id: null, pack_id: 'pack-pd-2026', program_key: 'evidencias', objective_key: 'O2', section_id: null, node_type: 'acao', title: 'Reconciliação semanal das fontes críticas', description: 'Conciliar fontes de saldo, Pareto e forecast com trilha mínima de auditoria semanal.', status: 'AGUARDANDO_EVIDENCIA', priority: 'P0', responsible: 'Direção Executiva', assigned_to: 'user-10', start_date: '2026-02-01', due_date: '2026-06-30', completed_at: null, progress: 75, evidence_required: true, notes: 'Aguardando evidência consolidada de reconciliação semanal.', cost_estimate: 250000, cost_actual: 220000, cost_type: 'CAPEX', currency: 'BRL', created_at: '2026-02-01T00:00:00Z', updated_at: '2026-03-20T00:00:00Z' },
+  { id: 'PD-DAD-03', plan_id: 'plan-pd-2026', pillar_id: 'pillar-4', area_okr_id: 'area-okr-pd-1', initiative_id: null, parent_action_id: null, pack_id: 'pack-pd-2026', program_key: 'evidencias', objective_key: 'O3', section_id: null, node_type: 'acao', title: 'Publicar trilha de evidências executivas', description: 'Organizar biblioteca única de evidências técnicas e executivas para decisões prioritárias.', status: 'CONCLUIDA', priority: 'P1', responsible: 'Direção Executiva', assigned_to: 'user-4', start_date: '2026-01-05', due_date: '2026-03-31', completed_at: '2026-03-15T00:00:00Z', progress: 100, evidence_required: true, notes: 'Biblioteca inicial publicada com evidências priorizadas.', cost_estimate: 350000, cost_actual: 340000, cost_type: 'CAPEX', currency: 'BRL', created_at: '2026-01-05T00:00:00Z', updated_at: '2026-03-15T00:00:00Z' },
+  { id: 'PD-IA-01', plan_id: 'plan-pd-2026', pillar_id: 'pillar-4', area_okr_id: 'area-okr-pd-1', initiative_id: null, parent_action_id: null, pack_id: 'pack-pd-2026', program_key: 'ia', objective_key: 'O3', section_id: null, node_type: 'acao', title: 'Implantar IA aplicada à priorização', description: 'Estruturar uso inicial de IA para apoiar previsão, priorização e leitura executiva.', status: 'PENDENTE', priority: 'P1', responsible: 'Direção Executiva', assigned_to: 'user-10', start_date: '2026-07-01', due_date: '2026-12-31', completed_at: null, progress: 0, evidence_required: true, notes: null, cost_estimate: 400000, cost_actual: 0, cost_type: 'OPEX', currency: 'BRL', created_at: '2026-01-10T00:00:00Z', updated_at: '2026-01-10T00:00:00Z' },
 
   // ========== FINANCEIRO 2026 (20 acoes) ==========
   { id: 'FIN-AUT-01', plan_id: 'plan-fin-2026', pillar_id: 'pillar-1', area_okr_id: 'area-okr-fin-1', initiative_id: 'init-9', parent_action_id: null, pack_id: 'pack-fin-2026', program_key: 'automacao', objective_key: 'F1', section_id: null, node_type: 'acao', title: 'Automatizar fechamento contabil', description: 'Reduzir ciclo de 10 para 5 dias', status: 'EM_ANDAMENTO', priority: 'P0', responsible: 'Maria Santos', assigned_to: 'user-5', start_date: '2026-02-01', due_date: '2026-07-31', completed_at: null, progress: 40, evidence_required: true, notes: 'Primeira fase concluida', cost_estimate: 120000, cost_actual: 48000, cost_type: 'CAPEX', currency: 'BRL', created_at: '2026-02-01T00:00:00Z', updated_at: '2026-03-10T00:00:00Z' },
@@ -142,11 +158,11 @@ mockStore.subtasks = [
   { id: 'subtask-10', action_id: 'OPS-RPA-01', title: 'Testar em homologação', completed: true, completed_at: '2026-02-28T00:00:00Z', sort_order: 4 },
   { id: 'subtask-11', action_id: 'OPS-RPA-01', title: 'Deploy Fase 1', completed: true, completed_at: '2026-03-10T00:00:00Z', sort_order: 5 },
   { id: 'subtask-12', action_id: 'OPS-RPA-01', title: 'Deploy Fase 2', completed: false, completed_at: null, sort_order: 6 },
-  { id: 'subtask-13', action_id: 'action-ti-1', title: 'Assessment de infraestrutura', completed: true, completed_at: '2026-01-20T00:00:00Z', sort_order: 1 },
-  { id: 'subtask-14', action_id: 'action-ti-1', title: 'Definir arquitetura cloud', completed: true, completed_at: '2026-02-01T00:00:00Z', sort_order: 2 },
-  { id: 'subtask-15', action_id: 'action-ti-1', title: 'Migrar módulo financeiro', completed: true, completed_at: '2026-02-28T00:00:00Z', sort_order: 3 },
-  { id: 'subtask-16', action_id: 'action-ti-1', title: 'Migrar módulo de RH', completed: false, completed_at: null, sort_order: 4 },
-  { id: 'subtask-17', action_id: 'action-ti-1', title: 'Migrar módulo de vendas', completed: false, completed_at: null, sort_order: 5 },
+  { id: 'subtask-13', action_id: 'PD-PAI-01', title: 'Levantar fontes críticas de saldo e forecast', completed: true, completed_at: '2026-01-20T00:00:00Z', sort_order: 1 },
+  { id: 'subtask-14', action_id: 'PD-PAI-01', title: 'Definir arquitetura do painel executivo', completed: true, completed_at: '2026-02-01T00:00:00Z', sort_order: 2 },
+  { id: 'subtask-15', action_id: 'PD-PAI-01', title: 'Publicar versão 1 do painel', completed: true, completed_at: '2026-02-28T00:00:00Z', sort_order: 3 },
+  { id: 'subtask-16', action_id: 'PD-PAI-01', title: 'Validar leitura com Direção', completed: false, completed_at: null, sort_order: 4 },
+  { id: 'subtask-17', action_id: 'PD-PAI-01', title: 'Integrar forecast 30/60/90 ao painel', completed: false, completed_at: null, sort_order: 5 },
   { id: 'subtask-18', action_id: 'MKT-INB-01', title: 'Definir personas', completed: true, completed_at: '2026-01-15T00:00:00Z', sort_order: 1 },
   { id: 'subtask-19', action_id: 'MKT-INB-01', title: 'Criar calendário editorial', completed: true, completed_at: '2026-01-20T00:00:00Z', sort_order: 2 },
   { id: 'subtask-20', action_id: 'MKT-INB-01', title: 'Configurar automação', completed: false, completed_at: null, sort_order: 3 },
@@ -159,11 +175,11 @@ mockStore.subtasks = [
 mockStore.evidences = [
   { id: 'evidence-1', action_id: 'RH-CON-01', filename: 'template_log_decisoes_v1.pdf', storage_path: '/evidences/rh/template_log_decisoes_v1.pdf', file_size: 1200000, mime_type: 'application/pdf', submitted_by: 'user-1', submitted_at: '2026-02-20T00:00:00Z', status: 'PENDENTE' },
   { id: 'evidence-2', action_id: 'OPS-RPA-02', filename: 'vsm_cadeia_suprimentos.pdf', storage_path: '/evidences/ops/vsm_cadeia_suprimentos.pdf', file_size: 5200000, mime_type: 'application/pdf', submitted_by: 'user-3', submitted_at: '2026-02-21T00:00:00Z', status: 'APROVADA' },
-  { id: 'evidence-3', action_id: 'action-ti-3', filename: 'relatorio_upgrade_rede.pdf', storage_path: '/evidences/ti/relatorio_upgrade_rede.pdf', file_size: 3100000, mime_type: 'application/pdf', submitted_by: 'user-4', submitted_at: '2026-03-16T00:00:00Z', status: 'APROVADA' },
+  { id: 'evidence-3', action_id: 'PD-DAD-03', filename: 'biblioteca_evidencias_v1.pdf', storage_path: '/evidences/pd/biblioteca_evidencias_v1.pdf', file_size: 3100000, mime_type: 'application/pdf', submitted_by: 'user-4', submitted_at: '2026-03-16T00:00:00Z', status: 'APROVADA' },
   { id: 'evidence-4', action_id: 'MKT-BRD-02', filename: 'site_launch_report.pdf', storage_path: '/evidences/mkt/site_launch_report.pdf', file_size: 1800000, mime_type: 'application/pdf', submitted_by: 'user-8', submitted_at: '2026-02-21T00:00:00Z', status: 'APROVADA' },
   { id: 'evidence-5', action_id: 'FIN-COM-01', filename: 'grc_implementation.pdf', storage_path: '/evidences/fin/grc_implementation.pdf', file_size: 4200000, mime_type: 'application/pdf', submitted_by: 'user-11', submitted_at: '2026-01-29T00:00:00Z', status: 'APROVADA' },
   { id: 'evidence-6', action_id: 'RH-INO-04', filename: 'painel_rh_v1_screenshot.png', storage_path: '/evidences/rh/painel_rh_v1_screenshot.png', file_size: 890000, mime_type: 'image/png', submitted_by: 'user-6', submitted_at: '2026-03-16T00:00:00Z', status: 'PENDENTE' },
-  { id: 'evidence-7', action_id: 'action-ti-2', filename: 'zero_trust_audit.pdf', storage_path: '/evidences/ti/zero_trust_audit.pdf', file_size: 2900000, mime_type: 'application/pdf', submitted_by: 'user-10', submitted_at: '2026-03-21T00:00:00Z', status: 'APROVADA_GESTOR' },
+  { id: 'evidence-7', action_id: 'PD-DAD-02', filename: 'reconciliacao_fontes_criticas.pdf', storage_path: '/evidences/pd/reconciliacao_fontes_criticas.pdf', file_size: 2900000, mime_type: 'application/pdf', submitted_by: 'user-10', submitted_at: '2026-03-21T00:00:00Z', status: 'APROVADA_GESTOR' },
   { id: 'evidence-8', action_id: 'OPS-LEA-02', filename: 'dashboards_producao.xlsx', storage_path: '/evidences/ops/dashboards_producao.xlsx', file_size: 1500000, mime_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', submitted_by: 'user-9', submitted_at: '2026-03-26T00:00:00Z', status: 'PENDENTE' },
 ]
 
@@ -175,7 +191,7 @@ mockStore.comments = [
   { id: 'comment-1', action_id: 'RH-DES-01', content: 'Checklist 4/4 definido, falta validar com líderes.', user_id: 'user-1', created_at: '2026-02-15T10:00:00Z', updated_at: '2026-02-15T10:00:00Z', user_email: 'renata.silvestre@empresa.com', user_role: 'gestor' },
   { id: 'comment-2', action_id: 'RH-DES-01', content: 'Precisamos travar baseline antes de 15/mar.', user_id: 'manager-1', created_at: '2026-02-20T14:30:00Z', updated_at: '2026-02-20T14:30:00Z', user_email: 'gestor.rh@empresa.com', user_role: 'direcao' },
   { id: 'comment-3', action_id: 'OPS-RPA-01', content: 'ROI dos primeiros bots já está positivo!', user_id: 'user-3', created_at: '2026-03-05T09:00:00Z', updated_at: '2026-03-05T09:00:00Z', user_email: 'roberto.lima@empresa.com', user_role: 'gestor' },
-  { id: 'comment-4', action_id: 'action-ti-1', content: 'Migração do módulo financeiro concluída sem downtime.', user_id: 'user-4', created_at: '2026-03-01T16:00:00Z', updated_at: '2026-03-01T16:00:00Z', user_email: 'carlos.mendes@empresa.com', user_role: 'gestor' },
+  { id: 'comment-4', action_id: 'PD-PAI-01', content: 'Versão inicial do painel já permite leitura executiva sem consolidar planilhas paralelas.', user_id: 'user-4', created_at: '2026-03-01T16:00:00Z', updated_at: '2026-03-01T16:00:00Z', user_email: 'direcao.executiva@empresa.com', user_role: 'gestor' },
   { id: 'comment-5', action_id: 'RH-INO-03', content: 'Dicionário de KPIs em revisão com Produto/Dados.', user_id: 'user-6', created_at: '2026-03-22T11:00:00Z', updated_at: '2026-03-22T11:00:00Z', user_email: 'fernanda.xavier@empresa.com', user_role: 'colaborador' },
 ]
 
@@ -189,7 +205,7 @@ mockStore.history = [
   { id: 'history-3', action_id: 'RH-INO-01', field_changed: 'status', old_value: 'PENDENTE', new_value: 'PENDENTE', changed_by: 'user-1', changed_at: '2026-02-06T15:00:00Z' },
   { id: 'history-4', action_id: 'RH-DES-07', field_changed: 'status', old_value: 'PENDENTE', new_value: 'PENDENTE', changed_by: 'user-1', changed_at: '2026-02-15T17:00:00Z' },
   { id: 'history-5', action_id: 'OPS-RPA-02', field_changed: 'status', old_value: 'EM_ANDAMENTO', new_value: 'CONCLUIDA', changed_by: 'user-3', changed_at: '2026-02-20T16:00:00Z' },
-  { id: 'history-6', action_id: 'action-ti-3', field_changed: 'status', old_value: 'EM_ANDAMENTO', new_value: 'CONCLUIDA', changed_by: 'user-4', changed_at: '2026-03-15T18:00:00Z' },
+  { id: 'history-6', action_id: 'PD-DAD-03', field_changed: 'status', old_value: 'EM_ANDAMENTO', new_value: 'CONCLUIDA', changed_by: 'user-4', changed_at: '2026-03-15T18:00:00Z' },
   { id: 'history-7', action_id: 'RH-INO-03', field_changed: 'status', old_value: 'PENDENTE', new_value: 'PENDENTE', changed_by: 'user-6', changed_at: '2026-03-20T09:00:00Z' },
 ]
 
@@ -199,12 +215,19 @@ mockStore.history = [
 
 mockStore.risks = [
   { id: 'risk-1', action_id: 'RH-DES-03', risk_label: 'Baixa adesão dos líderes na Escola', risk_level: 'MEDIO', mitigation: 'Comunicação intensiva e envolvimento da Direção' },
-  { id: 'risk-2', action_id: 'action-ti-1', risk_label: 'Downtime durante migração', risk_level: 'ALTO', mitigation: 'Migração em horário de baixo uso e rollback plan' },
-  { id: 'risk-3', action_id: 'action-ti-1', risk_label: 'Atraso por complexidade técnica', risk_level: 'MEDIO', mitigation: 'Buffer de tempo e consultoria especializada' },
+  { id: 'risk-2', action_id: 'PD-PAI-01', risk_label: 'Divergência entre fontes críticas do painel', risk_level: 'ALTO', mitigation: 'Reconciliação semanal e validação executiva antes do fechamento' },
+  { id: 'risk-3', action_id: 'PD-PAI-01', risk_label: 'Atraso por complexidade de integração', risk_level: 'MEDIO', mitigation: 'Buffer de entrega, escopo incremental e apoio especializado' },
   { id: 'risk-4', action_id: 'OPS-RPA-01', risk_label: 'Resistência à mudança', risk_level: 'MEDIO', mitigation: 'Change management e treinamento' },
   { id: 'risk-5', action_id: 'FIN-AUT-01', risk_label: 'Integração com sistemas legados', risk_level: 'ALTO', mitigation: 'POC antes do desenvolvimento completo' },
   { id: 'risk-6', action_id: 'MKT-INB-01', risk_label: 'Baixa conversão inicial', risk_level: 'BAIXO', mitigation: 'Testes A/B e otimização contínua' },
 ]
+
+mockStore.actions = mockStore.actions.map((action) => ({
+  ...action,
+  plan_id: normalizeMockId(action.plan_id) || action.plan_id,
+  area_okr_id: normalizeMockId(action.area_okr_id) || action.area_okr_id,
+  pack_id: normalizeMockId(action.pack_id) || action.pack_id,
+}))
 
 // Export para uso
 export const mockActions = mockStore.actions

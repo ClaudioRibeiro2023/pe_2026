@@ -1,44 +1,64 @@
-import { supabase, isSupabaseConfigured } from '@/shared/lib/supabaseClient'
+import { getSupabaseRuntimeState, supabase } from '@/shared/lib/supabaseClient'
 import type { Area, CreateAreaData, UpdateAreaData } from './types'
 
 const mockAreas: Area[] = [
   {
     id: 'area-rh',
     slug: 'rh',
-    name: 'RH',
-    owner: 'Ana Paula',
-    focus: 'Liderança, retenção e people analytics',
+    name: 'RH / Pessoas',
+    owner: null,
+    focus: 'Liderança, retenção, people analytics e capacidade intelectual',
     color: '#3B82F6',
     created_at: '2026-01-01T00:00:00Z',
     updated_at: '2026-01-01T00:00:00Z',
   },
   {
-    id: 'area-mkt',
+    id: 'area-marketing',
     slug: 'marketing',
     name: 'Marketing',
-    owner: 'Carlos Silva',
-    focus: 'Demanda qualificada e provas',
+    owner: null,
+    focus: 'Marca, narrativa de evidência e suporte à expansão e renovação',
     color: '#10B981',
     created_at: '2026-01-01T00:00:00Z',
     updated_at: '2026-01-01T00:00:00Z',
   },
   {
-    id: 'area-ops',
+    id: 'area-pd',
+    slug: 'pd',
+    name: 'P&D / Produto / Dados',
+    owner: 'Direção Executiva',
+    focus: 'Evidência, produto e inteligência via Direção e consultorias',
+    color: '#8B5CF6',
+    created_at: '2026-01-01T00:00:00Z',
+    updated_at: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: 'area-operacoes',
     slug: 'operacoes',
-    name: 'Operações',
-    owner: 'Roberto Lima',
-    focus: 'Eficiência operacional e automação',
+    name: 'Operação',
+    owner: null,
+    focus: 'Capacidade, produtividade, qualidade e prontidão para execução',
     color: '#F59E0B',
     created_at: '2026-01-01T00:00:00Z',
     updated_at: '2026-01-01T00:00:00Z',
   },
   {
-    id: 'area-ti',
-    slug: 'ti',
-    name: 'Tecnologia da Informação',
-    owner: 'Carlos Mendes',
-    focus: 'Infraestrutura, segurança e inovação',
-    color: '#8B5CF6',
+    id: 'area-cs',
+    slug: 'cs',
+    name: 'CS / Relacionamento',
+    owner: null,
+    focus: 'Ativação de demanda e previsibilidade 30/60/90',
+    color: '#06B6D4',
+    created_at: '2026-01-01T00:00:00Z',
+    updated_at: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: 'area-com',
+    slug: 'comercial',
+    name: 'Comercial',
+    owner: null,
+    focus: 'Expansão e diversificação com tese',
+    color: '#EC4899',
     created_at: '2026-01-01T00:00:00Z',
     updated_at: '2026-01-01T00:00:00Z',
   },
@@ -46,17 +66,56 @@ const mockAreas: Area[] = [
     id: 'area-fin',
     slug: 'financeiro',
     name: 'Financeiro',
-    owner: 'Maria Santos',
-    focus: 'Gestão financeira e compliance',
+    owner: null,
+    focus: 'Previsibilidade, DRE gerencial por unidade, controles e guardrails',
     color: '#EF4444',
     created_at: '2026-01-01T00:00:00Z',
     updated_at: '2026-01-01T00:00:00Z',
   },
 ]
 
+function normalizeAreaSlug(value: string): string {
+  const normalizedValue = value.trim().toLowerCase()
+
+  const canonicalSlugMap: Record<string, string> = {
+    rh: 'rh',
+    'rh / pessoas': 'rh',
+    marketing: 'marketing',
+    mkt: 'marketing',
+    pd: 'pd',
+    'p&d': 'pd',
+    'p&d / produto / dados': 'pd',
+    operacao: 'operacoes',
+    'operação': 'operacoes',
+    operacoes: 'operacoes',
+    'operações': 'operacoes',
+    cs: 'cs',
+    'cs / relacionamento': 'cs',
+    comercial: 'comercial',
+    financeiro: 'financeiro',
+  }
+
+  return canonicalSlugMap[normalizedValue] || normalizedValue.replace(/\s+/g, '-')
+}
+
+function resolveAreasSource(operation: string): 'mock' | 'supabase' {
+  const state = getSupabaseRuntimeState()
+
+  if (state.shouldUseSupabase) {
+    return 'supabase'
+  }
+
+  if (state.canUseMockFallback) {
+    console.info(`[Areas API] ${operation}: usando mock em ${state.environment}`)
+    return 'mock'
+  }
+
+  const reason = state.isConfigured ? 'serviço inacessível' : 'variáveis de ambiente ausentes'
+  throw new Error(`[Areas API] ${operation}: Supabase indisponível (${reason})`)
+}
+
 export async function fetchAreas(): Promise<Area[]> {
-  if (!isSupabaseConfigured()) {
-    console.info('[Areas API] Supabase não configurado, usando dados mock')
+  if (resolveAreasSource('fetchAreas') === 'mock') {
     return mockAreas
   }
 
@@ -67,25 +126,26 @@ export async function fetchAreas(): Promise<Area[]> {
       .order('name')
 
     if (error) {
-      console.warn('[Areas API] Erro ao buscar áreas do Supabase, usando fallback:', error.message)
-      return mockAreas
+      throw error
     }
 
-    // Se a tabela está vazia, retorna mock data para desenvolvimento
     if (!data || data.length === 0) {
-      console.info('[Areas API] Tabela areas vazia, usando dados mock')
-      return mockAreas
+      return []
     }
 
     return data
   } catch (err) {
-    console.error('[Areas API] Erro inesperado, usando fallback:', err)
-    return mockAreas
+    if (getSupabaseRuntimeState().canUseMockFallback) {
+      console.warn('[Areas API] Erro ao buscar áreas do Supabase, usando fallback de DEV:', err)
+      return mockAreas
+    }
+
+    throw err
   }
 }
 
 export async function fetchAreaById(id: string): Promise<Area | null> {
-  if (!isSupabaseConfigured()) {
+  if (resolveAreasSource('fetchAreaById') === 'mock') {
     return mockAreas.find((a) => a.id === id) || null
   }
 
@@ -97,19 +157,22 @@ export async function fetchAreaById(id: string): Promise<Area | null> {
       .single()
 
     if (error && error.code !== 'PGRST116') {
-      console.warn('[Areas API] Erro ao buscar área por ID, usando fallback:', error.message)
+      throw error
+    }
+
+    return data || null
+  } catch (err) {
+    if (getSupabaseRuntimeState().canUseMockFallback) {
+      console.warn('[Areas API] Erro ao buscar área por ID, usando fallback de DEV:', err)
       return mockAreas.find((a) => a.id === id) || null
     }
-    
-    return data || mockAreas.find((a) => a.id === id) || null
-  } catch (err) {
-    console.error('[Areas API] Erro inesperado em fetchAreaById:', err)
-    return mockAreas.find((a) => a.id === id) || null
+
+    throw err
   }
 }
 
 export async function fetchAreaBySlug(slug: string): Promise<Area | null> {
-  if (!isSupabaseConfigured()) {
+  if (resolveAreasSource('fetchAreaBySlug') === 'mock') {
     return mockAreas.find((a) => a.slug === slug) || null
   }
 
@@ -121,22 +184,25 @@ export async function fetchAreaBySlug(slug: string): Promise<Area | null> {
       .single()
 
     if (error && error.code !== 'PGRST116') {
-      console.warn('[Areas API] Erro ao buscar área por slug, usando fallback:', error.message)
+      throw error
+    }
+
+    return data || null
+  } catch (err) {
+    if (getSupabaseRuntimeState().canUseMockFallback) {
+      console.warn('[Areas API] Erro ao buscar área por slug, usando fallback de DEV:', err)
       return mockAreas.find((a) => a.slug === slug) || null
     }
-    
-    return data || mockAreas.find((a) => a.slug === slug) || null
-  } catch (err) {
-    console.error('[Areas API] Erro inesperado em fetchAreaBySlug:', err)
-    return mockAreas.find((a) => a.slug === slug) || null
+
+    throw err
   }
 }
 
 export async function createArea(areaData: CreateAreaData): Promise<Area> {
-  if (!isSupabaseConfigured()) {
+  if (resolveAreasSource('createArea') === 'mock') {
     const newArea: Area = {
       id: `area-${Date.now()}`,
-      slug: areaData.slug || areaData.name.toLowerCase().replace(/\s+/g, '-'),
+      slug: normalizeAreaSlug(areaData.slug || areaData.name),
       name: areaData.name,
       owner: areaData.owner || null,
       focus: areaData.focus || null,
@@ -148,7 +214,7 @@ export async function createArea(areaData: CreateAreaData): Promise<Area> {
     return newArea
   }
 
-  const slug = areaData.slug || areaData.name.toLowerCase().replace(/\s+/g, '-')
+  const slug = normalizeAreaSlug(areaData.slug || areaData.name)
 
   const { data, error } = await supabase
     .from('areas')
@@ -161,7 +227,7 @@ export async function createArea(areaData: CreateAreaData): Promise<Area> {
 }
 
 export async function updateArea(id: string, areaData: UpdateAreaData): Promise<Area> {
-  if (!isSupabaseConfigured()) {
+  if (resolveAreasSource('updateArea') === 'mock') {
     const index = mockAreas.findIndex((a) => a.id === id)
     if (index === -1) throw new Error('Área não encontrada')
     mockAreas[index] = {
@@ -184,7 +250,7 @@ export async function updateArea(id: string, areaData: UpdateAreaData): Promise<
 }
 
 export async function deleteArea(id: string): Promise<void> {
-  if (!isSupabaseConfigured()) {
+  if (resolveAreasSource('deleteArea') === 'mock') {
     const index = mockAreas.findIndex((a) => a.id === id)
     if (index !== -1) mockAreas.splice(index, 1)
     return

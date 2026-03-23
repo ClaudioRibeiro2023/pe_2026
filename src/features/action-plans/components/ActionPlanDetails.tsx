@@ -150,12 +150,14 @@ export function ActionPlanDetails({ plan, open, onClose }: ActionPlanDetailsProp
 
   const getStatusColor = (status: string) => {
     const colors = {
-      pending: 'bg-accent text-muted',
+      draft: 'bg-accent text-muted',
+      planned: 'bg-warning-100 text-warning-700',
       in_progress: 'bg-primary-100 text-primary-700',
+      blocked: 'bg-danger-100 text-danger-700',
       completed: 'bg-success-100 text-success-700',
       cancelled: 'bg-danger-100 text-danger-700',
     }
-    return colors[status as keyof typeof colors] || colors.pending
+    return colors[status as keyof typeof colors] || colors.draft
   }
 
   const getPriorityColor = (priority: string) => {
@@ -163,7 +165,7 @@ export function ActionPlanDetails({ plan, open, onClose }: ActionPlanDetailsProp
       low: 'bg-accent text-muted',
       medium: 'bg-primary-100 text-primary-700',
       high: 'bg-warning-100 text-warning-700',
-      urgent: 'bg-danger-100 text-danger-700',
+      critical: 'bg-danger-100 text-danger-700',
     }
     return colors[priority as keyof typeof colors] || colors.medium
   }

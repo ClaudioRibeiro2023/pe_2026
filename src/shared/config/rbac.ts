@@ -15,15 +15,17 @@ export const MULTIAREA_ENABLED = true
 // ============================================================
 // AREA SLUGS (canonical list)
 // ============================================================
-export type AreaSlug = 'rh' | 'marketing' | 'operacoes' | 'ti' | 'financeiro'
+export type AreaSlug = 'rh' | 'marketing' | 'pd' | 'operacoes' | 'cs' | 'comercial' | 'financeiro'
 
-export const ALL_AREA_SLUGS: AreaSlug[] = ['rh', 'marketing', 'operacoes', 'ti', 'financeiro']
+export const ALL_AREA_SLUGS: AreaSlug[] = ['rh', 'marketing', 'pd', 'operacoes', 'cs', 'comercial', 'financeiro']
 
 export const AREA_LABELS: Record<AreaSlug, string> = {
   rh: 'RH',
   marketing: 'Marketing',
+  pd: 'P&D / Produto / Dados',
   operacoes: 'Operações',
-  ti: 'TI',
+  cs: 'CS / Relacionamento',
+  comercial: 'Comercial',
   financeiro: 'Financeiro',
 }
 

@@ -71,9 +71,9 @@ export function CapacityPage() {
               <TableRow>
                 <TableHead>Trimestre</TableHead>
                 <TableHead>Operação</TableHead>
-                <TableHead>Ativação</TableHead>
-                <TableHead>Produto/Dados</TableHead>
-                <TableHead>Comercial/MKT</TableHead>
+                <TableHead>CS / Relacionamento</TableHead>
+                <TableHead>P&D / Produto / Dados</TableHead>
+                <TableHead>Comercial + Marketing</TableHead>
                 <TableHead>Governança</TableHead>
               </TableRow>
             </TableHeader>
@@ -81,9 +81,9 @@ export function CapacityPage() {
               {data.quarterlyMix.map((mix) => (
                 <TableRow key={mix.quarter}>
                   <TableCell className="font-medium">{mix.quarter}</TableCell>
-                  <TableCell>{mix.distribution.operacao}</TableCell>
-                  <TableCell>{mix.distribution.ativacao}</TableCell>
-                  <TableCell>{mix.distribution.produtoDados}</TableCell>
+                  <TableCell>{mix.distribution.operacoes}</TableCell>
+                  <TableCell>{mix.distribution.cs}</TableCell>
+                  <TableCell>{mix.distribution.pd}</TableCell>
                   <TableCell>{mix.distribution.comercialMarketing}</TableCell>
                   <TableCell>{mix.distribution.governanca}</TableCell>
                 </TableRow>

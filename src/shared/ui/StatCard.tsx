@@ -50,7 +50,7 @@ export function StatCard({
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <p className="text-sm font-medium text-muted">{title}</p>
-          <p className={cn('text-3xl font-bold font-mono tracking-tight', statusColors[status])}>
+          <p className={cn('text-3xl font-bold tracking-tight', statusColors[status])}>
             {value}
           </p>
         </div>

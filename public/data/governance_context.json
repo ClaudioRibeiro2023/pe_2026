@@ -21,11 +21,12 @@
       "docRef": "DOC 01",
       "title": "Base contratual e monetização",
       "description": "Base de contratos, saldo e diretrizes de monetização Q1.",
-      "owner": "CS",
+      "owner": "CS / Relacionamento",
       "module": "Monetização",
       "status": "ATIVO",
       "lastUpdate": "2026-01-12",
-      "link": "https://intranet/pe2026/doc-01"
+      "link": "https://intranet/pe2026/doc-01",
+      "tags": ["monetização", "carteira", "pareto"]
     },
     {
       "id": "ART-DOC-02",
@@ -65,11 +66,12 @@
       "docRef": "DOC 05",
       "title": "War Room e carteira Pareto",
       "description": "Rito War Room, Pareto Top-14 e plano de ativação por cliente.",
-      "owner": "CS",
+      "owner": "CS / Relacionamento",
       "module": "Monetização",
       "status": "ATIVO",
       "lastUpdate": "2026-01-19",
-      "link": "https://intranet/pe2026/doc-05"
+      "link": "https://intranet/pe2026/doc-05",
+      "tags": ["war-room", "pareto", "ativação"]
     },
     {
       "id": "ART-DOC-06",
@@ -234,11 +236,12 @@
       "title": "Ativar War Room Q1 para monetizacao",
       "description": "Operar rito semanal com foco no Pareto Top-14, previsao 30/60/90 e agenda ativa.",
       "date": "2026-01-22",
-      "owner": "Direcao Executiva",
+      "owner": "Direção Executiva",
       "impact": "ALTO",
       "status": "ATIVA",
       "pillars": ["P2", "P3"],
-      "tags": ["monetizacao", "q1"]
+      "tags": ["monetizacao", "q1"],
+      "related": ["INIT-2026-001", "KR-P2-01"]
     },
     {
       "id": "DEC-2026-002",
@@ -266,16 +269,16 @@
   "risks": [
     {
       "id": "RSK-2026-01",
-      "title": "Janela regulatoria reduzir vazao",
-      "category": "Regulatorio",
-      "description": "Mudancas de prazo ou definicoes institucionais podem reduzir a execucao do saldo no Q1.",
-      "impact": "ALTO",
+      "title": "Queda de monetização no Q1",
+      "category": "Monetização",
+      "description": "Risco de não converter saldo em agenda confirmada na velocidade necessária.",
+      "impact": "CRITICO",
       "probability": "MEDIA",
       "exposure": "CRITICO",
       "triggers": ["Queda de vazao por 2 semanas", "Agenda Pareto sem confirmacao"],
       "mitigation": "Plano de choque Q1 + agenda institucional preventiva + provas por decisor.",
       "contingency": "Replanejar capacidade e escalonar casos criticos.",
-      "owner": "Direcao Executiva",
+      "owner": "Direção Executiva",
       "cadence": "Semanal",
       "status": "ATIVO",
       "kpis": ["C3", "P3.KPI-01"]
@@ -291,7 +294,7 @@
       "triggers": ["Baixa ativacao no Pareto", "Previsao 30/60/90 sem evidencia"],
       "mitigation": "Plano por cliente Pareto + playbook de ativacao + kits de destrave.",
       "contingency": "War Room com cadencia reforcada e realocacao de capacidade.",
-      "owner": "CS",
+      "owner": "CS / Relacionamento",
       "cadence": "Semanal",
       "status": "ATIVO",
       "kpis": ["C4", "C5"]
@@ -299,7 +302,7 @@
     {
       "id": "RSK-2026-03",
       "title": "Retrabalho operacional alto",
-      "category": "Operacao",
+      "category": "Operação",
       "description": "Falhas de padrao elevam custo e reduzem vazao em janelas criticas.",
       "impact": "MEDIO",
       "probability": "MEDIA",
@@ -307,7 +310,7 @@
       "triggers": ["Retrabalho acima do limite por 2 ciclos", "Falhas repetidas no Pareto"],
       "mitigation": "Checklists + auditoria interna + correcoes de causa raiz.",
       "contingency": "Reduzir volume e estabilizar padrao.",
-      "owner": "Operacao",
+      "owner": "Operação",
       "cadence": "Semanal",
       "status": "ATIVO",
       "kpis": ["A3", "P3.KPI-02"]
@@ -320,7 +323,7 @@
       "type": "Ata",
       "description": "Registro de decisoes, plano Pareto e previsao 30/60/90.",
       "date": "2026-01-21",
-      "owner": "CS",
+      "owner": "CS / Relacionamento",
       "related": ["DEC-2026-001", "RSK-2026-02"],
       "link": "https://intranet/pe2026/atas/war-room-q1-semana-1",
       "validated": true,
@@ -359,7 +362,7 @@
       "type": "Relatorio",
       "description": "Saldo atualizado, aging e projeções de execução.",
       "date": "2026-01-21",
-      "owner": "CS",
+      "owner": "CS / Relacionamento",
       "related": ["KR-P2-02"],
       "link": "https://intranet/pe2026/relatorios/saldo-aging-q1",
       "validated": true,
@@ -424,7 +427,7 @@
       "type": "Relatorio",
       "description": "Pacotes de evidências entregues para Top-14.",
       "date": "2026-01-22",
-      "owner": "Produto/Dados",
+      "owner": "P&D / Produto / Dados",
       "related": ["KR-P4-01"],
       "link": "https://intranet/pe2026/relatorios/pareto-evidencias",
       "validated": true,
@@ -437,7 +440,7 @@
       "type": "Entrega",
       "description": "Painel publicado com atualização semanal.",
       "date": "2026-01-22",
-      "owner": "Produto/Dados",
+      "owner": "P&D / Produto / Dados",
       "related": ["KR-P4-02"],
       "link": "https://intranet/pe2026/painel-monetizacao",
       "validated": true,
@@ -488,7 +491,7 @@
       "entityId": "KR-P2-01",
       "version": "v1.0",
       "date": "2026-01-18",
-      "owner": "Direcao Executiva",
+      "owner": "Direção Executiva",
       "summary": "Meta Q1 de execucao validada com War Room.",
       "evidence": "EVID-2026-001"
     },
@@ -498,7 +501,7 @@
       "entityId": "INIT-2026-001",
       "version": "v1.2",
       "date": "2026-01-21",
-      "owner": "CS",
+      "owner": "CS / Relacionamento",
       "summary": "Atualizacao de dependencias e cronograma de ativacao.",
       "evidence": "EVID-2026-001"
     }
@@ -529,7 +532,7 @@
       "title": "WBR Semanal",
       "cadence": "Semanal",
       "focus": "Placar, carteira, monetizacao e riscos criticos",
-      "participants": "Direcao + CS + Operacao + Financeiro",
+      "participants": "Direção Executiva + CS / Relacionamento + Operação + Financeiro",
       "outputs": ["Ata WBR", "Lista de bloqueios", "Atualizacao de KPIs"]
     },
     {
@@ -537,7 +540,7 @@
       "title": "MBR Mensal",
       "cadence": "Mensal",
       "focus": "OKRs, capacidade, orcamento e riscos",
-      "participants": "Direcao + Heads",
+      "participants": "Direção Executiva + Heads",
       "outputs": ["Relatorio MBR", "Revisao de metas", "Plano de ajustes"]
     },
     {
@@ -545,7 +548,7 @@
       "title": "QBR Trimestral",
       "cadence": "Trimestral",
       "focus": "Tese, cenarios e decisoes estrategicas",
-      "participants": "Direcao + Conselho",
+      "participants": "Direção Executiva + Conselho",
       "outputs": ["Ata QBR", "Decisoes estrategicas", "Atualizacao de tese"]
     }
   ],
@@ -563,7 +566,7 @@
       "id": "AUD-02",
       "title": "Relatorio de execucao e vazao",
       "cadence": "Semanal",
-      "owner": "Operacao",
+      "owner": "Operação",
       "scope": "Saldo, vazao e produtividade",
       "lastUpdate": "2026-01-21",
       "status": "ATENCAO"

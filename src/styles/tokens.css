@@ -1,67 +1,10 @@
 /* ============================================
    Design Tokens - PE2026 Aero Engenharia
    Tema: Corporativo Moderno - Clean & Minimalista
+   Tokens semânticos usados pelos componentes via index.css
    ============================================ */
 
 :root {
-  /* ========== Cores Primárias - Azul Corporativo Sóbrio ========== */
-  --corp-primary-50: 240 247 255;
-  --corp-primary-100: 224 239 255;
-  --corp-primary-200: 186 221 255;
-  --corp-primary-300: 124 194 255;
-  --corp-primary-400: 54 163 255;
-  --corp-primary-500: 11 125 218;
-  --corp-primary-600: 0 98 184;
-  --corp-primary-700: 0 77 148;
-  --corp-primary-800: 0 64 122;
-  --corp-primary-900: 0 53 102;
-
-  /* ========== Cores Neutras - Base Clean ========== */
-  --corp-gray-50: 250 250 250;
-  --corp-gray-100: 245 245 245;
-  --corp-gray-200: 229 229 229;
-  --corp-gray-300: 212 212 212;
-  --corp-gray-400: 163 163 163;
-  --corp-gray-500: 115 115 115;
-  --corp-gray-600: 82 82 82;
-  --corp-gray-700: 64 64 64;
-  --corp-gray-800: 38 38 38;
-  --corp-gray-900: 23 23 23;
-
-  /* ========== Cores de Status ========== */
-  --corp-success-50: 240 253 244;
-  --corp-success-100: 220 252 231;
-  --corp-success-500: 22 163 74;
-  --corp-success-600: 21 128 61;
-  --corp-success-700: 21 128 61;
-
-  --corp-warning-50: 254 252 232;
-  --corp-warning-100: 254 249 195;
-  --corp-warning-500: 202 138 4;
-  --corp-warning-600: 161 98 7;
-  --corp-warning-700: 133 77 14;
-
-  --corp-danger-50: 254 242 242;
-  --corp-danger-100: 254 226 226;
-  --corp-danger-500: 220 38 38;
-  --corp-danger-600: 185 28 28;
-  --corp-danger-700: 153 27 27;
-
-  --corp-info-50: 240 249 255;
-  --corp-info-100: 224 242 254;
-  --corp-info-500: 2 132 199;
-  --corp-info-600: 3 105 161;
-  --corp-info-700: 7 89 133;
-
-  /* ========== Tema Claro ========== */
-  --background: var(--corp-gray-50);
-  --surface: 255 255 255;
-  --surface-elevated: var(--corp-gray-100);
-  --foreground: var(--corp-gray-900);
-  --foreground-muted: var(--corp-gray-500);
-  --border: var(--corp-gray-200);
-  --border-strong: var(--corp-gray-300);
-
   /* ========== Tipografia ========== */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'SF Mono', 'Fira Code', monospace;
@@ -81,15 +24,4 @@
   /* ========== Transições ========== */
   --transition-fast: 150ms;
   --transition-normal: 200ms;
-}
-
-/* ========== Tema Escuro ========== */
-.dark {
-  --background: var(--corp-gray-900);
-  --surface: var(--corp-gray-800);
-  --surface-elevated: var(--corp-gray-700);
-  --foreground: var(--corp-gray-50);
-  --foreground-muted: var(--corp-gray-400);
-  --border: var(--corp-gray-700);
-  --border-strong: var(--corp-gray-600);
 }

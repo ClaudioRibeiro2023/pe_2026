@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/Card'
-import { Database, CheckCircle, AlertTriangle } from '@/shared/ui/icons'
+import { Database, CheckCircle, AlertTriangle, Layers } from '@/shared/ui/icons'
 import { cn } from '@/shared/lib/cn'
+import { useCutoverStatus } from '../hooks'
 import type { DataHealthMetric } from '../types'
 
 const mockMetrics: DataHealthMetric[] = [
@@ -64,6 +65,10 @@ function getScoreBg(score: number): string {
 
 export function DataHealthPage() {
   const overallHealth = Math.round(mockMetrics.reduce((acc, m) => acc + m.overall_score, 0) / mockMetrics.length)
+  const { data: modules = [] } = useCutoverStatus()
+
+  const activeCount = modules.filter((m) => m.enabled && m.source === 'supabase').length
+  const mockCount = modules.filter((m) => !m.enabled || m.source !== 'supabase').length
 
   return (
     <div className="space-y-6">
@@ -91,6 +96,53 @@ export function DataHealthPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Cutover Status */}
+      {modules.length > 0 && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2">
+              <Layers className="h-5 w-5" />
+              Status dos Módulos (Cutover)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-6 mb-4">
+              <div className="flex items-center gap-2">
+                <span className="inline-block w-3 h-3 rounded-full bg-success-500" />
+                <span className="text-sm text-muted">{activeCount} em Supabase</span>
+              </div>
+              {mockCount > 0 && (
+                <div className="flex items-center gap-2">
+                  <span className="inline-block w-3 h-3 rounded-full bg-warning-500" />
+                  <span className="text-sm text-muted">{mockCount} em mock</span>
+                </div>
+              )}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+              {modules.map((m) => {
+                const isLive = m.enabled && m.source === 'supabase'
+                return (
+                  <div
+                    key={m.module}
+                    className={cn(
+                      'flex items-center gap-2 px-3 py-2 rounded-lg border text-sm',
+                      isLive
+                        ? 'border-success-200 bg-success-50 text-success-700 dark:bg-success-900/20 dark:border-success-800 dark:text-success-400'
+                        : 'border-warning-200 bg-warning-50 text-warning-700 dark:bg-warning-900/20 dark:border-warning-800 dark:text-warning-400'
+                    )}
+                  >
+                    {isLive
+                      ? <CheckCircle className="h-3.5 w-3.5 flex-shrink-0" />
+                      : <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0" />}
+                    <span className="truncate font-medium">{m.label ?? m.module}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

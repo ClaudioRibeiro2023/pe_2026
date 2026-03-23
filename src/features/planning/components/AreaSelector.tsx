@@ -7,7 +7,7 @@ import { useLastArea } from '../hooks/useLastArea'
 import type { Area } from '@/features/areas/types'
 
 // MVP Mode: mostrar apenas RH durante validação
-const MVP_RH_ONLY = true
+const MVP_RH_ONLY = false
 const MVP_ALLOWED_AREAS = ['rh']
 
 interface AreaSelectorProps {
@@ -20,7 +20,8 @@ const AREA_COLORS: Record<string, string> = {
   financeiro: 'from-green-500 to-green-600',
   comercial: 'from-blue-500 to-blue-600',
   operacoes: 'from-orange-500 to-orange-600',
-  ti: 'from-cyan-500 to-cyan-600',
+  pd: 'from-cyan-500 to-cyan-600',
+  cs: 'from-sky-500 to-sky-600',
   marketing: 'from-pink-500 to-pink-600',
   default: 'from-gray-500 to-gray-600',
 }
@@ -139,7 +140,6 @@ export function AreaSelector({ onSelectArea, showAllAreas = false }: AreaSelecto
             key={area.id}
             area={area}
             onSelect={() => handleSelectArea(area.slug)}
-            highlight={area.slug === 'rh'}
           />
         ))}
       </div>

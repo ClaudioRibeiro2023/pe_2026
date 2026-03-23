@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('Authentication — Login Page', () => {
+  test.skip(!process.env.E2E_TEST_EMAIL, 'Requires Supabase auth mode — run via: npm run test:e2e:local')
   test('should redirect root to login', async ({ page }) => {
     await page.goto('/')
     await page.waitForURL(/\/login/)

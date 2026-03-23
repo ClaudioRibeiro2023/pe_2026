@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Users, Shield, UserCheck, UserX, Mail, Building2 } from '@/shared/ui/icons'
+import { Users, Shield, UserCheck, UserX, Mail, Building2, Layers, CheckCircle, AlertTriangle } from '@/shared/ui/icons'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/Card'
 import { Button } from '@/shared/ui/Button'
+import { cn } from '@/shared/lib/cn'
+import { useCutoverStatus } from '@/features/analytics/hooks'
 import { LazyModal } from '@/shared/ui/LazyModal'
 import { Select } from '@/shared/ui/Select'
 import { Input } from '@/shared/ui/Input'
@@ -41,6 +43,8 @@ export function AdminPage() {
   const { addToast } = useToast()
   const isSupabaseReady = isSupabaseConfigured()
   const { data: areas = [] } = useAreas()
+  const { data: modules = [] } = useCutoverStatus()
+  const mockModules = modules.filter((m) => !m.enabled || m.source !== 'supabase')
 
   useEffect(() => {
     loadUsers()
@@ -73,13 +77,15 @@ export function AdminPage() {
         setUsers([
           { id: 'p-1', user_id: 'demo-user', email: 'admin@empresa.com', role: 'admin', active: true, area_id: null, area_name: undefined, area_role: null, created_at: '2026-01-01T00:00:00Z' },
           { id: 'p-2', user_id: 'user-dir', email: 'direcao@empresa.com', role: 'direcao', active: true, area_id: null, area_name: undefined, area_role: null, created_at: '2026-01-01T00:00:00Z' },
-          { id: 'p-3', user_id: 'user-1', email: 'gestor.rh@empresa.com', role: 'gestor', active: true, area_id: 'area-rh', area_name: 'Recursos Humanos', area_role: 'gestor', created_at: '2026-01-01T00:00:00Z' },
-          { id: 'p-4', user_id: 'user-2', email: 'gestor.mkt@empresa.com', role: 'gestor', active: true, area_id: 'area-mkt', area_name: 'Marketing', area_role: 'gestor', created_at: '2026-01-05T00:00:00Z' },
-          { id: 'p-5', user_id: 'user-3', email: 'gestor.ops@empresa.com', role: 'gestor', active: true, area_id: 'area-ops', area_name: 'Operações', area_role: 'gestor', created_at: '2026-01-02T00:00:00Z' },
-          { id: 'p-6', user_id: 'user-4', email: 'gestor.ti@empresa.com', role: 'gestor', active: true, area_id: 'area-ti', area_name: 'Tecnologia', area_role: 'gestor', created_at: '2026-01-03T00:00:00Z' },
-          { id: 'p-7', user_id: 'user-5', email: 'gestor.fin@empresa.com', role: 'gestor', active: true, area_id: 'area-fin', area_name: 'Financeiro', area_role: 'gestor', created_at: '2026-01-10T00:00:00Z' },
-          { id: 'p-8', user_id: 'user-6', email: 'colab.rh@empresa.com', role: 'colaborador', active: true, area_id: 'area-rh', area_name: 'Recursos Humanos', area_role: 'colaborador', created_at: '2026-01-15T00:00:00Z' },
-          { id: 'p-9', user_id: 'user-cli', email: 'cliente@parceiro.com', role: 'cliente', active: false, area_id: null, area_name: undefined, area_role: null, created_at: '2026-02-01T00:00:00Z' },
+          { id: 'p-3', user_id: 'user-1', email: 'gestor.rh@empresa.com', role: 'gestor', active: true, area_id: 'area-rh', area_name: 'RH / Pessoas', area_role: 'gestor', created_at: '2026-01-01T00:00:00Z' },
+          { id: 'p-4', user_id: 'user-2', email: 'gestor.marketing@empresa.com', role: 'gestor', active: true, area_id: 'area-marketing', area_name: 'Marketing', area_role: 'gestor', created_at: '2026-01-05T00:00:00Z' },
+          { id: 'p-5', user_id: 'user-3', email: 'gestor.operacoes@empresa.com', role: 'gestor', active: true, area_id: 'area-operacoes', area_name: 'Operação', area_role: 'gestor', created_at: '2026-01-02T00:00:00Z' },
+          { id: 'p-6', user_id: 'user-4', email: 'gestor.pd@empresa.com', role: 'gestor', active: true, area_id: 'area-pd', area_name: 'P&D / Produto / Dados', area_role: 'gestor', created_at: '2026-01-03T00:00:00Z' },
+          { id: 'p-7', user_id: 'user-5', email: 'gestor.cs@empresa.com', role: 'gestor', active: true, area_id: 'area-cs', area_name: 'CS / Relacionamento', area_role: 'gestor', created_at: '2026-01-08T00:00:00Z' },
+          { id: 'p-8', user_id: 'user-6', email: 'gestor.comercial@empresa.com', role: 'gestor', active: true, area_id: 'area-com', area_name: 'Comercial', area_role: 'gestor', created_at: '2026-01-09T00:00:00Z' },
+          { id: 'p-9', user_id: 'user-7', email: 'gestor.financeiro@empresa.com', role: 'gestor', active: true, area_id: 'area-fin', area_name: 'Financeiro', area_role: 'gestor', created_at: '2026-01-10T00:00:00Z' },
+          { id: 'p-10', user_id: 'user-8', email: 'colab.rh@empresa.com', role: 'colaborador', active: true, area_id: 'area-rh', area_name: 'RH / Pessoas', area_role: 'colaborador', created_at: '2026-01-15T00:00:00Z' },
+          { id: 'p-11', user_id: 'user-cli', email: 'cliente@parceiro.com', role: 'cliente', active: false, area_id: null, area_name: undefined, area_role: null, created_at: '2026-02-01T00:00:00Z' },
         ])
         return
       }
@@ -260,6 +266,51 @@ export function AdminPage() {
           Convidar usuário
         </Button>
       </div>
+
+      {/* Module Status Banner */}
+      {modules.length > 0 && (
+        <Card className={cn(
+          'border-2',
+          mockModules.length === 0
+            ? 'border-success-200 bg-success-50 dark:bg-success-900/10 dark:border-success-800'
+            : 'border-warning-200 bg-warning-50 dark:bg-warning-900/10 dark:border-warning-800'
+        )}>
+          <CardContent className="py-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Layers className={cn('h-5 w-5', mockModules.length === 0 ? 'text-success-600' : 'text-warning-600')} />
+                <span className={cn('font-semibold text-sm', mockModules.length === 0 ? 'text-success-700 dark:text-success-400' : 'text-warning-700 dark:text-warning-400')}>
+                  {mockModules.length === 0
+                    ? `Cutover completo — ${modules.length}/${modules.length} módulos em Supabase`
+                    : `${mockModules.length} módulo(s) ainda em mock`
+                  }
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {modules.map((m) => {
+                  const isLive = m.enabled && m.source === 'supabase'
+                  return (
+                    <span
+                      key={m.module}
+                      className={cn(
+                        'inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium',
+                        isLive
+                          ? 'bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400'
+                          : 'bg-warning-100 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400'
+                      )}
+                    >
+                      {isLive
+                        ? <CheckCircle className="h-3 w-3" />
+                        : <AlertTriangle className="h-3 w-3" />}
+                      {m.label ?? m.module}
+                    </span>
+                  )
+                })}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

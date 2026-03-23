@@ -88,7 +88,8 @@ export interface ActionPlan extends BaseEntity {
   // Metadados
   owner_id: string | null
   sponsor_id: string | null
-  user_id: string
+  user_id: string | null
+  is_canonical?: boolean
   completed_at: string | null
   
   // Campos legados (compatibilidade)

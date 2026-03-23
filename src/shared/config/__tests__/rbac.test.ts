@@ -40,6 +40,10 @@ describe('canAccessArea', () => {
     expect(canAccessArea('admin', 'rh')).toBe(true)
   })
 
+  it('admin can access pd', () => {
+    expect(canAccessArea('admin', 'pd')).toBe(true)
+  })
+
   it('admin can access financeiro', () => {
     expect(canAccessArea('admin', 'financeiro')).toBe(true)
   })
@@ -65,10 +69,10 @@ describe('getNavigableAreas', () => {
     }
   })
 
-  it('returns exactly 5 areas', () => {
+  it('returns exactly 7 areas', () => {
     const areas = getNavigableAreas()
     if (MULTIAREA_ENABLED) {
-      expect(areas).toHaveLength(5)
+      expect(areas).toHaveLength(7)
     } else {
       expect(areas).toEqual(['rh'])
     }

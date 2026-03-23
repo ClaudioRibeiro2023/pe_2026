@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { PILLAR_COLORS } from '@/shared/config/pillarColors'
 import {
   TrendingUp,
   ShieldAlert,
@@ -19,22 +20,18 @@ import { formatCurrency, formatNumber } from '@/shared/lib/format'
 import { useStrategicContext } from '@/features/strategy/hooks'
 import { useOkrsContext } from '@/features/okrs/hooks'
 import { useScoreboardContext } from '@/features/scoreboard/hooks'
+import { useStrategicRisks } from '@/features/area-plans/hooks'
 import { ROUTES } from '@/shared/config/routes'
 
-const pillarColors: Record<string, { bg: string; text: string; light: string }> = {
-  P1: { bg: 'bg-blue-500', text: 'text-blue-600', light: 'bg-blue-50' },
-  P2: { bg: 'bg-emerald-500', text: 'text-emerald-600', light: 'bg-emerald-50' },
-  P3: { bg: 'bg-amber-500', text: 'text-amber-600', light: 'bg-amber-50' },
-  P4: { bg: 'bg-violet-500', text: 'text-violet-600', light: 'bg-violet-50' },
-  P5: { bg: 'bg-rose-500', text: 'text-rose-600', light: 'bg-rose-50' },
-}
+const pillarColors = PILLAR_COLORS
 
 export function StrategyOverviewPage() {
   const { data, isLoading: stratLoading, isError: stratError, error: sError, refetch: refetchStrat } = useStrategicContext()
   const { data: okrsData, isLoading: okrsLoading } = useOkrsContext()
   const { data: scoreboardData, isLoading: scoreLoading } = useScoreboardContext()
+  const { data: canonicalRisks, isLoading: risksLoading } = useStrategicRisks()
 
-  const isLoading = stratLoading || okrsLoading || scoreLoading
+  const isLoading = stratLoading || okrsLoading || scoreLoading || risksLoading
 
   if (isLoading) {
     return <PageLoader text="Carregando dashboard executivo..." />
@@ -62,7 +59,7 @@ export function StrategyOverviewPage() {
   }
 
   const perf = data.performance2025
-  const alerts = data.alertasCriticos
+  const alerts = canonicalRisks ?? []
   const pillars = data.pillars ?? []
   const corporateOkrs = okrsData?.corporate ?? []
   const guardrails = scoreboardData?.guardrails ?? []
@@ -85,8 +82,8 @@ export function StrategyOverviewPage() {
   const guardrailsAttention = guardrails.filter((g) => g.status === 'ATENCAO').length
   const guardrailsCritical = guardrails.filter((g) => g.status === 'CRITICO').length
 
-  // Critical alerts
-  const criticalAlerts = alerts.filter((a) => a.nivel === 'CRITICO')
+  // Critical alerts (RSK canônicos severity=CRITICO)
+  const criticalAlerts = alerts.filter((a) => a.severity === 'CRITICO')
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -271,16 +268,16 @@ export function StrategyOverviewPage() {
                 {criticalAlerts.slice(0, 4).map((alert) => (
                   <InfoTooltip
                     key={alert.id}
-                    title={alert.titulo}
-                    description={`Métrica crítica: ${alert.metrica}`}
-                    details={`Categoria: ${alert.categoria} · Prazo: ${alert.prazo}`}
+                    title={alert.title}
+                    description={`Código: ${alert.code} · Impacto: ${alert.impact}`}
+                    details={`Categoria: ${alert.category} · Cadência: ${alert.review_cadence}`}
                   >
                     <div className="p-3 rounded-lg bg-danger-50 border border-danger-100">
-                      <p className="text-sm font-medium text-danger-800 line-clamp-1">{alert.titulo}</p>
-                      <p className="text-xs text-danger-600 mt-1">{alert.metrica}</p>
+                      <p className="text-sm font-medium text-danger-800 line-clamp-1">{alert.title}</p>
+                      <p className="text-xs text-danger-600 mt-1">{alert.code}</p>
                       <div className="flex items-center justify-between mt-2">
-                        <span className="text-xs text-danger-500">{alert.prazo}</span>
-                        <span className="text-xs text-danger-700 font-medium">{alert.categoria}</span>
+                        <span className="text-xs text-danger-500">{alert.review_cadence}</span>
+                        <span className="text-xs text-danger-700 font-medium">{alert.category}</span>
                       </div>
                     </div>
                   </InfoTooltip>

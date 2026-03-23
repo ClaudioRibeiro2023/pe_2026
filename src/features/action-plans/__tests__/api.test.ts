@@ -85,6 +85,8 @@ describe('action-plans API (mock mode)', () => {
     expect(areas.length).toBeGreaterThanOrEqual(1)
     expect(areas[0]).toHaveProperty('id')
     expect(areas[0]).toHaveProperty('name')
+    expect(areas.some((area) => area.id === 'pd')).toBe(true)
+    expect(areas.some((area) => area.id === 'cs')).toBe(true)
   })
 })
 
@@ -92,7 +94,7 @@ describe('calculatePortfolioStats', () => {
   const mockPlans: ActionPlan[] = [
     {
       id: '1', title: 'Plan A', description: null,
-      area_id: 'ti', area_name: 'TI', parent_plan_id: null,
+      area_id: 'pd', area_name: 'P&D / Produto / Dados', parent_plan_id: null,
       linked_kpis: [], linked_goals: [],
       status: 'in_progress', priority: 'high', health: 'on_track',
       pdca_phase: 'do', pdca_history: [],
@@ -107,7 +109,7 @@ describe('calculatePortfolioStats', () => {
     },
     {
       id: '2', title: 'Plan B', description: null,
-      area_id: 'ti', area_name: 'TI', parent_plan_id: null,
+      area_id: 'pd', area_name: 'P&D / Produto / Dados', parent_plan_id: null,
       linked_kpis: [], linked_goals: [],
       status: 'completed', priority: 'low', health: 'on_track',
       pdca_phase: 'act', pdca_history: [],
@@ -166,8 +168,8 @@ describe('calculatePortfolioStats', () => {
   it('groups by area correctly', () => {
     const stats = calculatePortfolioStats(mockPlans)
     expect(stats.byArea.length).toBe(2)
-    const tiArea = stats.byArea.find(a => a.area_id === 'ti')
-    expect(tiArea?.count).toBe(2)
+    const pdArea = stats.byArea.find(a => a.area_id === 'pd')
+    expect(pdArea?.count).toBe(2)
   })
 
   it('calculates completion rate', () => {

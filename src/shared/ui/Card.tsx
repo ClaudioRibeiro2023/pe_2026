@@ -73,7 +73,7 @@ export function CardFooter({ className, children, ...props }: CardFooterProps) {
   return (
     <div
       className={cn(
-        'px-6 py-4 border-t border-border bg-accent rounded-b-xl',
+        'px-6 py-4 border-t border-border bg-accent rounded-b-lg',
         className
       )}
       {...props}

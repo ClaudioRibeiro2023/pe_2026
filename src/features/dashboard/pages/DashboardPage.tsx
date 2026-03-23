@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Target, TrendingUp, ClipboardList, Activity, ArrowUp, ArrowDown, Minus } from '@/shared/ui/icons'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/Card'
 import { ErrorState } from '@/shared/ui/ErrorState'
+import { PageLoader } from '@/shared/ui/Loader'
 import { formatNumber } from '@/shared/lib/format'
 import { useGoals } from '@/features/goals/hooks'
 import { useIndicators } from '@/features/indicators/hooks'
@@ -161,11 +162,7 @@ export function DashboardPage() {
   ]
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-      </div>
-    )
+    return <PageLoader text="Carregando dashboard..." />
   }
 
   if (error) {
@@ -298,11 +295,11 @@ export function DashboardPage() {
                 {actionPlans.slice(0, 4).map((plan) => {
                   const statusColors: Record<string, string> = {
                     draft: 'bg-accent text-muted',
-                    planned: 'bg-blue-100 text-blue-700',
-                    in_progress: 'bg-primary-100 text-primary-700',
-                    blocked: 'bg-warning-100 text-warning-700',
-                    completed: 'bg-success-100 text-success-700',
-                    cancelled: 'bg-danger-100 text-danger-700',
+                    planned: 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400',
+                    in_progress: 'bg-info-100 text-info-700 dark:bg-info-900/30 dark:text-info-400',
+                    blocked: 'bg-warning-100 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400',
+                    completed: 'bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400',
+                    cancelled: 'bg-danger-100 text-danger-700 dark:bg-danger-900/30 dark:text-danger-400',
                   }
                   const statusLabels: Record<string, string> = {
                     draft: 'Rascunho',

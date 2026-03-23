@@ -8,11 +8,11 @@ import { formatDate } from '@/shared/lib/format'
 import { useStrategicContext } from '@/features/strategy/hooks'
 
 const frontierStyles: Record<string, string> = {
-  'Estrutura e governança': 'bg-primary-100 text-primary-700 border-primary-200',
-  'Crescimento e diversificação': 'bg-success-100 text-success-700 border-success-200',
-  'Excelência operacional': 'bg-warning-100 text-warning-700 border-warning-200',
-  'Produto e dados': 'bg-info-100 text-info-700 border-info-200',
-  'Pessoas e liderança': 'bg-purple-100 text-purple-700 border-purple-200',
+  P1: 'bg-primary-100 text-primary-700 border-primary-200',
+  P2: 'bg-success-100 text-success-700 border-success-200',
+  P3: 'bg-warning-100 text-warning-700 border-warning-200',
+  P4: 'bg-info-100 text-info-700 border-info-200',
+  P5: 'bg-purple-100 text-purple-700 border-purple-200',
 }
 
 export function StrategyThesisPage() {
@@ -142,7 +142,7 @@ export function StrategyThesisPage() {
         <h3 className="text-xl font-semibold text-foreground mb-4">Fronteiras Estratégicas</h3>
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
           {pillars.map((pillar) => {
-            const styleClass = frontierStyles[pillar.frontier] || 'bg-accent text-muted border-border'
+            const styleClass = frontierStyles[pillar.id] || 'bg-accent text-muted border-border'
             return (
               <InfoTooltip
                 key={pillar.id}

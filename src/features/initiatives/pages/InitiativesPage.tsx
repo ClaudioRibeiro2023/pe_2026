@@ -5,7 +5,58 @@ import { ErrorState } from '@/shared/ui/ErrorState'
 import { PageLoader } from '@/shared/ui/Loader'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/Table'
 import { formatDate } from '@/shared/lib/format'
-import { useInitiativesContext } from '@/features/initiatives/hooks'
+import { useInitiativesContext, useCanonicalInitiatives } from '@/features/initiatives/hooks'
+import type { Initiative as AreaInitiative } from '@/features/area-plans/types'
+import type { Initiative as CtxInitiative } from '@/features/initiatives/types'
+
+interface DisplayInitiative {
+  id: string
+  code: string
+  title: string
+  type: string
+  priority: string
+  pillar: string
+  okr: string
+  owner: string
+  status: string
+  startDate: string | null
+  endDate: string | null
+  motorCodes: string[]
+}
+
+function normalizeAreaInit(i: AreaInitiative): DisplayInitiative {
+  return {
+    id: i.id,
+    code: i.code,
+    title: i.title,
+    type: i.type ?? '—',
+    priority: i.priority ?? '—',
+    pillar: i.pillar?.code ?? i.pillar_id ?? '—',
+    okr: i.okr_code ?? '—',
+    owner: i.owner ?? '—',
+    status: i.status,
+    startDate: i.start_date,
+    endDate: i.end_date,
+    motorCodes: i.motor_codes ?? [],
+  }
+}
+
+function normalizeCtxInit(i: CtxInitiative): DisplayInitiative {
+  return {
+    id: i.id,
+    code: i.id,
+    title: i.title,
+    type: i.type,
+    priority: i.priority,
+    pillar: i.pillar,
+    okr: i.okr,
+    owner: i.owner,
+    status: i.status,
+    startDate: i.startDate,
+    endDate: i.endDate,
+    motorCodes: [],
+  }
+}
 
 const statusStyles: Record<string, string> = {
   PLANEJADA: 'bg-accent text-muted',
@@ -22,7 +73,11 @@ const priorityStyles: Record<string, string> = {
 }
 
 export function InitiativesPage() {
-  const { data, isLoading, isError, error, refetch } = useInitiativesContext()
+  const { data: ctx, isLoading: ctxLoading, isError: ctxError, error: ctxErr, refetch: refetchCtx } = useInitiativesContext()
+  const { data: canonicalInits, isLoading: initsLoading, isError: initsError, refetch: refetchInits } = useCanonicalInitiatives()
+
+  const isLoading = ctxLoading || initsLoading
+  const isError = ctxError || initsError
 
   if (isLoading) {
     return <PageLoader text="Carregando carteira de iniciativas..." />
@@ -32,15 +87,21 @@ export function InitiativesPage() {
     return (
       <ErrorState
         title="Erro ao carregar carteira"
-        message={error instanceof Error ? error.message : undefined}
+        message={ctxErr instanceof Error ? ctxErr.message : undefined}
         onRetry={() => {
-          void refetch()
+          void refetchCtx()
+          void refetchInits()
         }}
       />
     )
   }
 
-  if (!data || data.initiatives.length === 0) {
+  // Normaliza para DisplayInitiative — resolve conflito de tipos entre as duas fontes
+  const initiatives: DisplayInitiative[] = (canonicalInits && canonicalInits.length > 0)
+    ? canonicalInits.map(normalizeAreaInit)
+    : (ctx?.initiatives ?? []).map(normalizeCtxInit)
+
+  if (initiatives.length === 0) {
     return (
       <EmptyState
         title="Sem iniciativas"
@@ -49,14 +110,32 @@ export function InitiativesPage() {
     )
   }
 
-  const { capacity, initiatives, prioritizationCriteria, evidenceRequirement } = data
+  const capacity = ctx?.capacity
+  const prioritizationCriteria = ctx?.prioritizationCriteria ?? []
+  const evidenceRequirement = ctx?.evidenceRequirement
+
+  // Capacidade calculada em tempo real com base nas INITs canônicas
+  const wipLimit = capacity?.wipInstitutionalLimit ?? 10
+  const wipAreaLimit = capacity?.wipAreaLimit ?? 5
+  const inProgressCount = canonicalInits
+    ? canonicalInits.filter(i => i.status === 'EM_ANDAMENTO').length
+    : (capacity?.inProgressCount ?? 0)
+  const blockedCount = canonicalInits
+    ? canonicalInits.filter(i => i.status === 'BLOQUEADA').length
+    : (capacity?.blockedCount ?? 0)
+  const p0Count = canonicalInits
+    ? canonicalInits.filter(i => i.priority === 'P0').length
+    : (capacity?.p0Count ?? 0)
 
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Carteira de Iniciativas</h1>
+        <h1 className="text-3xl font-bold text-foreground">Carteira de Iniciativas PE2026</h1>
         <p className="text-muted mt-2">
-          Prioridades, capacidade e rastreabilidade das iniciativas estratégicas.
+          {canonicalInits && canonicalInits.length > 0
+            ? `${canonicalInits.length} iniciativas canônicas — INIT-001 a INIT-022 (DOC 08 v2)`
+            : 'Prioridades, capacidade e rastreabilidade das iniciativas estratégicas.'
+          }
         </p>
       </div>
 
@@ -83,15 +162,15 @@ export function InitiativesPage() {
           </CardHeader>
           <CardContent className="space-y-2">
             <p className="text-sm text-muted">
-              {evidenceRequirement.mandatory ? 'Obrigatória para conclusão' : 'Opcional'}
+              {evidenceRequirement?.mandatory ? 'Obrigatória para conclusão' : 'Opcional'}
             </p>
             <p className="text-sm text-muted">Artefatos mínimos:</p>
             <ul className="list-disc pl-5 text-sm text-muted space-y-1">
-              {evidenceRequirement.requiredArtifacts.map((artifact) => (
+              {(evidenceRequirement?.requiredArtifacts ?? ['EVID-*', 'DEC-*']).map((artifact) => (
                 <li key={artifact}>{artifact}</li>
               ))}
             </ul>
-            <p className="text-xs text-muted">{evidenceRequirement.validation}</p>
+            <p className="text-xs text-muted">{evidenceRequirement?.validation}</p>
           </CardContent>
         </Card>
       </div>
@@ -101,7 +180,7 @@ export function InitiativesPage() {
           <CardContent className="p-4">
             <p className="text-sm text-muted">WIP institucional</p>
             <p className="text-2xl font-bold text-foreground mt-2">
-              {capacity.inProgressCount} / {capacity.wipInstitutionalLimit}
+              {inProgressCount} / {wipLimit}
             </p>
           </CardContent>
         </Card>
@@ -109,7 +188,7 @@ export function InitiativesPage() {
           <CardContent className="p-4">
             <p className="text-sm text-muted">WIP por área</p>
             <p className="text-2xl font-bold text-foreground mt-2">
-              {capacity.wipAreaLimit}
+              {wipAreaLimit}
             </p>
           </CardContent>
         </Card>
@@ -117,7 +196,7 @@ export function InitiativesPage() {
           <CardContent className="p-4">
             <p className="text-sm text-muted">Iniciativas bloqueadas</p>
             <p className="text-2xl font-bold text-foreground mt-2">
-              {capacity.blockedCount}
+              {blockedCount}
             </p>
           </CardContent>
         </Card>
@@ -125,7 +204,7 @@ export function InitiativesPage() {
           <CardContent className="p-4">
             <p className="text-sm text-muted">P0 em execução</p>
             <p className="text-2xl font-bold text-foreground mt-2">
-              {capacity.p0Count}
+              {p0Count}
             </p>
           </CardContent>
         </Card>
@@ -160,7 +239,7 @@ export function InitiativesPage() {
                     <div className="min-w-0">
                       <p className="font-medium text-foreground truncate">{initiative.title}</p>
                       <p className="text-xs text-muted truncate">
-                        {initiative.okr} · {initiative.kr}
+                        {initiative.okr}
                       </p>
                     </div>
                   </TableCell>
@@ -186,7 +265,9 @@ export function InitiativesPage() {
                     </span>
                   </TableCell>
                   <TableCell className="text-xs text-muted">
-                    {formatDate(initiative.startDate)} → {formatDate(initiative.endDate)}
+                    {initiative.startDate ? formatDate(initiative.startDate) : '—'}
+                    {' → '}
+                    {initiative.endDate ? formatDate(initiative.endDate) : '—'}
                   </TableCell>
                 </TableRow>
               ))}
