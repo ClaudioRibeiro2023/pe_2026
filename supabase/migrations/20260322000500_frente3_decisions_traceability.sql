@@ -134,21 +134,4 @@ LEFT JOIN public.key_results    kr ON kr.okr_id   = o.id
 LEFT JOIN public.initiatives    i  ON i.kr_code   = kr.code
 ORDER BY p.code, o.code, kr.code, i.code;
 
--- ============================================================
--- 4. VIEW vw_modules_status — status de todos os módulos
--- ============================================================
-
-CREATE OR REPLACE VIEW public.vw_modules_status AS
-SELECT
-  ff.module,
-  ff.enabled,
-  ff.source,
-  ff.enabled_at,
-  ff.enabled_by,
-  ff.description,
-  (SELECT COUNT(*) FROM public.cutover_log cl WHERE cl.module = ff.module) AS total_cutover_events,
-  (SELECT MAX(cl.created_at) FROM public.cutover_log cl WHERE cl.module = ff.module) AS last_event_at
-FROM public.feature_flags ff
-ORDER BY ff.module;
-
 COMMIT;
