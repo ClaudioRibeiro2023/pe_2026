@@ -2,7 +2,7 @@
 
 > **Documento vivo.** Atualizado a cada conclusão de tarefa ou descoberta de oportunidade.  
 > **Fonte de verdade:** Este arquivo é a referência de continuidade entre sessões de desenvolvimento.  
-> **Última atualização:** 2026-03-21 (sessão 2) | **Atualizado por:** Cascade
+> **Última atualização:** 2026-03-23 (sessão 4 - finalizada) | **Atualizado por:** Cascade
 
 ---
 
@@ -225,6 +225,14 @@
 
 | Data | Item | Descrição |
 |------|------|-----------|
+| 2026-03-23 | Workbooks Excel | 8 workbooks gerados (7 setoriais + 1 corporativo) com script `generate_action_plans.py` |
+| 2026-03-23 | Dashboard INITs Avançado | Filtros de pilar, motor, tipo, período e ordenação no `InitiativesDashboardPage` |
+| 2026-03-23 | Script Deploy PowerShell | `scripts/deploy_action_plans.ps1` criado para deploy em Windows |
+| 2026-03-23 | Build TypeScript | 0 erros, todos os módulos compilando corretamente |
+| 2026-03-23 | Integração RH | Seed SQL com 6 INITs setoriais + 5 corporativas, validadores Python, testes de integração |
+| 2026-03-23 | Integração Áreas | Seeds SQL para Marketing (7), P&D (6), Operação (8), CS (8), Comercial (5), Financeiro (8) INITs |
+| 2026-03-23 | Dashboard INITs | Página `InitiativesDashboardPage` com filtros, estatísticas e visualização grid/lista |
+| 2026-03-23 | Total INITs | 84 iniciativas integradas (48 setoriais + 36 corporativas) ao banco de dados |
 | 2026-03-20 | Onda A–C | Migrations + seeds canônicos aplicados; 117 registros no Supabase |
 | 2026-03-20 | Build | TypeScript/Vite: 0 erros, 2133 módulos |
 | 2026-03-21 | Onda F | Cutover ativado; 6 módulos em Supabase via feature flags |

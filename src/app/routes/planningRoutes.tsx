@@ -49,6 +49,9 @@ const PlanningAreaTimelinePage = lazy(() =>
 const PlanningAreaStrategicPackPage = lazy(() =>
   import('@/features/planning/pages/area/PlanningAreaStrategicPackPage').then((m) => ({ default: m.PlanningAreaStrategicPackPage }))
 )
+const InitiativesDashboardPage = lazy(() =>
+  import('@/features/area-plans/pages/InitiativesDashboardPage').then((m) => ({ default: m.InitiativesDashboardPage }))
+)
 const PlanningAreaLayout = lazy(() =>
   import('@/features/planning/layouts/PlanningAreaLayout').then((m) => ({ default: m.PlanningAreaLayout }))
 )
@@ -87,6 +90,9 @@ export function planningRoutes() {
         <Route path="timeline" element={<SuspensePage featureName="Planning"><PlanningAreaTimelinePage /></SuspensePage>} />
         <Route path="pe-2026" element={<SuspensePage featureName="Planning"><PlanningAreaStrategicPackPage /></SuspensePage>} />
       </Route>
+      
+      {/* Initiatives Dashboard */}
+      <Route path="/planning/initiatives" element={<SuspensePage featureName="Planning"><InitiativesDashboardPage /></SuspensePage>} />
     </>
   )
 }

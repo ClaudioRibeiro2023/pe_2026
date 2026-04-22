@@ -11,7 +11,19 @@ export const env = {
 
 // Validate required env vars
 if (!env.supabaseUrl || !env.supabaseAnonKey) {
-  console.warn(
-    '⚠️ Supabase environment variables not set. Check your .env file.'
-  )
+  const missing = [
+    !env.supabaseUrl && 'VITE_SUPABASE_URL',
+    !env.supabaseAnonKey && 'VITE_SUPABASE_ANON_KEY',
+  ].filter(Boolean).join(', ')
+
+  if (env.isProd) {
+    console.error(
+      `[PE2026] PROD: Variáveis de ambiente ausentes: ${missing}. ` +
+      'A aplicação funcionará em modo demo — dados reais indisponíveis.'
+    )
+  } else {
+    console.warn(
+      `[PE2026] DEV: Variáveis ausentes: ${missing}. Modo demo ativado.`
+    )
+  }
 }

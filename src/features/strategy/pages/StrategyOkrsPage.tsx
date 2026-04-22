@@ -174,8 +174,15 @@ export function StrategyOkrsPage() {
                       <p className="text-sm text-white/80 mt-1">Dono: {okr.owner}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-3xl font-bold">{progress}%</p>
-                      <p className="text-xs text-white/80">{completedCount}/{okr.krs.length} KRs</p>
+                      <p
+                        className="text-3xl font-bold text-white tabular-nums"
+                        style={{ textShadow: '0 1px 2px rgba(0,0,0,0.25)' }}
+                      >
+                        {progress}%
+                      </p>
+                      <p className="text-xs text-white/80 tabular-nums">
+                        {completedCount}/{okr.krs.length} KRs
+                      </p>
                     </div>
                   </div>
                 </div>

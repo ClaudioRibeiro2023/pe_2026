@@ -7,6 +7,29 @@ Template canônico para construção de aplicações internas com:
 - **Supabase** (Auth + Postgres + RLS)
 - Deploy via **Netlify (Git Deploy)**
 
+## Planos de Ação PE2026
+
+Dashboard de iniciativas corporativas e setoriais implementado:
+
+### Funcionalidades
+- **Dashboard de INITs**: `/planning/initiatives` - Visualização grid/lista com filtros avançados
+- **Filtros**: Prioridade (P0/P1/P2), Status, Tipo (Corp/Setorial), Pilar, Motor, Período
+- **Estatísticas**: Cards com total, orçamento, distribuição por prioridade
+- **Busca**: Código, título, responsável
+
+### Seeds de Dados
+```powershell
+# Windows
+powershell -ExecutionPolicy Bypass -File scripts/deploy_action_plans.ps1
+
+# Linux/Mac  
+bash scripts/deploy_action_plans.sh
+```
+
+**Total**: 84 iniciativas (36 corporativas + 48 setoriais)
+
+---
+
 ## Início Rápido
 
 ### 1. Instalar dependências

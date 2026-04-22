@@ -125,22 +125,37 @@ export function ActionTimeline({ actions, onActionClick }: ActionTimelineProps) 
                     <div className="flex-1 relative h-8">
                       <div
                         className={cn(
-                          'absolute h-full rounded cursor-pointer transition-all',
+                          'absolute h-full rounded-md cursor-pointer transition-all overflow-hidden',
                           'hover:shadow-md hover:scale-y-110',
-                          action.status === 'CONCLUIDA' && 'bg-green-400',
-                          action.status === 'EM_ANDAMENTO' && 'bg-blue-400',
-                          action.status === 'BLOQUEADA' && 'bg-red-400',
-                          action.status === 'AGUARDANDO_EVIDENCIA' && 'bg-yellow-400',
-                          action.status === 'EM_VALIDACAO' && 'bg-purple-400',
-                          action.status === 'PENDENTE' && 'bg-muted',
+                          // Fundo mais claro (track); progress preenche por cima
+                          action.status === 'CONCLUIDA' && 'bg-green-200 dark:bg-green-900/40',
+                          action.status === 'EM_ANDAMENTO' && 'bg-blue-200 dark:bg-blue-900/40',
+                          action.status === 'BLOQUEADA' && 'bg-red-200 dark:bg-red-900/40',
+                          action.status === 'AGUARDANDO_EVIDENCIA' && 'bg-yellow-200 dark:bg-yellow-900/40',
+                          action.status === 'EM_VALIDACAO' && 'bg-purple-200 dark:bg-purple-900/40',
+                          action.status === 'PENDENTE' && 'bg-gray-200 dark:bg-gray-800/60',
                           action.status === 'CANCELADA' && 'bg-accent',
                           overdue && 'ring-2 ring-red-500 ring-offset-1'
                         )}
                         style={position}
                       >
-                        <div className="absolute inset-0 flex items-center px-2 overflow-hidden">
-                          <span className="text-xs text-white font-medium truncate">
-                            {action.progress > 0 && `${action.progress}%`}
+                        {/* Progress fill */}
+                        <div
+                          className={cn(
+                            'absolute inset-y-0 left-0 transition-all',
+                            action.status === 'CONCLUIDA' && 'bg-green-500',
+                            action.status === 'EM_ANDAMENTO' && 'bg-blue-500',
+                            action.status === 'BLOQUEADA' && 'bg-red-500',
+                            action.status === 'AGUARDANDO_EVIDENCIA' && 'bg-yellow-500',
+                            action.status === 'EM_VALIDACAO' && 'bg-purple-500',
+                            action.status === 'PENDENTE' && 'bg-gray-400 dark:bg-gray-600',
+                            action.status === 'CANCELADA' && 'bg-muted'
+                          )}
+                          style={{ width: `${Math.max(0, Math.min(100, action.progress))}%` }}
+                        />
+                        <div className="absolute inset-0 flex items-center px-2 overflow-hidden z-[1]">
+                          <span className="text-[11px] text-white font-semibold tabular-nums drop-shadow-sm">
+                            {action.progress}%
                           </span>
                         </div>
 

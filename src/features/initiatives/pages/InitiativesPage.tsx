@@ -218,61 +218,87 @@ export function InitiativesPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Iniciativa</TableHead>
-                <TableHead>Tipo</TableHead>
-                <TableHead>Prioridade</TableHead>
-                <TableHead>Pilar</TableHead>
-                <TableHead>Dono</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Prazo</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {initiatives.map((initiative) => (
-                <TableRow key={initiative.id}>
-                  <TableCell className="font-medium">{initiative.id}</TableCell>
-                  <TableCell>
-                    <div className="min-w-0">
-                      <p className="font-medium text-foreground truncate">{initiative.title}</p>
-                      <p className="text-xs text-muted truncate">
-                        {initiative.okr}
-                      </p>
-                    </div>
-                  </TableCell>
-                  <TableCell>{initiative.type}</TableCell>
-                  <TableCell>
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded ${
-                        priorityStyles[initiative.priority] || 'bg-accent text-muted'
-                      }`}
-                    >
-                      {initiative.priority}
-                    </span>
-                  </TableCell>
-                  <TableCell>{initiative.pillar}</TableCell>
-                  <TableCell>{initiative.owner}</TableCell>
-                  <TableCell>
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded ${
-                        statusStyles[initiative.status] || 'bg-accent text-muted'
-                      }`}
-                    >
-                      {initiative.status}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-xs text-muted">
-                    {initiative.startDate ? formatDate(initiative.startDate) : '—'}
-                    {' → '}
-                    {initiative.endDate ? formatDate(initiative.endDate) : '—'}
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="whitespace-nowrap">ID</TableHead>
+                  <TableHead className="min-w-[280px]">Iniciativa</TableHead>
+                  <TableHead className="whitespace-nowrap">Tipo</TableHead>
+                  <TableHead className="whitespace-nowrap">Prioridade</TableHead>
+                  <TableHead className="whitespace-nowrap">Pilar</TableHead>
+                  <TableHead className="min-w-[120px]">Dono</TableHead>
+                  <TableHead className="whitespace-nowrap">Status</TableHead>
+                  <TableHead className="whitespace-nowrap">Prazo</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {initiatives.map((initiative) => (
+                  <TableRow key={initiative.id}>
+                    <TableCell className="font-medium whitespace-nowrap" title={initiative.code}>
+                      {initiative.id}
+                    </TableCell>
+                    <TableCell className="max-w-[340px]">
+                      <div className="min-w-0">
+                        <p
+                          className="font-medium text-foreground truncate"
+                          title={initiative.title}
+                        >
+                          {initiative.title}
+                        </p>
+                        <p className="text-xs text-muted truncate" title={initiative.okr}>
+                          {initiative.okr}
+                        </p>
+                      </div>
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap" title={`Tipo: ${initiative.type}`}>
+                      {initiative.type}
+                    </TableCell>
+                    <TableCell>
+                      <span
+                        className={`px-2 py-1 text-xs font-medium rounded whitespace-nowrap ${
+                          priorityStyles[initiative.priority] || 'bg-accent text-muted'
+                        }`}
+                        title={`Prioridade: ${initiative.priority}`}
+                      >
+                        {initiative.priority}
+                      </span>
+                    </TableCell>
+                    <TableCell
+                      className="whitespace-nowrap"
+                      title={`Pilar: ${initiative.pillar}`}
+                    >
+                      {initiative.pillar}
+                    </TableCell>
+                    <TableCell
+                      className="max-w-[180px] truncate"
+                      title={initiative.owner}
+                    >
+                      {initiative.owner}
+                    </TableCell>
+                    <TableCell>
+                      <span
+                        className={`px-2 py-1 text-xs font-medium rounded whitespace-nowrap ${
+                          statusStyles[initiative.status] || 'bg-accent text-muted'
+                        }`}
+                        title={`Status: ${initiative.status}`}
+                      >
+                        {initiative.status}
+                      </span>
+                    </TableCell>
+                    <TableCell
+                      className="text-xs text-muted whitespace-nowrap tabular-nums"
+                      title={`Início: ${initiative.startDate ?? '—'} · Fim: ${initiative.endDate ?? '—'}`}
+                    >
+                      {initiative.startDate ? formatDate(initiative.startDate) : '—'}
+                      {' → '}
+                      {initiative.endDate ? formatDate(initiative.endDate) : '—'}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

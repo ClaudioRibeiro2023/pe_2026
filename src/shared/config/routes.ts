@@ -67,6 +67,7 @@ export const ROUTES = {
   ADMIN_MIGRATION: '/admin/migration',
   ADMIN_TEMPLATES: '/admin/templates',
   ADMIN_VALIDATION: '/admin/validation',
+  ADMIN_MAINTENANCE: '/admin/maintenance',
 
   // Cockpit expandido
   ALERTS: '/alerts',

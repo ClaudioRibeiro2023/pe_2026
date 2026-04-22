@@ -1,5 +1,5 @@
-const CACHE_NAME = 'app-cache-v1'
-const HTML_CACHE = 'app-html-v1'
+const CACHE_NAME = 'app-cache-v2'
+const HTML_CACHE = 'app-html-v2'
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -30,7 +30,7 @@ self.addEventListener('fetch', (event) => {
   const requestUrl = new URL(event.request.url)
   if (requestUrl.origin !== self.location.origin) return
 
-  if (event.request.mode === 'navigate') {
+  if (event.request.mode === 'navigate' || event.request.destination === 'document') {
     event.respondWith(networkFirst(event.request))
     return
   }
@@ -50,6 +50,10 @@ async function networkFirst(request) {
   } catch (error) {
     const cached = await cache.match(request)
     if (cached) return cached
+
+    const fallback = await cache.match('/index.html')
+    if (fallback) return fallback
+
     throw error
   }
 }
@@ -59,9 +63,21 @@ async function cacheFirst(request) {
   const cached = await cache.match(request)
   if (cached) return cached
 
-  const response = await fetch(request)
-  if (response.ok) {
-    cache.put(request, response.clone())
+  try {
+    const response = await fetch(request)
+    if (response.ok) {
+      cache.put(request, response.clone())
+    }
+    return response
+  } catch (error) {
+    const fallback = await cache.match('/index.html')
+    if (fallback && (request.destination === 'document' || request.mode === 'navigate')) {
+      return fallback
+    }
+
+    return new Response('', {
+      status: 504,
+      statusText: 'Offline or unavailable',
+    })
   }
-  return response
 }

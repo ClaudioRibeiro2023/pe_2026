@@ -6,9 +6,12 @@ import { routePreloaders } from '@/app/routePreloaders'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { navSections } from '@/shared/config/navigation'
 import { filterNavByRole } from '@/shared/lib/navAccess'
-import { ChevronsLeft, ChevronsRight, ChevronDown, ChevronRight } from '@/shared/ui/icons'
+import type { NavBadge } from '@/shared/config/navigation'
+import { ChevronsLeft, ChevronsRight, ChevronDown, Search } from '@/shared/ui/icons'
 import { Logo, LogoMark } from '@/shared/ui/Logo'
 import type { UserRole } from '@/shared/types'
+import { SidebarTooltip } from './components/SidebarTooltip'
+import { useCommandPalette } from '@/shared/hooks/useCommandPalette'
 
 interface NavItemWithSubItems {
   label: string
@@ -18,8 +21,48 @@ interface NavItemWithSubItems {
     label: string
     href: string
     icon: React.ComponentType<{ className?: string }>
+    badge?: NavBadge
+    notificationCount?: number
   }>
   defaultOpen?: boolean
+  badge?: NavBadge
+  notificationCount?: number
+}
+
+const BADGE_CLASS: Record<string, string> = {
+  BETA: 'bg-warning-500/20 text-warning-400 border-warning-500/20',
+  DEV: 'bg-primary-500/20 text-primary-400 border-primary-500/20',
+  NEW: 'bg-success-500/20 text-success-400 border-success-500/20',
+}
+
+function Badge({ children }: { children: string }) {
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded-full tracking-wide border',
+        BADGE_CLASS[children] || 'bg-gray-500/20 text-gray-400 border-gray-500/20'
+      )}
+    >
+      {children}
+    </span>
+  )
+}
+
+function NotificationDot({ count }: { count: number }) {
+  return (
+    <span className="min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-danger-500 text-white text-[10px] font-bold px-1 ring-2 ring-surface">
+      {count > 99 ? '99+' : count}
+    </span>
+  )
+}
+
+function ActiveBar() {
+  return (
+    <span
+      aria-hidden="true"
+      className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] rounded-r-full bg-primary-500"
+    />
+  )
 }
 
 function SidebarItem({
@@ -33,87 +76,169 @@ function SidebarItem({
 }) {
   const location = useLocation()
   const [isOpen, setIsOpen] = useState(item.defaultOpen ?? false)
+  const [tooltipOpen, setTooltipOpen] = useState(false)
   const Icon = item.icon
   const hasSubItems = item.subItems && item.subItems.length > 0
 
-  // Detectar se algum subitem está ativo para destacar o pai
   const hasActiveChild = item.subItems?.some(
     (sub) => location.pathname === sub.href || location.pathname.startsWith(`${sub.href}/`)
   ) ?? false
 
-  // If collapsed and has subitems, just show the parent icon that navigates to first subitem
+  // Auto-expandir quando tem filho ativo
+  useEffect(() => {
+    if (hasActiveChild) setIsOpen(true)
+  }, [hasActiveChild])
+
+  // Contagem de notificações do item + filhos
+  const totalNotifications =
+    (item.notificationCount ?? 0) +
+    (item.subItems?.reduce((sum, s) => sum + (s.notificationCount ?? 0), 0) ?? 0)
+
+  // Mouse enter / leave com delay curto para não piscar
+  const tooltipTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const handleMouseEnter = () => {
+    if (tooltipTimer.current) clearTimeout(tooltipTimer.current)
+    if (collapsed) setTooltipOpen(true)
+  }
+  const handleMouseLeave = () => {
+    if (tooltipTimer.current) clearTimeout(tooltipTimer.current)
+    tooltipTimer.current = setTimeout(() => setTooltipOpen(false), 100)
+  }
+
+  // ── Colapsada com subitems: navega para o 1º filho ──
   if (collapsed && hasSubItems) {
     const firstSubItem = item.subItems![0]
     return (
-      <NavLink
-        to={firstSubItem.href}
-        onMouseEnter={() => onPreload(firstSubItem.href)}
-        onFocus={() => onPreload(firstSubItem.href)}
-        title={item.label}
-        className={({ isActive }) =>
-          cn(
-            'flex items-center gap-2.5 px-2 py-2 rounded-md text-sm font-medium transition-colors justify-center',
-            isActive
-              ? 'nav-item-active'
-              : 'text-muted hover:text-foreground hover:bg-accent'
-          )
-        }
+      <div
+        className="relative"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        <Icon className="h-4 w-4 flex-shrink-0" />
-      </NavLink>
+        <NavLink
+          to={firstSubItem.href}
+          onMouseEnter={() => onPreload(firstSubItem.href)}
+          onFocus={() => onPreload(firstSubItem.href)}
+          className={({ isActive }) => {
+            const activeState = isActive || hasActiveChild
+            return cn(
+              'relative flex items-center justify-center min-h-[40px] min-w-[40px] rounded-lg transition-all duration-150',
+              activeState
+                ? 'bg-primary-500/10 text-primary-500'
+                : 'text-muted hover:text-foreground hover:bg-accent'
+            )
+          }}
+        >
+          {(hasActiveChild) && <ActiveBar />}
+          <span className="relative">
+            <Icon className="h-[18px] w-[18px] flex-shrink-0" />
+            {totalNotifications > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 flex items-center justify-center rounded-full bg-danger-500 text-white text-[9px] font-bold px-0.5 ring-2 ring-surface">
+                {totalNotifications > 99 ? '99+' : totalNotifications}
+              </span>
+            )}
+          </span>
+        </NavLink>
+        <SidebarTooltip
+          label={item.label}
+          badge={item.badge}
+          notificationCount={totalNotifications}
+          visible={tooltipOpen}
+        />
+      </div>
     )
   }
 
-  // If no subitems and no href, skip
+  // ── Sem subitems e sem href ──
   if (!hasSubItems && !item.href) return null
 
-  // Simple link without subitems
+  // ── Link simples ──
   if (!hasSubItems && item.href) {
     return (
-      <NavLink
-        to={item.href}
-        end={item.href === ROUTES.DASHBOARD}
-        onMouseEnter={() => onPreload(item.href!)}
-        onFocus={() => onPreload(item.href!)}
-        title={collapsed ? item.label : undefined}
-        className={({ isActive }) =>
-          cn(
-            'flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm font-medium transition-colors',
-            isActive
-              ? 'nav-item-active'
-              : 'text-muted hover:text-foreground hover:bg-accent',
-            collapsed && 'justify-center px-2'
-          )
-        }
+      <div
+        className="relative"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        <Icon className="h-4 w-4 flex-shrink-0" />
-        {!collapsed && <span>{item.label}</span>}
-      </NavLink>
+        <NavLink
+          to={item.href}
+          end={item.href === ROUTES.DASHBOARD}
+          onMouseEnter={() => onPreload(item.href!)}
+          onFocus={() => onPreload(item.href!)}
+          className={({ isActive }) =>
+            cn(
+              'group relative flex items-center gap-2.5 rounded-lg text-sm font-medium transition-all duration-150',
+              collapsed
+                ? 'justify-center min-h-[40px] min-w-[40px]'
+                : 'px-2.5 py-2 hover:translate-x-0.5',
+              isActive
+                ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400'
+                : 'text-muted hover:text-foreground hover:bg-accent'
+            )
+          }
+        >
+          {({ isActive }) => (
+            <>
+              {isActive && <ActiveBar />}
+              <span className="relative flex-shrink-0">
+                <Icon className="h-[18px] w-[18px]" />
+                {collapsed && item.notificationCount != null && item.notificationCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 flex items-center justify-center rounded-full bg-danger-500 text-white text-[9px] font-bold px-0.5 ring-2 ring-surface">
+                    {item.notificationCount > 99 ? '99+' : item.notificationCount}
+                  </span>
+                )}
+              </span>
+              {!collapsed && (
+                <>
+                  <span className="flex-1 truncate">{item.label}</span>
+                  {item.badge && <Badge>{item.badge}</Badge>}
+                  {item.notificationCount != null && item.notificationCount > 0 && (
+                    <NotificationDot count={item.notificationCount} />
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </NavLink>
+        {collapsed && (
+          <SidebarTooltip
+            label={item.label}
+            badge={item.badge}
+            notificationCount={item.notificationCount}
+            visible={tooltipOpen}
+          />
+        )}
+      </div>
     )
   }
 
-  // Expandable item with subitems
+  // ── Expansível com subitems ──
   return (
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
         className={cn(
-          'w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm font-medium transition-colors',
+          'relative w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 hover:translate-x-0.5',
           hasActiveChild
-            ? 'text-primary-600 dark:text-primary-400 hover:bg-accent'
+            ? 'text-primary-600 dark:text-primary-400 bg-primary-500/5'
             : 'text-muted hover:text-foreground hover:bg-accent'
         )}
       >
-        <Icon className="h-4 w-4 flex-shrink-0" />
-        <span className="flex-1 text-left">{item.label}</span>
-        {isOpen ? (
-          <ChevronDown className={cn('h-3.5 w-3.5', hasActiveChild ? 'text-primary-500' : 'text-muted')} />
-        ) : (
-          <ChevronRight className={cn('h-3.5 w-3.5', hasActiveChild ? 'text-primary-500' : 'text-muted')} />
-        )}
+        {hasActiveChild && <ActiveBar />}
+        <Icon className="h-[18px] w-[18px] flex-shrink-0" />
+        <span className="flex-1 text-left truncate">{item.label}</span>
+        {item.badge && <Badge>{item.badge}</Badge>}
+        {totalNotifications > 0 && <NotificationDot count={totalNotifications} />}
+        <ChevronDown
+          className={cn(
+            'h-3.5 w-3.5 flex-shrink-0 transition-transform duration-200',
+            isOpen ? '' : '-rotate-90',
+            hasActiveChild ? 'text-primary-500' : 'text-muted'
+          )}
+        />
       </button>
       {isOpen && (
-        <div className="mt-1 ml-4 pl-2 border-l border-primary-200 dark:border-primary-800/50 space-y-0.5">
+        <div className="mt-1 ml-4 pl-2 border-l border-primary-500/20 space-y-0.5">
           {item.subItems!.map((subItem) => {
             const SubIcon = subItem.icon
             return (
@@ -124,15 +249,19 @@ function SidebarItem({
                 onFocus={() => onPreload(subItem.href)}
                 className={({ isActive }) =>
                   cn(
-                    'flex items-center gap-2 px-2 py-1.5 rounded-md text-sm transition-colors',
+                    'group flex items-center gap-2 px-2 py-1.5 rounded-md text-[13px] transition-all duration-150',
                     isActive
-                      ? 'nav-item-active'
+                      ? 'text-primary-600 dark:text-primary-400 font-medium bg-primary-500/10'
                       : 'text-muted hover:text-foreground hover:bg-accent/50'
                   )
                 }
               >
                 <SubIcon className="h-3.5 w-3.5 flex-shrink-0" />
-                <span>{subItem.label}</span>
+                <span className="flex-1 truncate">{subItem.label}</span>
+                {subItem.badge && <Badge>{subItem.badge}</Badge>}
+                {subItem.notificationCount != null && subItem.notificationCount > 0 && (
+                  <NotificationDot count={subItem.notificationCount} />
+                )}
               </NavLink>
             )
           })}
@@ -160,13 +289,18 @@ const ROLE_COLORS: Record<UserRole, string> = {
 
 const ALL_ROLES: UserRole[] = ['admin', 'direcao', 'gestor', 'colaborador', 'cliente']
 
-export function Sidebar() {
+interface SidebarProps {
+  /** Se true, força exibição em mobile (drawer). Default: escondido em <lg. */
+  forceVisible?: boolean
+}
+
+export function Sidebar({ forceVisible = false }: SidebarProps = {}) {
   const { user, roleOverride, setRoleOverride } = useAuth()
+  const commandPalette = useCommandPalette()
   const userRole = user?.profile?.role
   const userEmail = user?.email || 'usuário'
   const [showRolePicker, setShowRolePicker] = useState(false)
 
-  // Filter nav sections directly — bypasses any memoization issues
   const sections = filterNavByRole(navSections, userRole)
 
   const [collapsed, setCollapsed] = useState(() => {
@@ -206,18 +340,23 @@ export function Sidebar() {
     routePreloaders[href]?.()
   }
 
+  const MOD_KEY = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl'
+
   return (
     <aside
       data-tour="sidebar"
+      role="navigation"
+      aria-label="Menu principal"
       className={cn(
-        'hidden lg:flex lg:flex-col bg-surface border-r border-border transition-all duration-200',
-        collapsed ? 'w-16' : 'w-60'
+        'flex flex-col bg-surface border-r border-border transition-[width] duration-200 ease-out h-full',
+        forceVisible ? 'flex' : 'hidden lg:flex',
+        collapsed ? 'w-[56px]' : 'w-60'
       )}
     >
-      {/* Logo */}
+      {/* ── Logo + Collapse ── */}
       <div className={cn(
-        'flex items-center h-14 border-b border-border',
-        collapsed ? 'px-3 justify-center' : 'px-4'
+        'flex items-center h-[52px] border-b border-border flex-shrink-0',
+        collapsed ? 'px-2 justify-center' : 'px-3 justify-between'
       )}>
         {collapsed ? (
           <LogoMark className="w-8 h-8" />
@@ -226,8 +365,9 @@ export function Sidebar() {
             <Logo collapsed={false} />
             <button
               onClick={toggleCollapsed}
-              className="ml-auto p-1.5 rounded-md text-muted hover:text-foreground hover:bg-accent transition-colors"
+              className="p-1.5 rounded-md text-muted hover:text-foreground hover:bg-accent transition-colors"
               aria-label="Recolher menu"
+              title="Recolher menu"
             >
               <ChevronsLeft className="h-4 w-4" />
             </button>
@@ -235,14 +375,44 @@ export function Sidebar() {
         )}
       </div>
 
-      {/* Navigation */}
-      <nav ref={navRef} className={cn('flex-1 py-3 overflow-y-auto relative', collapsed ? 'px-2' : 'px-3')}>
+      {/* ── Quick Search Trigger ── */}
+      <div className={cn('pt-2 pb-1 flex-shrink-0', collapsed ? 'px-2' : 'px-2.5')}>
+        <button
+          onClick={commandPalette.toggle}
+          className={cn(
+            'group w-full flex items-center gap-2 rounded-lg transition-all duration-150',
+            'bg-accent/50 hover:bg-accent border border-border hover:border-border-strong',
+            'text-muted hover:text-foreground',
+            collapsed ? 'p-2 justify-center' : 'px-2.5 py-1.5'
+          )}
+          title={collapsed ? `Buscar (${MOD_KEY}+K)` : undefined}
+          aria-label="Abrir busca global"
+        >
+          <Search className="h-4 w-4 flex-shrink-0 group-hover:rotate-12 transition-transform" />
+          {!collapsed && (
+            <>
+              <span className="text-xs flex-1 text-left">Buscar...</span>
+              <kbd className="text-[10px] px-1.5 py-0.5 rounded bg-surface border border-border font-mono text-muted">
+                {MOD_KEY}K
+              </kbd>
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* ── Navigation ── */}
+      <nav ref={navRef} className={cn('flex-1 py-2 overflow-y-auto relative', collapsed ? 'px-2' : 'px-2.5')}>
         {sections.map((section, sectionIndex) => (
-          <div key={section.id} className={cn(sectionIndex > 0 && 'mt-6')}>
-            {!collapsed && (
-              <p className="px-2 mb-2 text-[11px] font-medium text-muted uppercase tracking-wider">
+          <div key={section.id} className={cn(sectionIndex > 0 && 'mt-3 pt-3')}>
+            {sectionIndex > 0 && (
+              <div className={cn('border-t border-border mb-2', collapsed ? '-mx-2' : '-mx-2.5')} />
+            )}
+            {!collapsed ? (
+              <p className="px-2.5 mb-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-muted/70 select-none">
                 {section.title}
               </p>
+            ) : (
+              <div className="sr-only">{section.title}</div>
             )}
             <div className="space-y-0.5">
               {section.items.map((item) => (

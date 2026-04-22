@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Users, Shield, UserCheck, UserX, Mail, Building2, Layers, CheckCircle, AlertTriangle } from '@/shared/ui/icons'
+import { Users, Shield, UserCheck, UserX, Mail, Building2, Layers, CheckCircle, AlertTriangle, Settings } from '@/shared/ui/icons'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/Card'
 import { Button } from '@/shared/ui/Button'
 import { cn } from '@/shared/lib/cn'
@@ -368,6 +368,28 @@ export function AdminPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Maintenance Console Link */}
+      <Card className="border-primary-200 bg-primary-50 dark:bg-primary-900/10">
+        <CardContent className="py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary-100 text-primary-600">
+                <Settings className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-medium text-foreground">Console de Manutenção</p>
+                <p className="text-sm text-muted">
+                  Sistema autônomo de limpeza e organização da repo
+                </p>
+              </div>
+            </div>
+            <Button variant="outline" onClick={() => window.location.href = ROUTES.ADMIN_MAINTENANCE}>
+              Acessar
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Users Table */}
       <Card>

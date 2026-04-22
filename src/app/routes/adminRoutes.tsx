@@ -16,6 +16,9 @@ const LegacyMigrationPage = lazy(() =>
 const ValidationPage = lazy(() =>
   import('@/features/admin/pages/ValidationPage').then((m) => ({ default: m.ValidationPage }))
 )
+const MaintenanceConsolePage = lazy(() =>
+  import('@/features/admin/pages/MaintenanceConsolePage').then((m) => ({ default: m.MaintenanceConsolePage }))
+)
 
 export function adminRoutes() {
   return (
@@ -24,6 +27,7 @@ export function adminRoutes() {
       <Route path={ROUTES.ADMIN_CONTEXTS} element={<SuspensePage featureName="Admin"><RequireRole allowedRoles={['admin']}><ContextManagerPage /></RequireRole></SuspensePage>} />
       <Route path={ROUTES.ADMIN_MIGRATION} element={<SuspensePage featureName="Admin"><RequireRole allowedRoles={['admin']}><LegacyMigrationPage /></RequireRole></SuspensePage>} />
       <Route path={ROUTES.ADMIN_VALIDATION} element={<SuspensePage featureName="Admin"><ValidationPage /></SuspensePage>} />
+      <Route path={ROUTES.ADMIN_MAINTENANCE} element={<SuspensePage featureName="Admin"><RequireRole allowedRoles={['admin']}><MaintenanceConsolePage /></RequireRole></SuspensePage>} />
     </>
   )
 }

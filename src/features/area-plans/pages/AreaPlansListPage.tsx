@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { 
   LayoutGrid, 
@@ -15,17 +15,21 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/Card'
 import { Button } from '@/shared/ui/Button'
 import { Badge } from '@/shared/ui/Badge'
+import { Modal } from '@/shared/ui/Modal'
 import { PageLoader } from '@/shared/ui/Loader'
 import { PageHeader } from '@/shared/ui/PageHeader'
 import type { Crumb } from '@/shared/ui/Breadcrumbs'
 import { FilterBar } from '@/shared/ui/FilterBar'
 import { DataTable, type DataTableColumn } from '@/shared/ui/DataTable'
-import { useAreaPlans, useAreaPlanProgress, useEvidenceBacklog, useActionsByPackId } from '../hooks'
-import { PlanStatusBadge } from '../components/StatusBadge'
+import { useAreaPlans, useAreaPlanProgress, useEvidenceBacklog, useActionsByPackId, useAction, useSubtasks } from '../hooks'
+import { PlanStatusBadge, ActionStatusBadge, PriorityBadge } from '../components/StatusBadge'
 import { ProgressBar } from '../components/ProgressBar'
 import { UnifiedPlanWizard } from '../components/UnifiedPlanWizard'
 import type { AreaPlanProgress, PlanAction, ActionStatus } from '../types'
 import { EvidenceBacklogList } from '../components/ApprovalPanel'
+import { ActionTreeView } from '../components/ActionTreeView'
+import { ActionCard } from '../components/ActionCard'
+import { SubtaskList } from '../components/SubtaskList'
 import { useAuth } from '@/features/auth/AuthProvider'
 
 interface AreaPlansListPageProps {
@@ -43,51 +47,107 @@ const STATUS_VARIANT: Record<ActionStatus, 'default' | 'primary' | 'success' | '
   CANCELADA: 'default',
 }
 
-const packActionColumns: DataTableColumn<PlanAction>[] = [
-  {
-    key: 'title',
-    header: 'Titulo',
-    sortable: true,
-    render: (row) => (
-      <div className="min-w-0">
-        <p className="font-medium text-foreground truncate">{row.title}</p>
-        <p className="text-xs text-muted truncate">{row.description || 'Sem descricao'}</p>
-      </div>
-    ),
-  },
-  {
-    key: 'status',
-    header: 'Status',
-    sortable: true,
-    align: 'center',
-    render: (row) => (
-      <Badge variant={STATUS_VARIANT[row.status]} size="sm">
-        {row.status.replace(/_/g, ' ')}
-      </Badge>
-    ),
-  },
-  {
-    key: 'progress',
-    header: 'Progresso',
-    sortable: true,
-    align: 'center',
-    className: 'min-w-[80px]',
-    render: (row) => <span className="text-sm font-medium text-foreground">{row.progress}%</span>,
-  },
-  {
-    key: 'responsible',
-    header: 'Responsavel',
-    sortable: true,
-    render: (row) => <span className="text-sm text-muted">{row.responsible || '-'}</span>,
-  },
-  {
-    key: 'due_date',
-    header: 'Prazo',
-    sortable: true,
-    align: 'center',
-    render: (row) => <span className="text-xs text-muted">{row.due_date || '-'}</span>,
-  },
-]
+function computePackHierarchyStats(actions: PlanAction[]) {
+  const byId = new Map(actions.map((action) => [action.id, action]))
+  const roots = actions.filter((action) => !action.parent_action_id || !byId.has(action.parent_action_id))
+  const children = actions.filter((action) => action.parent_action_id && byId.has(action.parent_action_id))
+  const leafNodes = actions.filter((action) => action.node_type === 'acao')
+
+  const depthCache = new Map<string, number>()
+  const getDepth = (action: PlanAction, trail = new Set<string>()): number => {
+    if (depthCache.has(action.id)) return depthCache.get(action.id)!
+    if (!action.parent_action_id || !byId.has(action.parent_action_id) || trail.has(action.id)) {
+      depthCache.set(action.id, 1)
+      return 1
+    }
+
+    const parent = byId.get(action.parent_action_id)
+    if (!parent) {
+      depthCache.set(action.id, 1)
+      return 1
+    }
+
+    const nextTrail = new Set(trail)
+    nextTrail.add(action.id)
+    const depth = getDepth(parent, nextTrail) + 1
+    depthCache.set(action.id, depth)
+    return depth
+  }
+
+  const maxDepth = actions.length > 0 ? Math.max(...actions.map((action) => getDepth(action))) : 0
+
+  return {
+    total: actions.length,
+    roots: roots.length,
+    children: children.length,
+    leafNodes: leafNodes.length,
+    maxDepth,
+  }
+}
+
+function buildPackActionColumns(onInspect: (action: PlanAction) => void): DataTableColumn<PlanAction>[] {
+  return [
+    {
+      key: 'title',
+      header: 'Titulo',
+      sortable: true,
+      render: (row) => (
+        <div className="min-w-0">
+          <p className="font-medium text-foreground truncate">{row.title}</p>
+          <div className="mt-1 flex flex-wrap items-center gap-2">
+            <PriorityBadge priority={row.priority} />
+            <Badge variant={row.parent_action_id ? 'info' : 'default'} size="sm">
+              {row.parent_action_id ? 'Subação' : 'Raiz'}
+            </Badge>
+          </div>
+          <p className="text-xs text-muted truncate mt-1">{row.description || 'Sem descricao'}</p>
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      sortable: true,
+      align: 'center',
+      render: (row) => (
+        <Badge variant={STATUS_VARIANT[row.status]} size="sm">
+          {row.status.replace(/_/g, ' ')}
+        </Badge>
+      ),
+    },
+    {
+      key: 'progress',
+      header: 'Progresso',
+      sortable: true,
+      align: 'center',
+      className: 'min-w-[80px]',
+      render: (row) => <span className="text-sm font-medium text-foreground">{row.progress}%</span>,
+    },
+    {
+      key: 'responsible',
+      header: 'Responsavel',
+      sortable: true,
+      render: (row) => <span className="text-sm text-muted">{row.responsible || '-'}</span>,
+    },
+    {
+      key: 'due_date',
+      header: 'Prazo',
+      sortable: true,
+      align: 'center',
+      render: (row) => <span className="text-xs text-muted">{row.due_date || '-'}</span>,
+    },
+    {
+      key: 'details',
+      header: 'Abrir',
+      align: 'center',
+      render: (row) => (
+        <Button variant="ghost" size="sm" onClick={() => onInspect(row)}>
+          Detalhar
+        </Button>
+      ),
+    },
+  ]
+}
 
 export function AreaPlansListPage({ areaSlugFilter, packIdFilter }: AreaPlansListPageProps = {}) {
   const navigate = useNavigate()
@@ -97,6 +157,8 @@ export function AreaPlansListPage({ areaSlugFilter, packIdFilter }: AreaPlansLis
   const [showCreateWizard, setShowCreateWizard] = useState(false)
   const [activeTab, setActiveTab] = useState<'plans' | 'evidences'>('plans')
   const [searchQuery, setSearchQuery] = useState('')
+  const [packViewMode, setPackViewMode] = useState<'tree' | 'table'>(packIdFilter ? 'tree' : 'table')
+  const [selectedActionId, setSelectedActionId] = useState<string | null>(null)
 
   useEffect(() => {
     const tab = searchParams.get('tab')
@@ -110,6 +172,74 @@ export function AreaPlansListPage({ areaSlugFilter, packIdFilter }: AreaPlansLis
   const { data: progress, isLoading: progressLoading } = useAreaPlanProgress(selectedYear)
   const { data: evidenceBacklog = [], isLoading: backlogLoading } = useEvidenceBacklog()
   const { data: packActions = [], isLoading: packActionsLoading } = useActionsByPackId(packIdFilter || undefined)
+  const { data: selectedAction, isLoading: selectedActionLoading } = useAction(selectedActionId || '')
+  const { data: selectedSubtasks = [] } = useSubtasks(selectedActionId || '')
+
+  useEffect(() => {
+    if (packIdFilter) {
+      setPackViewMode('tree')
+    }
+  }, [packIdFilter])
+
+  useEffect(() => {
+    setSelectedActionId(null)
+  }, [packIdFilter])
+
+  const normalizedSearchQuery = searchQuery.trim().toLowerCase()
+
+  const selectedPackAction = useMemo(
+    () => (selectedActionId ? packActions.find((action) => action.id === selectedActionId) || null : null),
+    [packActions, selectedActionId]
+  )
+
+  const detailAction = selectedAction ?? selectedPackAction
+  const detailSubtasks = detailAction?.subtasks ?? selectedSubtasks
+  const detailChildActions = useMemo(
+    () => (detailAction ? packActions.filter((action) => action.parent_action_id === detailAction.id) : []),
+    [detailAction?.id, packActions]
+  )
+  const filteredProgress = areaSlugFilter
+    ? progress?.filter((p) => p.area_slug === areaSlugFilter)
+    : progress
+
+  const visibleProgress = useMemo(() => {
+    const baseProgress = filteredProgress ?? []
+
+    if (packIdFilter || !normalizedSearchQuery) return baseProgress
+
+    return baseProgress.filter((item) => {
+      const haystack = [item.area_name, item.plan_title, item.plan_status].join(' ').toLowerCase()
+      return haystack.includes(normalizedSearchQuery)
+    })
+  }, [filteredProgress, normalizedSearchQuery, packIdFilter])
+
+  const visiblePackActions = useMemo(() => {
+    if (!packIdFilter || !normalizedSearchQuery) return packActions
+
+    return packActions.filter((action) => {
+      const haystack = [
+        action.title,
+        action.description,
+        action.responsible,
+        action.assigned_to,
+        action.priority,
+        action.status,
+        action.node_type,
+        action.program_key,
+        action.objective_key,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase()
+
+      return haystack.includes(normalizedSearchQuery)
+    })
+  }, [packActions, normalizedSearchQuery, packIdFilter])
+
+  const isDetailLoading = !!selectedActionId && !detailAction && selectedActionLoading
+  const isDetailMissing = !!selectedActionId && !detailAction && !selectedActionLoading
+  const packHierarchyStats = useMemo(() => computePackHierarchyStats(visiblePackActions), [visiblePackActions])
+  const packActionColumns = useMemo(() => buildPackActionColumns((action) => setSelectedActionId(action.id)), [])
 
   const userRole = user?.profile?.role || 'colaborador'
   const canViewBacklog = userRole === 'admin' || userRole === 'gestor' || userRole === 'direcao'
@@ -127,12 +257,7 @@ export function AreaPlansListPage({ areaSlugFilter, packIdFilter }: AreaPlansLis
 
   const isLoading = plansLoading || progressLoading || (activeTab === 'evidences' && backlogLoading) || packActionsLoading
 
-  // Filtra por área se areaSlugFilter estiver definido
-  const filteredProgress = areaSlugFilter
-    ? progress?.filter((p) => p.area_slug === areaSlugFilter)
-    : progress
-
-  const stats = filteredProgress?.reduce(
+  const stats = visibleProgress?.reduce(
     (acc, p) => ({
       totalActions: acc.totalActions + p.total_actions,
       completedActions: acc.completedActions + p.completed_actions,
@@ -231,11 +356,11 @@ export function AreaPlansListPage({ areaSlugFilter, packIdFilter }: AreaPlansLis
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
           <input
             type="text"
-            placeholder="Buscar por area ou plano..."
+            placeholder="Buscar por área, plano ou ação..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             className="w-full h-8 pl-9 pr-3 rounded-lg border border-border bg-surface text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-            aria-label="Buscar acoes"
+            aria-label="Buscar áreas, planos e ações"
           />
         </div>
       </FilterBar>
@@ -333,23 +458,106 @@ export function AreaPlansListPage({ areaSlugFilter, packIdFilter }: AreaPlansLis
         )}
       </div>
 
-      {activeTab === 'plans' && packIdFilter && packActions.length > 0 && (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileCheck className="w-5 h-5" />
-            Ações do Strategic Pack ({packActions.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <DataTable<PlanAction>
-            columns={packActionColumns}
-            rows={packActions}
-            rowKey="id"
-            pageSizeOptions={[10, 25, 50]}
-          />
-        </CardContent>
-      </Card>
+      {activeTab === 'plans' && packIdFilter && (
+        <Card>
+          <CardHeader className="space-y-3">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <FileCheck className="w-5 h-5" />
+                Ações do Strategic Pack ({visiblePackActions.length})
+              </CardTitle>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={packViewMode === 'tree' ? 'primary' : 'outline'}
+                  size="sm"
+                  onClick={() => setPackViewMode('tree')}
+                >
+                  Estrutura
+                </Button>
+                <Button
+                  variant={packViewMode === 'table' ? 'primary' : 'outline'}
+                  size="sm"
+                  onClick={() => setPackViewMode('table')}
+                >
+                  Tabela
+                </Button>
+              </div>
+            </div>
+
+            <p className="text-sm text-muted">
+              A visão em árvore destaca a cadeia pai → filha; a tabela mantém a leitura analítica e o acesso rápido ao detalhe.
+            </p>
+
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+              <div className="rounded-lg border border-border bg-accent/30 p-3">
+                <p className="text-xs text-muted">Total</p>
+                <p className="text-xl font-semibold text-foreground">{packHierarchyStats.total}</p>
+              </div>
+              <div className="rounded-lg border border-border bg-accent/30 p-3">
+                <p className="text-xs text-muted">Raiz</p>
+                <p className="text-xl font-semibold text-foreground">{packHierarchyStats.roots}</p>
+              </div>
+              <div className="rounded-lg border border-border bg-accent/30 p-3">
+                <p className="text-xs text-muted">Subações</p>
+                <p className="text-xl font-semibold text-foreground">{packHierarchyStats.children}</p>
+              </div>
+              <div className="rounded-lg border border-border bg-accent/30 p-3">
+                <p className="text-xs text-muted">Folhas operacionais</p>
+                <p className="text-xl font-semibold text-foreground">{packHierarchyStats.leafNodes}</p>
+              </div>
+              <div className="rounded-lg border border-border bg-accent/30 p-3">
+                <p className="text-xs text-muted">Profundidade máx.</p>
+                <p className="text-xl font-semibold text-foreground">{packHierarchyStats.maxDepth}</p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            {visiblePackActions.length > 0 ? (
+              packViewMode === 'tree' ? (
+                <div className="p-4">
+                  <ActionTreeView
+                    actions={visiblePackActions}
+                    selectedActionId={selectedActionId || undefined}
+                    onActionClick={(action) => setSelectedActionId(action.id)}
+                  />
+                </div>
+              ) : (
+                <DataTable<PlanAction>
+                  columns={packActionColumns}
+                  rows={visiblePackActions}
+                  rowKey="id"
+                  pageSizeOptions={[10, 25, 50]}
+                />
+              )
+            ) : packActions.length === 0 ? (
+              <div className="p-8 text-center space-y-3">
+                <FileCheck className="w-10 h-10 text-muted mx-auto" />
+                <div>
+                  <h3 className="text-lg font-medium text-foreground">Nenhuma ação cadastrada no pack</h3>
+                  <p className="text-sm text-muted">
+                    Gere ou vincule ações para começar a acompanhar a execução detalhada.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="p-8 text-center space-y-3">
+                <Search className="w-10 h-10 text-muted mx-auto" />
+                <div>
+                  <h3 className="text-lg font-medium text-foreground">Nenhuma ação encontrada</h3>
+                  <p className="text-sm text-muted">
+                    Ajuste a busca ou limpe o filtro para voltar a ver todas as ações do pack.
+                  </p>
+                </div>
+                {normalizedSearchQuery && (
+                  <Button variant="outline" size="sm" onClick={() => setSearchQuery('')}>
+                    Limpar busca
+                  </Button>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       {activeTab === 'plans' && !packIdFilter && (
@@ -361,9 +569,9 @@ export function AreaPlansListPage({ areaSlugFilter, packIdFilter }: AreaPlansLis
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {filteredProgress && filteredProgress.length > 0 ? (
+          {visibleProgress && visibleProgress.length > 0 ? (
             <div className="space-y-3">
-              {filteredProgress
+              {[...visibleProgress]
                 .sort((a, b) => b.completion_percentage - a.completion_percentage)
                 .map((areaProgress: AreaPlanProgress) => (
                   <div
@@ -483,6 +691,170 @@ export function AreaPlansListPage({ areaSlugFilter, packIdFilter }: AreaPlansLis
         onClose={() => setShowCreateWizard(false)}
         year={selectedYear}
       />
+
+      <Modal
+        open={!!selectedActionId}
+        onClose={() => setSelectedActionId(null)}
+        title={detailAction?.title}
+        description={detailAction?.description || 'Detalhamento operacional da ação selecionada'}
+        size="2xl"
+      >
+        {isDetailLoading ? (
+          <div className="py-8 text-center text-muted">Carregando detalhe da ação...</div>
+        ) : isDetailMissing ? (
+          <div className="py-8 text-center text-muted">A ação selecionada não foi encontrada.</div>
+        ) : detailAction ? (
+          <div className="space-y-6">
+            <div className="flex flex-wrap items-center gap-2">
+              <ActionStatusBadge status={detailAction.status} />
+              <PriorityBadge priority={detailAction.priority} />
+              <Badge variant={detailAction.parent_action_id ? 'info' : 'default'} size="sm">
+                {detailAction.parent_action_id ? 'Subação' : 'Raiz'}
+              </Badge>
+              <Badge variant="info" size="sm">
+                {detailAction.node_type.replace(/_/g, ' ')}
+              </Badge>
+            </div>
+
+            <div className="grid gap-4 lg:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Visão executiva</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <p className="text-sm text-muted mb-1">Progresso</p>
+                    <ProgressBar value={detailAction.progress} />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-muted">Responsável</p>
+                      <p className="font-medium text-foreground">{detailAction.responsible || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted">Designado</p>
+                      <p className="font-medium text-foreground">{detailAction.assigned_to || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted">Início</p>
+                      <p className="font-medium text-foreground">{detailAction.start_date || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted">Prazo</p>
+                      <p className="font-medium text-foreground">{detailAction.due_date || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted">Concluída em</p>
+                      <p className="font-medium text-foreground">{detailAction.completed_at || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted">Evidência obrigatória</p>
+                      <p className="font-medium text-foreground">{detailAction.evidence_required ? 'Sim' : 'Não'}</p>
+                    </div>
+                  </div>
+
+                  {detailAction.cost_estimate !== null && detailAction.cost_estimate !== undefined && (
+                    <div className="grid grid-cols-2 gap-4 text-sm pt-2 border-t border-border">
+                      <div>
+                        <p className="text-muted">Custo estimado</p>
+                        <p className="font-medium text-foreground">
+                          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: detailAction.currency || 'BRL' }).format(detailAction.cost_estimate)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted">Custo realizado</p>
+                        <p className="font-medium text-foreground">
+                          {detailAction.cost_actual !== null && detailAction.cost_actual !== undefined
+                            ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: detailAction.currency || 'BRL' }).format(detailAction.cost_actual)
+                            : '-'}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Relações e sinais</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-muted">Subtarefas</p>
+                      <p className="font-medium text-foreground">{detailSubtasks.length}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted">Filhas no pack</p>
+                      <p className="font-medium text-foreground">{detailChildActions.length}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted">Comentários</p>
+                      <p className="font-medium text-foreground">{detailAction.comments?.length || 0}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted">Evidências</p>
+                      <p className="font-medium text-foreground">{detailAction.evidences?.length || 0}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted">Riscos</p>
+                      <p className="font-medium text-foreground">{detailAction.risks?.length || 0}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted">Parent</p>
+                      <p className="font-medium text-foreground">{detailAction.parent_action_id || '-'}</p>
+                    </div>
+                  </div>
+
+                  {detailAction.notes && (
+                    <div>
+                      <p className="text-muted mb-1">Observações</p>
+                      <p className="text-foreground whitespace-pre-wrap rounded-lg border border-border bg-accent/30 p-3 text-sm">
+                        {detailAction.notes}
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Subtarefas</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SubtaskList
+                  actionId={detailAction.id}
+                  subtasks={detailSubtasks}
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Ações filhas</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {detailChildActions.length > 0 ? (
+                  <div className="grid gap-3 md:grid-cols-2">
+                    {detailChildActions.map((child) => (
+                      <ActionCard
+                        key={child.id}
+                        action={child}
+                        compact
+                        onClick={() => setSelectedActionId(child.id)}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted">Esta ação ainda não possui filhas vinculadas no pack.</p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        ) : null}
+      </Modal>
     </div>
   )
 }

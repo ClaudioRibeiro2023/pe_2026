@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/Card'
 import { Button } from '@/shared/ui/Button'
+import { Select } from '@/shared/ui/Select'
 import { Bell, AlertTriangle, Info, CheckCircle, Filter, RefreshCw } from '@/shared/ui/icons'
 import { cn } from '@/shared/lib/cn'
 import type { Alert, AlertSeverity, AlertStatus, AlertStats } from '../types'
@@ -165,35 +166,49 @@ export function AlertCenterPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-wrap gap-4">
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-muted">Status</label>
-              <select
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:flex md:flex-wrap gap-4">
+            <div className="w-full sm:w-48">
+              <Select
+                label="Status"
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as AlertStatus | 'all')}
-                className="block w-40 px-3 py-2 bg-surface border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-              >
-                <option value="all">Todos</option>
-                <option value="active">Ativos</option>
-                <option value="acknowledged">Reconhecidos</option>
-                <option value="resolved">Resolvidos</option>
-                <option value="dismissed">Dispensados</option>
-              </select>
+                options={[
+                  { value: 'all', label: 'Todos' },
+                  { value: 'active', label: 'Ativos' },
+                  { value: 'acknowledged', label: 'Reconhecidos' },
+                  { value: 'resolved', label: 'Resolvidos' },
+                  { value: 'dismissed', label: 'Dispensados' },
+                ]}
+              />
             </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-muted">Severidade</label>
-              <select
+            <div className="w-full sm:w-48">
+              <Select
+                label="Severidade"
                 value={filterSeverity}
                 onChange={(e) => setFilterSeverity(e.target.value as AlertSeverity | 'all')}
-                className="block w-40 px-3 py-2 bg-surface border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-              >
-                <option value="all">Todas</option>
-                <option value="critical">Crítico</option>
-                <option value="warning">Aviso</option>
-                <option value="info">Informativo</option>
-                <option value="success">Sucesso</option>
-              </select>
+                options={[
+                  { value: 'all', label: 'Todas' },
+                  { value: 'critical', label: 'Crítico' },
+                  { value: 'warning', label: 'Aviso' },
+                  { value: 'info', label: 'Informativo' },
+                  { value: 'success', label: 'Sucesso' },
+                ]}
+              />
             </div>
+            {(filterStatus !== 'all' || filterSeverity !== 'all') && (
+              <div className="flex items-end">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setFilterStatus('all')
+                    setFilterSeverity('all')
+                  }}
+                >
+                  Limpar filtros
+                </Button>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

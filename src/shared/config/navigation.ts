@@ -31,11 +31,15 @@ import { getNavigableAreas, AREA_LABELS } from './rbac'
 
 export type NavIcon = (props: LucideProps) => JSX.Element
 
+export type NavBadge = 'BETA' | 'DEV' | 'NEW'
+
 export interface NavSubItem {
   label: string
   href: string
   icon: NavIcon
   allowedRoles?: UserRole[]
+  badge?: NavBadge
+  notificationCount?: number
 }
 
 export interface NavItem {
@@ -45,6 +49,8 @@ export interface NavItem {
   subItems?: NavSubItem[]
   defaultOpen?: boolean
   allowedRoles?: UserRole[]
+  badge?: NavBadge
+  notificationCount?: number
 }
 
 export interface NavSection {
@@ -165,6 +171,7 @@ export const navSections: NavSection[] = [
             label: 'Aprovações',
             href: ROUTES.PLANNING_ACTIONS_APPROVALS,
             icon: FileCheck,
+            notificationCount: 4,
           },
           {
             label: 'Backlog de Evidências',
@@ -200,6 +207,7 @@ export const navSections: NavSection[] = [
         label: 'Insights',
         href: ROUTES.ANALYTICS_INSIGHTS,
         icon: Lightbulb,
+        badge: 'BETA',
       },
       {
         label: 'Qualidade de Dados',

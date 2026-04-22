@@ -3,6 +3,14 @@
   publish = "dist"
   environment = { NODE_VERSION = "20" }
 
+# Prevent caching index.html — always fetch fresh after deploy
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"
+
 # Cache static assets (hashed filenames) for 1 year
 [[headers]]
   for = "/assets/*"

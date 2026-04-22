@@ -1,6 +1,6 @@
 import { TrendingUp, TrendingDown, Minus, Edit2, Trash2 } from '@/shared/ui/icons'
 import { Card, CardContent } from '@/shared/ui/Card'
-import { Button } from '@/shared/ui/Button'
+import { IconButton } from '@/shared/ui/IconButton'
 import { formatCurrency, formatNumber, formatDate } from '@/shared/lib/format'
 import type { Indicator } from '../types'
 
@@ -73,13 +73,21 @@ export function IndicatorCard({ indicator, onEdit, onDelete }: IndicatorCardProp
               <p className="text-sm text-muted mt-1">{indicator.description}</p>
             )}
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => onEdit(indicator)}>
-              <Edit2 className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => onDelete(indicator)}>
-              <Trash2 className="h-4 w-4" />
-            </Button>
+          <div className="flex gap-1 flex-shrink-0">
+            <IconButton
+              icon={<Edit2 />}
+              label={`Editar indicador ${indicator.name}`}
+              size="sm"
+              variant="ghost"
+              onClick={() => onEdit(indicator)}
+            />
+            <IconButton
+              icon={<Trash2 />}
+              label={`Excluir indicador ${indicator.name}`}
+              size="sm"
+              variant="danger"
+              onClick={() => onDelete(indicator)}
+            />
           </div>
         </div>
 

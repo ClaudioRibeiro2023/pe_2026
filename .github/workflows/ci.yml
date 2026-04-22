@@ -35,6 +35,33 @@ jobs:
       - name: Build
         run: npm run build
 
+  maintenance:
+    name: Maintenance Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: quality
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run maintenance checks
+        run: |
+          echo "Running maintenance diagnostics..."
+          # Verificar arquivos temporários
+          find . -name "*.tmp" -o -name "*.log" | head -20
+          # Verificar tamanho do dist
+          du -sh dist/ 2>/dev/null || echo "dist/ not found"
+          # Verificar console.logs
+          grep -r "console.log" src/ --include="*.ts" --include="*.tsx" | grep -v "performanceMonitor" | head -10 || echo "No console.logs found"
+
   e2e:
     name: E2E Smoke Tests
     runs-on: ubuntu-latest

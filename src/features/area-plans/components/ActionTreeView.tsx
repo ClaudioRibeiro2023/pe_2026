@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { ChevronRight, ChevronDown, Plus, MoreVertical } from '@/shared/ui/icons'
 import { Button } from '@/shared/ui/Button'
 import { Card } from '@/shared/ui/Card'
@@ -43,8 +43,8 @@ function buildTree(actions: PlanAction[]): ActionNode[] {
   const sortNodes = (nodes: ActionNode[]) => {
     nodes.sort((a, b) => {
       const priorityOrder = { P0: 0, P1: 1, P2: 2 }
-      return (priorityOrder[a.priority as keyof typeof priorityOrder] || 1) - 
-             (priorityOrder[b.priority as keyof typeof priorityOrder] || 1)
+      return (priorityOrder[a.priority as keyof typeof priorityOrder] ?? 1) -
+             (priorityOrder[b.priority as keyof typeof priorityOrder] ?? 1)
     })
     nodes.forEach((node) => sortNodes(node.children))
   }
@@ -76,6 +76,7 @@ function ActionTreeItem({
   const isExpanded = expandedIds.has(node.id)
   const isSelected = selectedActionId === node.id
   const isLeaf = node.node_type === 'acao'
+  const isClickable = !!onActionClick
 
   const statusColors: Record<string, string> = {
     PENDENTE: 'bg-accent text-muted',
@@ -96,11 +97,13 @@ function ActionTreeItem({
   return (
     <div className="select-none">
       <div
-        className={`group flex items-center gap-2 py-2 px-3 rounded-lg cursor-pointer transition-colors ${
+        className={`group flex items-center gap-2 py-2 px-3 rounded-lg transition-colors ${
+          isClickable ? 'cursor-pointer' : 'cursor-default'
+        } ${
           isSelected ? 'bg-primary-100 border border-primary-300' : 'hover:bg-accent'
         }`}
         style={{ paddingLeft: `${node.level * 24 + 12}px` }}
-        onClick={() => onActionClick?.(node)}
+        onClick={isClickable ? () => onActionClick?.(node) : undefined}
       >
         {/* Expand/Collapse */}
         <button
@@ -152,7 +155,7 @@ function ActionTreeItem({
 
         {/* Actions */}
         <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1">
-          {!isLeaf && (
+          {!isLeaf && onAddChild && (
             <Button
               size="sm"
               variant="ghost"
@@ -165,17 +168,19 @@ function ActionTreeItem({
               <Plus className="w-3 h-3" />
             </Button>
           )}
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={(e) => {
-              e.stopPropagation()
-              onEditAction?.(node)
-            }}
-            title="Editar"
-          >
-            <MoreVertical className="w-3 h-3" />
-          </Button>
+          {onEditAction && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={(e) => {
+                e.stopPropagation()
+                onEditAction(node)
+              }}
+              title="Editar"
+            >
+              <MoreVertical className="w-3 h-3" />
+            </Button>
+          )}
         </div>
       </div>
 
@@ -207,14 +212,18 @@ export function ActionTreeView({
   onEditAction,
   selectedActionId,
 }: ActionTreeViewProps) {
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => {
-    // Por padrão, expandir todos os nós não-folha
-    return new Set(actions.filter((a) => a.node_type !== 'acao').map((a) => a.id))
-  })
+  const userTouchedExpansion = useRef(false)
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
 
   const tree = useMemo(() => buildTree(actions), [actions])
 
+  useEffect(() => {
+    if (actions.length === 0 || userTouchedExpansion.current) return
+    setExpandedIds(new Set(actions.filter((a) => a.node_type !== 'acao').map((a) => a.id)))
+  }, [actions])
+
   const toggleExpanded = (id: string) => {
+    userTouchedExpansion.current = true
     setExpandedIds((prev) => {
       const next = new Set(prev)
       if (next.has(id)) {
@@ -227,10 +236,12 @@ export function ActionTreeView({
   }
 
   const expandAll = () => {
+    userTouchedExpansion.current = true
     setExpandedIds(new Set(actions.map((a) => a.id)))
   }
 
   const collapseAll = () => {
+    userTouchedExpansion.current = true
     setExpandedIds(new Set())
   }
 

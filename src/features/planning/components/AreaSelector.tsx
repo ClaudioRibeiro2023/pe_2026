@@ -64,7 +64,7 @@ export function AreaSelector({ onSelectArea, showAllAreas = false }: AreaSelecto
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" />
       </div>
     )
   }
@@ -77,7 +77,7 @@ export function AreaSelector({ onSelectArea, showAllAreas = false }: AreaSelecto
     
     return (
       <div className="space-y-6">
-        <Card className="border-2 border-blue-200 bg-blue-50/50">
+        <Card className="border-2 border-primary-200 bg-primary-50/50">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -161,8 +161,8 @@ interface AreaCardProps {
 function AreaCard({ area, onSelect, highlight }: AreaCardProps) {
   return (
     <Card
-      className={`cursor-pointer transition-all hover:shadow-lg hover:border-blue-300 ${
-        highlight ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+      className={`cursor-pointer transition-all hover:shadow-lg hover:border-primary-300 ${
+        highlight ? 'ring-2 ring-primary-500 ring-offset-2' : ''
       }`}
       onClick={onSelect}
     >
@@ -175,7 +175,7 @@ function AreaCard({ area, onSelect, highlight }: AreaCardProps) {
             <div className="flex items-center gap-2">
               <h3 className="font-semibold text-foreground truncate">{area.name}</h3>
               {highlight && (
-                <span className="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
+                <span className="px-2 py-0.5 text-xs font-medium bg-primary-100 text-primary-700 rounded-full">
                   MVP
                 </span>
               )}

@@ -50,6 +50,8 @@ import type {
 // ============================================================
 // MODO MOCK - Re-exporta todas as funções do api-mock.ts
 // ============================================================
+let _mockModeLogged = false
+
 function resolveAreaPlansSource(operation: string): 'mock' | 'supabase' {
   const state = getSupabaseRuntimeState()
 
@@ -58,7 +60,10 @@ function resolveAreaPlansSource(operation: string): 'mock' | 'supabase' {
   }
 
   if (state.canUseMockFallback) {
-    console.info(`[Area Plans API] ${operation}: usando mock em ${state.environment}`)
+    if (!_mockModeLogged) {
+      _mockModeLogged = true
+      console.info(`[Area Plans API] Modo mock ativo (${state.environment}) — Supabase não configurado.`)
+    }
     return 'mock'
   }
 
@@ -406,6 +411,7 @@ export async function createAreaPlan(data: CreateAreaPlanData): Promise<AreaPlan
 }
 
 export async function updateAreaPlan(planId: string, data: UpdateAreaPlanData): Promise<AreaPlan> {
+  if (resolveAreaPlansSource('updateAreaPlan') === 'mock') return mockApi.updateAreaPlan(planId, data)
   const { data: plan, error } = await supabase
     .from('area_plans')
     .update(data)
@@ -421,6 +427,7 @@ export async function updateAreaPlan(planId: string, data: UpdateAreaPlanData): 
 }
 
 export async function deleteAreaPlan(planId: string): Promise<void> {
+  if (resolveAreaPlansSource('deleteAreaPlan') === 'mock') return mockApi.deleteAreaPlan(planId)
   const { error } = await supabase
     .from('area_plans')
     .delete()
@@ -434,6 +441,7 @@ export async function deleteAreaPlan(planId: string): Promise<void> {
 // ============================================================
 
 export async function approvePlanAsManager(planId: string): Promise<{ success: boolean; message?: string; error?: string }> {
+  if (resolveAreaPlansSource('approvePlanAsManager') === 'mock') return mockApi.approvePlanAsManager(planId)
   const { data, error } = await supabase.rpc('approve_plan_as_manager', { p_plan_id: planId })
 
   if (error) throw error
@@ -441,6 +449,7 @@ export async function approvePlanAsManager(planId: string): Promise<{ success: b
 }
 
 export async function approvePlanAsDirection(planId: string): Promise<{ success: boolean; message?: string; error?: string }> {
+  if (resolveAreaPlansSource('approvePlanAsDirection') === 'mock') return mockApi.approvePlanAsDirection(planId)
   const { data, error } = await supabase.rpc('approve_plan_as_direction', { p_plan_id: planId })
 
   if (error) throw error
@@ -448,6 +457,7 @@ export async function approvePlanAsDirection(planId: string): Promise<{ success:
 }
 
 export async function rejectPlan(planId: string, reason?: string): Promise<{ success: boolean; message?: string; error?: string }> {
+  if (resolveAreaPlansSource('rejectPlan') === 'mock') return mockApi.rejectPlan(planId, reason)
   const { data, error } = await supabase.rpc('reject_plan', { p_plan_id: planId, p_reason: reason })
 
   if (error) throw error
@@ -463,6 +473,12 @@ export async function fetchPlanActions(
   filters?: ActionFilters,
   pagination?: { page: number; limit: number }
 ): Promise<{ data: PlanAction[]; total: number }> {
+  if (resolveAreaPlansSource('fetchPlanActions') === 'mock') {
+    const result = await mockApi.fetchPlanActions(planId, filters)
+    const data = Array.isArray(result) ? result : result.data
+    return { data, total: data.length }
+  }
+
   // Calcular offset para paginação
   const offset = pagination ? (pagination.page - 1) * pagination.limit : 0
   const limit = pagination?.limit || 50
@@ -555,6 +571,7 @@ export async function fetchPlanActions(
 }
 
 export async function fetchActionById(actionId: string): Promise<PlanAction | null> {
+  if (resolveAreaPlansSource('fetchActionById') === 'mock') return mockApi.fetchActionById(actionId)
   const { data, error } = await supabase
     .from('plan_actions')
     .select(`
@@ -578,6 +595,7 @@ export async function fetchActionById(actionId: string): Promise<PlanAction | nu
 }
 
 export async function createPlanAction(data: CreatePlanActionData): Promise<PlanAction> {
+  if (resolveAreaPlansSource('createPlanAction') === 'mock') return mockApi.createPlanAction(data)
   const { data: action, error } = await supabase
     .from('plan_actions')
     .insert(data)
@@ -594,6 +612,7 @@ export async function createPlanAction(data: CreatePlanActionData): Promise<Plan
 }
 
 export async function updatePlanAction(actionId: string, data: UpdatePlanActionData): Promise<PlanAction> {
+  if (resolveAreaPlansSource('updatePlanAction') === 'mock') return mockApi.updatePlanAction(actionId, data)
   const { data: action, error } = await supabase
     .from('plan_actions')
     .update(data)
@@ -611,6 +630,7 @@ export async function updatePlanAction(actionId: string, data: UpdatePlanActionD
 }
 
 export async function deletePlanAction(actionId: string): Promise<void> {
+  if (resolveAreaPlansSource('deletePlanAction') === 'mock') return mockApi.deletePlanAction(actionId)
   const { error } = await supabase
     .from('plan_actions')
     .delete()
@@ -624,6 +644,7 @@ export async function updateActionStatus(actionId: string, status: string): Prom
 }
 
 export async function fetchActionsByPackId(packId: string): Promise<PlanAction[]> {
+  if (resolveAreaPlansSource('fetchActionsByPackId') === 'mock') return mockApi.fetchActionsByPackId(packId)
   const { data, error } = await supabase
     .from('plan_actions')
     .select('*')
@@ -634,6 +655,7 @@ export async function fetchActionsByPackId(packId: string): Promise<PlanAction[]
 }
 
 export async function fetchActionsByProgramKey(packId: string, programKey: string): Promise<PlanAction[]> {
+  if (resolveAreaPlansSource('fetchActionsByProgramKey') === 'mock') return mockApi.fetchActionsByProgramKey(packId, programKey)
   const { data, error } = await supabase
     .from('plan_actions')
     .select('*')
@@ -645,6 +667,7 @@ export async function fetchActionsByProgramKey(packId: string, programKey: strin
 }
 
 export async function fetchActionsByObjectiveKey(packId: string, objectiveKey: string): Promise<PlanAction[]> {
+  if (resolveAreaPlansSource('fetchActionsByObjectiveKey') === 'mock') return mockApi.fetchActionsByObjectiveKey(packId, objectiveKey)
   const { data, error } = await supabase
     .from('plan_actions')
     .select('*')
@@ -660,6 +683,7 @@ export async function fetchActionsByObjectiveKey(packId: string, objectiveKey: s
 // ============================================================
 
 export async function fetchSubtasks(actionId: string): Promise<ActionSubtask[]> {
+  if (resolveAreaPlansSource('fetchSubtasks') === 'mock') return mockApi.fetchSubtasks(actionId)
   const { data, error } = await supabase
     .from('action_subtasks')
     .select('*')
@@ -671,6 +695,7 @@ export async function fetchSubtasks(actionId: string): Promise<ActionSubtask[]> 
 }
 
 export async function createSubtask(data: CreateSubtaskData): Promise<ActionSubtask> {
+  if (resolveAreaPlansSource('createSubtask') === 'mock') return mockApi.createSubtask(data)
   const { data: subtask, error } = await supabase
     .from('action_subtasks')
     .insert(data)
@@ -682,6 +707,7 @@ export async function createSubtask(data: CreateSubtaskData): Promise<ActionSubt
 }
 
 export async function updateSubtask(subtaskId: string, data: UpdateSubtaskData): Promise<ActionSubtask> {
+  if (resolveAreaPlansSource('updateSubtask') === 'mock') return mockApi.updateSubtask(subtaskId, data)
   const updateData: any = { ...data }
   if (data.completed !== undefined) {
     updateData.completed_at = data.completed ? new Date().toISOString() : null
@@ -699,6 +725,7 @@ export async function updateSubtask(subtaskId: string, data: UpdateSubtaskData):
 }
 
 export async function deleteSubtask(subtaskId: string): Promise<void> {
+  if (resolveAreaPlansSource('deleteSubtask') === 'mock') return mockApi.deleteSubtask(subtaskId)
   const { error } = await supabase
     .from('action_subtasks')
     .delete()
@@ -716,6 +743,7 @@ export async function toggleSubtask(subtaskId: string, completed: boolean): Prom
 // ============================================================
 
 export async function fetchEvidences(actionId: string): Promise<ActionEvidence[]> {
+  if (resolveAreaPlansSource('fetchEvidences') === 'mock') return mockApi.fetchEvidences(actionId)
   const { data, error } = await supabase
     .from('action_evidences')
     .select(`
@@ -730,6 +758,7 @@ export async function fetchEvidences(actionId: string): Promise<ActionEvidence[]
 }
 
 export async function createEvidence(data: CreateEvidenceData): Promise<ActionEvidence> {
+  if (resolveAreaPlansSource('createEvidence') === 'mock') return mockApi.createEvidence(data)
   const { data: user } = await supabase.auth.getUser()
   if (!user.user) throw new Error('Usuário não autenticado')
 
@@ -748,6 +777,7 @@ export async function createEvidence(data: CreateEvidenceData): Promise<ActionEv
 }
 
 export async function uploadEvidence(actionId: string, file: File): Promise<ActionEvidence> {
+  if (resolveAreaPlansSource('uploadEvidence') === 'mock') return mockApi.uploadEvidence(actionId, file)
   const { data: user } = await supabase.auth.getUser()
   if (!user.user) throw new Error('Usuário não autenticado')
 
@@ -770,6 +800,7 @@ export async function uploadEvidence(actionId: string, file: File): Promise<Acti
 }
 
 export async function deleteEvidence(evidenceId: string): Promise<void> {
+  if (resolveAreaPlansSource('deleteEvidence') === 'mock') return mockApi.deleteEvidence(evidenceId)
   const { data: evidence } = await supabase
     .from('action_evidences')
     .select('storage_path')
@@ -795,6 +826,7 @@ export async function deleteEvidence(evidenceId: string): Promise<void> {
 // ============================================================
 
 export async function approveEvidenceAsManager(evidenceId: string, note?: string): Promise<{ success: boolean; message?: string; error?: string }> {
+  if (resolveAreaPlansSource('approveEvidenceAsManager') === 'mock') return mockApi.approveEvidenceAsManager(evidenceId, note)
   const { data, error } = await supabase.rpc('approve_evidence_as_manager', { 
     p_evidence_id: evidenceId, 
     p_note: note 
@@ -805,6 +837,7 @@ export async function approveEvidenceAsManager(evidenceId: string, note?: string
 }
 
 export async function approveEvidenceAsDirection(evidenceId: string, note?: string): Promise<{ success: boolean; message?: string; error?: string }> {
+  if (resolveAreaPlansSource('approveEvidenceAsDirection') === 'mock') return mockApi.approveEvidenceAsDirection(evidenceId, note)
   const { data, error } = await supabase.rpc('approve_evidence_as_direction', { 
     p_evidence_id: evidenceId, 
     p_note: note 
@@ -815,6 +848,7 @@ export async function approveEvidenceAsDirection(evidenceId: string, note?: stri
 }
 
 export async function rejectEvidence(evidenceId: string, role: 'gestor' | 'direcao', reason: string): Promise<{ success: boolean; message?: string; error?: string }> {
+  if (resolveAreaPlansSource('rejectEvidence') === 'mock') return mockApi.rejectEvidence(evidenceId, role, reason)
   const { data, error } = await supabase.rpc('reject_evidence', { 
     p_evidence_id: evidenceId, 
     p_role: role,
@@ -830,6 +864,7 @@ export async function rejectEvidence(evidenceId: string, role: 'gestor' | 'direc
 // ============================================================
 
 export async function fetchComments(actionId: string): Promise<ActionComment[]> {
+  if (resolveAreaPlansSource('fetchComments') === 'mock') return mockApi.fetchComments(actionId)
   const { data, error } = await supabase
     .from('action_comments')
     .select('*')
@@ -841,6 +876,7 @@ export async function fetchComments(actionId: string): Promise<ActionComment[]> 
 }
 
 export async function createComment(data: CreateCommentData): Promise<ActionComment> {
+  if (resolveAreaPlansSource('createComment') === 'mock') return mockApi.createComment(data)
   const { data: user } = await supabase.auth.getUser()
   if (!user.user) throw new Error('Usuário não autenticado')
 
@@ -858,6 +894,7 @@ export async function createComment(data: CreateCommentData): Promise<ActionComm
 }
 
 export async function updateComment(commentId: string, data: UpdateCommentData): Promise<ActionComment> {
+  if (resolveAreaPlansSource('updateComment') === 'mock') return mockApi.updateComment(commentId, data)
   const { data: comment, error } = await supabase
     .from('action_comments')
     .update(data)
@@ -870,6 +907,7 @@ export async function updateComment(commentId: string, data: UpdateCommentData):
 }
 
 export async function deleteComment(commentId: string): Promise<void> {
+  if (resolveAreaPlansSource('deleteComment') === 'mock') return mockApi.deleteComment(commentId)
   const { error } = await supabase
     .from('action_comments')
     .delete()
@@ -883,6 +921,7 @@ export async function deleteComment(commentId: string): Promise<void> {
 // ============================================================
 
 export async function fetchActionHistory(actionId: string): Promise<ActionHistory[]> {
+  if (resolveAreaPlansSource('fetchActionHistory') === 'mock') return mockApi.fetchActionHistory(actionId)
   const { data, error } = await supabase
     .from('action_history')
     .select('*')
@@ -898,6 +937,7 @@ export async function fetchActionHistory(actionId: string): Promise<ActionHistor
 // ============================================================
 
 export async function fetchRisks(actionId: string): Promise<ActionRisk[]> {
+  if (resolveAreaPlansSource('fetchRisks') === 'mock') return mockApi.fetchActionRisks(actionId)
   const { data, error } = await supabase
     .from('action_risks')
     .select('*')
@@ -908,6 +948,7 @@ export async function fetchRisks(actionId: string): Promise<ActionRisk[]> {
 }
 
 export async function createRisk(data: CreateRiskData): Promise<ActionRisk> {
+  if (resolveAreaPlansSource('createRisk') === 'mock') return mockApi.createRisk(data)
   const { data: risk, error } = await supabase
     .from('action_risks')
     .insert(data)
@@ -919,6 +960,7 @@ export async function createRisk(data: CreateRiskData): Promise<ActionRisk> {
 }
 
 export async function updateRisk(riskId: string, data: UpdateRiskData): Promise<ActionRisk> {
+  if (resolveAreaPlansSource('updateRisk') === 'mock') return mockApi.updateRisk(riskId, data)
   const { data: risk, error } = await supabase
     .from('action_risks')
     .update(data)
@@ -931,6 +973,7 @@ export async function updateRisk(riskId: string, data: UpdateRiskData): Promise<
 }
 
 export async function deleteRisk(riskId: string): Promise<void> {
+  if (resolveAreaPlansSource('deleteRisk') === 'mock') return mockApi.deleteRisk(riskId)
   const { error } = await supabase
     .from('action_risks')
     .delete()
@@ -944,6 +987,7 @@ export async function deleteRisk(riskId: string): Promise<void> {
 // ============================================================
 
 export async function fetchAreaPlanProgress(year?: number): Promise<AreaPlanProgress[]> {
+  if (resolveAreaPlansSource('fetchAreaPlanProgress') === 'mock') return mockApi.fetchAreaPlanProgress(year)
   // Query direta às tabelas pois a view não existe no banco
   let query = supabase
     .from('area_plans')
@@ -1021,6 +1065,7 @@ export async function fetchAreaPlanProgress(year?: number): Promise<AreaPlanProg
 }
 
 export async function fetchAreaPillarProgress(areaId: string, year: number): Promise<AreaPillarProgress[]> {
+  if (resolveAreaPlansSource('fetchAreaPillarProgress') === 'mock') return mockApi.fetchAreaPillarProgress(areaId, year)
   // Query direta pois a view não existe
   const { data: plans, error: plansError } = await supabase
     .from('area_plans')
@@ -1086,6 +1131,7 @@ export async function fetchAreaPillarProgress(areaId: string, year: number): Pro
 }
 
 export async function fetchEvidenceBacklog(): Promise<EvidenceBacklogItem[]> {
+  if (resolveAreaPlansSource('fetchEvidenceBacklog') === 'mock') return mockApi.fetchEvidenceBacklog()
   // Query direta pois a view não existe
   const { data, error } = await supabase
     .from('action_evidences')
@@ -1143,6 +1189,10 @@ export async function fetchPlanStats(planId: string): Promise<{
   inValidation: number
   completionPercentage: number
 }> {
+  if (resolveAreaPlansSource('fetchPlanStats') === 'mock') {
+    return mockApi.fetchPlanStats(planId)
+  }
+
   const { data, error } = await supabase
     .from('plan_actions')
     .select('status, due_date')

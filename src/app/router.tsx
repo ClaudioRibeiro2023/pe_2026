@@ -66,6 +66,17 @@ export function AppRouter() {
         {strategyRoutes()}
       </Route>
 
+      {/* Friendly redirects — URLs intuitivas que usuários podem tipar */}
+      <Route element={<RequireAuth><AppShell /></RequireAuth>}>
+        <Route path="/governance" element={<Navigate to={ROUTES.GOVERNANCE_DECISIONS} replace />} />
+        <Route path="/strategy/overview" element={<Navigate to={ROUTES.STRATEGY} replace />} />
+        <Route path="/analytics/reports" element={<Navigate to={ROUTES.REPORTS} replace />} />
+        <Route path="/analytics" element={<Navigate to={ROUTES.ANALYTICS_SCOREBOARD} replace />} />
+        <Route path="/admin" element={<Navigate to={ROUTES.ADMIN} replace />} />
+        <Route path="/audit" element={<Navigate to={ROUTES.AUDIT_LOGS} replace />} />
+        <Route path="/planning/:areaSlug/strategic-pack" element={<Navigate to=".." relative="path" replace />} />
+      </Route>
+
       {/* Fallback routes */}
       <Route path="/" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
       <Route path="*" element={<NotFoundPage />} />

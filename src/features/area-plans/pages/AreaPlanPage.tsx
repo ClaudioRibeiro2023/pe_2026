@@ -109,7 +109,7 @@ export function AreaPlanPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={() => navigate('/area-plans')}>
+          <Button variant="ghost" onClick={() => navigate('/planning')}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <div>

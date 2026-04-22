@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { X, Keyboard } from '@/shared/ui/icons'
+import { X, Keyboard, RefreshCw } from '@/shared/ui/icons'
 
 interface ShortcutItem {
   keys: string[]
@@ -96,10 +96,27 @@ export function ShortcutsGuide({ open, onClose }: ShortcutsGuideProps) {
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-4 border-t border-border bg-accent/30">
-            <p className="text-xs text-muted text-center">
-              Pressione <kbd className="px-1.5 py-0.5 bg-surface border border-border rounded text-[10px]">?</kbd> para abrir este guia novamente
+          <div className="px-6 py-4 border-t border-border bg-accent/30 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-xs text-muted">
+              Pressione <kbd className="px-1.5 py-0.5 bg-surface border border-border rounded text-[10px]">?</kbd> para abrir este guia
             </p>
+            <button
+              onClick={() => {
+                try {
+                  localStorage.removeItem('onboarding-completed')
+                  onClose()
+                  // Pequeno delay para evitar conflito com animação de fechar
+                  setTimeout(() => window.location.reload(), 200)
+                } catch {
+                  window.location.reload()
+                }
+              }}
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+              title="Reinicia o tour de navegação guiada"
+            >
+              <RefreshCw className="h-3 w-3" />
+              Refazer tour de navegação
+            </button>
           </div>
         </div>
       </div>

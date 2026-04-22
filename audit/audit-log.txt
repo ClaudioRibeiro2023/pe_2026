@@ -1,0 +1,69 @@
+
+=== AUDITORIA VISUAL PE2026 ===
+
+
+[ETAPA 1] Login e mapeamento inicial
+  📸 00-login-page
+  📸 01-post-login
+
+[ETAPA 2] Varredura de rotas (desktop 1440×900)
+  📸 00-login
+  📸 02-dashboard
+  📸 03-planning-home
+  📸 04-planning-rh-dashboard
+  📸 05-planning-rh-kanban
+  📸 06-planning-rh-timeline
+  📸 07-planning-rh-calendar
+  📸 08-planning-rh-strategic-pack
+  📸 09-planning-marketing-dashboard
+  📸 10-planning-operacoes-dashboard
+  📸 11-planning-financeiro-dashboard
+  📸 12-planning-pd-dashboard
+  📸 13-planning-cs-dashboard
+  📸 14-planning-comercial-dashboard
+  📸 15-planning-dashboard
+  📸 16-actions-manage
+  📸 17-actions-approvals
+  📸 18-actions-evidences
+  📸 19-actions-templates
+  📸 20-analytics-scoreboard
+  📸 21-analytics-reports
+  📸 22-strategy-overview
+  📸 23-strategy-okrs
+  📸 24-strategy-kpis
+  📸 25-strategy-risks
+  📸 26-strategy-scenarios
+  📸 27-strategy-pillars
+  📸 28-strategy-thesis
+  📸 29-goals
+  📸 30-indicators
+  📸 31-initiatives
+  📸 32-action-plans
+  📸 33-governance
+  📸 34-calendar
+  📸 35-alerts
+  📸 36-admin
+  📸 37-area-plans
+  📸 38-not-found
+
+[ETAPA 3] Interações com UI
+  📸 50-sidebar-collapsed
+  📸 51-dashboard-scrolled
+  📸 52-dashboard-bottom
+  📸 55-actions-manage-full
+  📸 58-scoreboard-mid
+  📸 59-scoreboard-bottom
+
+[ETAPA 4] Viewport notebook (1280×800)
+  📸 nb-/dashboard
+  📸 nb-/planning
+  📸 nb-/planning/rh/dashboard
+  📸 nb-/analytics/scoreboard
+  📸 nb-/strategy/overview
+
+[ETAPA 5] Viewport mobile (390×844)
+  📸 mobile-/login
+  📸 mobile-/dashboard
+  📸 mobile-/planning
+  📸 mobile-/planning/rh/dashboard
+  📸 mobile-/analytics/scoreboard

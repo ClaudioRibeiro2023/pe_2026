@@ -346,9 +346,33 @@ export function PlanningAreaCalendarPage() {
           </CardHeader>
           <CardContent>
             {!selectedDate ? (
-              <p className="text-muted text-sm">Clique em uma data para ver as ações.</p>
+              <div className="flex flex-col items-center text-center py-6 px-2">
+                <div className="w-14 h-14 rounded-2xl bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center mb-3">
+                  <Calendar className="w-7 h-7 text-primary-600 dark:text-primary-400" />
+                </div>
+                <h3 className="text-sm font-semibold text-foreground mb-1">
+                  Selecione uma data
+                </h3>
+                <p className="text-xs text-muted max-w-[220px] mb-4">
+                  Clique em qualquer dia do calendário para ver os prazos e ações em andamento.
+                </p>
+                <button
+                  onClick={() => setSelectedDate(new Date())}
+                  className="text-xs font-medium text-primary-600 dark:text-primary-400 hover:underline"
+                >
+                  Ver hoje
+                </button>
+              </div>
             ) : selectedDayActions.length === 0 && selectedDayInProgress.length === 0 ? (
-              <p className="text-muted text-sm">Nenhuma ação nesta data.</p>
+              <div className="flex flex-col items-center text-center py-6 px-2">
+                <div className="w-12 h-12 rounded-full bg-success-100 dark:bg-success-900/20 flex items-center justify-center mb-3">
+                  <Calendar className="w-6 h-6 text-success-600 dark:text-success-400" />
+                </div>
+                <p className="text-sm font-medium text-foreground mb-1">Dia livre</p>
+                <p className="text-xs text-muted max-w-[220px]">
+                  Nenhuma ação programada para esta data.
+                </p>
+              </div>
             ) : (
               <div className="space-y-4">
                 {selectedDayActions.length > 0 && (

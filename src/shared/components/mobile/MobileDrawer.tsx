@@ -7,6 +7,7 @@ import { useFavorites } from '@/shared/contexts/FavoritesContext'
 import { routePreloaders } from '@/app/routePreloaders'
 import { env } from '@/shared/config/env'
 import type { NavItem } from '@/shared/config/navigation'
+import { useFocusTrap } from '@/shared/hooks/useFocusTrap'
 
 interface MobileDrawerProps {
   open: boolean
@@ -64,18 +65,28 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
     return () => window.removeEventListener('keydown', handleEscape)
   }, [open, onClose])
 
-  if (!open) return null
+  const trapRef = useFocusTrap<HTMLElement>(open)
 
   return (
     <>
+      {/* Overlay sempre montado para permitir fade-out */}
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+        className={cn(
+          'fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300',
+          open ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        )}
         onClick={onClose}
+        aria-hidden="true"
       />
       <aside
+        ref={trapRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu de navegação"
+        aria-hidden={!open}
         className={cn(
-          'fixed top-0 left-0 bottom-0 w-80 bg-surface border-r border-border z-50 lg:hidden',
-          'transform transition-transform duration-300 ease-in-out',
+          'fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-surface border-r border-border z-50 lg:hidden flex flex-col',
+          'transform transition-transform duration-300 ease-out will-change-transform',
           open ? 'translate-x-0' : '-translate-x-full'
         )}
       >

@@ -47,9 +47,41 @@ export function OnboardingTour() {
   useEffect(() => {
     const completed = localStorage.getItem(STORAGE_KEY)
     if (!completed) {
-      setTimeout(() => setIsActive(true), 1000)
+      // Aguarda layout estabilizar + alvo da 1ª etapa existir antes de abrir
+      const timer = setTimeout(() => {
+        const firstTarget = document.querySelector(tourSteps[0].target)
+        if (firstTarget) setIsActive(true)
+      }, 1500)
+      return () => clearTimeout(timer)
     }
   }, [])
+
+  // Fechar com ESC
+  useEffect(() => {
+    if (!isActive) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        localStorage.setItem(STORAGE_KEY, 'true')
+        setIsActive(false)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [isActive])
+
+  // Pular silenciosamente passos cujo alvo não existe
+  useEffect(() => {
+    if (!isActive) return
+    const step = tourSteps[currentStep]
+    if (!document.querySelector(step.target)) {
+      if (currentStep < tourSteps.length - 1) {
+        setCurrentStep((s) => s + 1)
+      } else {
+        localStorage.setItem(STORAGE_KEY, 'true')
+        setIsActive(false)
+      }
+    }
+  }, [isActive, currentStep])
 
   useEffect(() => {
     if (!isActive) return
@@ -64,11 +96,16 @@ export function OnboardingTour() {
       const tooltipWidth = tooltipRect?.width || Math.min(360, viewportWidth - viewportPadding * 2)
       const tooltipHeight = tooltipRect?.height || 220
 
-      if (!element || viewportWidth < 640) {
+      if (!element) {
+        // Alvo não existe — o effect acima já pulou para o próximo passo; não renderiza aqui
+        return
+      }
+      if (viewportWidth < 640) {
+        // Em mobile, ancora no bottom-center para não cobrir o conteúdo central
         setPosition({
-          top: '50%',
+          bottom: 16,
           left: '50%',
-          transform: 'translate(-50%, -50%)',
+          transform: 'translateX(-50%)',
           width: tooltipWidth,
           maxWidth: '90vw',
         })
@@ -163,15 +200,23 @@ export function OnboardingTour() {
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 z-[90]" />
+      {/* Overlay transparente — fecha ao clicar fora. Não cobre visualmente o conteúdo. */}
+      <div
+        className="fixed inset-0 z-[90]"
+        onClick={handleSkip}
+        aria-hidden="true"
+      />
       <div
         ref={tooltipRef}
+        role="dialog"
+        aria-labelledby="tour-title"
         className="fixed z-[100] w-80 max-w-[90vw] bg-surface rounded-2xl shadow-2xl border border-border p-6 animate-in fade-in-0 zoom-in-95 duration-300"
         style={position}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-foreground mb-1">{step.title}</h3>
+            <h3 id="tour-title" className="text-lg font-semibold text-foreground mb-1">{step.title}</h3>
             <p className="text-sm text-muted">{step.content}</p>
           </div>
           <button

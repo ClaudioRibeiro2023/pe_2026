@@ -1,6 +1,6 @@
 import { Calendar, TrendingUp, Edit2, Trash2, Target } from '@/shared/ui/icons'
 import { Card, CardContent } from '@/shared/ui/Card'
-import { Button } from '@/shared/ui/Button'
+import { IconButton } from '@/shared/ui/IconButton'
 import { formatDate, formatCurrency, formatNumber } from '@/shared/lib/format'
 import type { Goal } from '../types'
 
@@ -71,13 +71,21 @@ export function GoalCard({ goal, onEdit, onDelete }: GoalCardProps) {
             )}
           </div>
 
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => onEdit(goal)}>
-              <Edit2 className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => onDelete(goal)}>
-              <Trash2 className="h-4 w-4" />
-            </Button>
+          <div className="flex gap-1 flex-shrink-0">
+            <IconButton
+              icon={<Edit2 />}
+              label={`Editar meta ${goal.title}`}
+              size="sm"
+              variant="ghost"
+              onClick={() => onEdit(goal)}
+            />
+            <IconButton
+              icon={<Trash2 />}
+              label={`Excluir meta ${goal.title}`}
+              size="sm"
+              variant="danger"
+              onClick={() => onDelete(goal)}
+            />
           </div>
         </div>
 
