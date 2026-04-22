@@ -3,6 +3,8 @@ import { Target, TrendingUp, ClipboardList, Activity, ArrowUp, ArrowDown, Minus 
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/Card'
 import { ErrorState } from '@/shared/ui/ErrorState'
 import { PageLoader } from '@/shared/ui/Loader'
+import { Sparkline } from '@/shared/ui/Sparkline'
+import { generateSparklineSeries, type SparklineTrend } from '@/shared/lib/sparklineMock'
 import { formatNumber } from '@/shared/lib/format'
 import { useGoals } from '@/features/goals/hooks'
 import { useIndicators } from '@/features/indicators/hooks'
@@ -31,9 +33,21 @@ interface StatCardProps {
   change?: string
   changeType?: 'positive' | 'negative' | 'neutral'
   icon: React.ReactNode
+  sparklineValue?: number
+  sparklineTrend?: SparklineTrend
+  sparklineSeed?: string
 }
 
-function StatCard({ title, value, change, changeType = 'neutral', icon }: StatCardProps) {
+function StatCard({
+  title,
+  value,
+  change,
+  changeType = 'neutral',
+  icon,
+  sparklineValue,
+  sparklineTrend,
+  sparklineSeed,
+}: StatCardProps) {
   const changeColors = {
     positive: 'text-success-600',
     negative: 'text-danger-600',
@@ -46,13 +60,26 @@ function StatCard({ title, value, change, changeType = 'neutral', icon }: StatCa
     neutral: <Minus className="h-3.5 w-3.5" />,
   }
 
+  const sparklineTone =
+    changeType === 'positive' ? 'success' : changeType === 'negative' ? 'danger' : 'primary'
+
+  const series =
+    sparklineValue !== undefined
+      ? generateSparklineSeries({
+          current: sparklineValue,
+          trend: sparklineTrend ?? (changeType === 'positive' ? 'up' : changeType === 'negative' ? 'down' : 'stable'),
+          seed: sparklineSeed ?? title,
+          points: 12,
+        })
+      : null
+
   return (
     <Card>
       <CardContent className="p-5">
-        <div className="flex items-start justify-between">
-          <div>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
             <p className="text-sm text-muted">{title}</p>
-            <p className="text-2xl font-semibold text-foreground mt-1">{value}</p>
+            <p className="text-2xl font-semibold text-foreground mt-1 tabular-nums">{value}</p>
             {change && (
               <div className={`flex items-center gap-1 text-sm mt-2 ${changeColors[changeType]}`}>
                 {changeIcons[changeType]}
@@ -60,9 +87,51 @@ function StatCard({ title, value, change, changeType = 'neutral', icon }: StatCa
               </div>
             )}
           </div>
-          <div className="w-10 h-10 rounded-lg bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center">
-            {icon}
+          <div className="flex flex-col items-end gap-2 flex-shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center">
+              {icon}
+            </div>
+            {series && (
+              <Sparkline
+                data={series}
+                width={84}
+                height={26}
+                tone={sparklineTone}
+                area
+                label={`Tendência de ${title}`}
+              />
+            )}
           </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+interface ScoreboardStatCardProps {
+  label: string
+  value: string
+  sparklineValue: number
+  tone: 'primary' | 'success' | 'warning' | 'danger'
+  trend: SparklineTrend
+  seed: string
+}
+
+function ScoreboardStatCard({ label, value, sparklineValue, tone, trend, seed }: ScoreboardStatCardProps) {
+  const series = generateSparklineSeries({
+    current: sparklineValue,
+    trend,
+    seed,
+    points: 12,
+  })
+
+  return (
+    <Card>
+      <CardContent className="p-6">
+        <p className="text-sm text-muted">{label}</p>
+        <div className="mt-2 flex items-end justify-between gap-3">
+          <p className="text-3xl font-bold text-foreground tabular-nums">{value}</p>
+          <Sparkline data={series} width={80} height={32} tone={tone} area label={`Tendência de ${label}`} />
         </div>
       </CardContent>
     </Card>
@@ -137,6 +206,8 @@ export function DashboardPage() {
       change: completedGoals > 0 ? `${completedGoals} concluídas` : 'Nenhuma concluída',
       changeType: completedGoals > 0 ? 'positive' as const : 'neutral' as const,
       icon: <Target className="h-5 w-5 text-primary-600" />,
+      sparklineValue: activeGoals,
+      sparklineTrend: 'stable' as SparklineTrend,
     },
     {
       title: 'Progresso Médio',
@@ -144,6 +215,8 @@ export function DashboardPage() {
       change: avgProgress >= 70 ? 'Ótimo desempenho' : avgProgress >= 40 ? 'Bom ritmo' : 'Precisa atenção',
       changeType: avgProgress >= 70 ? 'positive' as const : avgProgress >= 40 ? 'neutral' as const : 'negative' as const,
       icon: <TrendingUp className="h-5 w-5 text-primary-600" />,
+      sparklineValue: avgProgress,
+      sparklineTrend: (avgProgress >= 50 ? 'up' : 'down') as SparklineTrend,
     },
     {
       title: 'Planos de Ação',
@@ -151,6 +224,8 @@ export function DashboardPage() {
       change: completedActionPlans > 0 ? `${completedActionPlans} finalizados` : 'Em andamento',
       changeType: completedActionPlans > 0 ? 'positive' as const : 'neutral' as const,
       icon: <ClipboardList className="h-5 w-5 text-primary-600" />,
+      sparklineValue: activeActionPlans,
+      sparklineTrend: 'up' as SparklineTrend,
     },
     {
       title: 'Indicadores',
@@ -158,6 +233,8 @@ export function DashboardPage() {
       change: positiveIndicators > 0 ? `${positiveIndicators} em alta` : 'Estável',
       changeType: positiveIndicators > 0 ? 'positive' as const : 'neutral' as const,
       icon: <Activity className="h-5 w-5 text-primary-600" />,
+      sparklineValue: indicatorsWithTrend,
+      sparklineTrend: (positiveIndicators > 0 ? 'up' : 'stable') as SparklineTrend,
     },
   ]
 
@@ -208,30 +285,38 @@ export function DashboardPage() {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-sm text-muted">Guardrails em atenção</p>
-                <p className="text-3xl font-bold text-foreground mt-2">{formatNumber(guardrailsAttention)}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-sm text-muted">KPIs em atenção</p>
-                <p className="text-3xl font-bold text-foreground mt-2">{formatNumber(kpisAttention)}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-sm text-muted">Execução monetização</p>
-                <p className="text-3xl font-bold text-foreground mt-2">{formatNumber(execucaoPercentual, 1)}%</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-sm text-muted">Ativação de demanda</p>
-                <p className="text-3xl font-bold text-foreground mt-2">{formatNumber(ativacaoPercentual, 1)}%</p>
-              </CardContent>
-            </Card>
+            <ScoreboardStatCard
+              label="Guardrails em atenção"
+              value={formatNumber(guardrailsAttention)}
+              sparklineValue={guardrailsAttention}
+              tone={guardrailsAttention > 0 ? 'warning' : 'success'}
+              trend={guardrailsAttention > 0 ? 'up' : 'down'}
+              seed="scoreboard-guardrails"
+            />
+            <ScoreboardStatCard
+              label="KPIs em atenção"
+              value={formatNumber(kpisAttention)}
+              sparklineValue={kpisAttention}
+              tone={kpisAttention > 5 ? 'warning' : kpisAttention > 0 ? 'primary' : 'success'}
+              trend={kpisAttention > 0 ? 'volatile' : 'stable'}
+              seed="scoreboard-kpis"
+            />
+            <ScoreboardStatCard
+              label="Execução monetização"
+              value={`${formatNumber(execucaoPercentual, 1)}%`}
+              sparklineValue={execucaoPercentual}
+              tone={execucaoPercentual >= 70 ? 'success' : execucaoPercentual >= 40 ? 'primary' : 'warning'}
+              trend={execucaoPercentual >= 50 ? 'up' : 'down'}
+              seed="scoreboard-execucao"
+            />
+            <ScoreboardStatCard
+              label="Ativação de demanda"
+              value={`${formatNumber(ativacaoPercentual, 1)}%`}
+              sparklineValue={ativacaoPercentual}
+              tone={ativacaoPercentual >= 70 ? 'success' : ativacaoPercentual >= 40 ? 'primary' : 'warning'}
+              trend={ativacaoPercentual >= 50 ? 'up' : 'stable'}
+              seed="scoreboard-ativacao"
+            />
           </div>
         </div>
       )}
