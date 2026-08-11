@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canvas — Mapa Mental P5 / RH · PE2026</title>
+<style>
+  :root{
+    --bg:#0b1220;
+    --panel:#0f172a;
+    --panel-2:#111c34;
+    --line:#1f2a44;
+    --ink:#e5e7eb;
+    --muted:#94a3b8;
+    --accent:#22d3ee;
+    --p5:#a855f7;
+    --p5-2:#7c3aed;
+    --s1:#f59e0b;
+    --s2:#10b981;
+    --s3:#ef4444;
+    --s4:#3b82f6;
+    --gold:#fbbf24;
+    --ok:#22c55e;
+    --warn:#f97316;
+    --crit:#dc2626;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;font-size:13px;line-height:1.45}
+  .canvas{max-width:1640px;margin:0 auto;padding:24px}
+  header.hero{
+    background:linear-gradient(135deg,#1e1b4b 0%,#0f172a 60%,#0b1220 100%);
+    border:1px solid var(--line);border-radius:16px;padding:24px 28px;margin-bottom:20px;position:relative;overflow:hidden
+  }
+  header.hero::after{
+    content:"";position:absolute;right:-80px;top:-80px;width:300px;height:300px;
+    background:radial-gradient(circle,rgba(168,85,247,.25),transparent 70%);border-radius:50%
+  }
+  .pilar-tag{display:inline-block;background:rgba(168,85,247,.18);color:#d8b4fe;border:1px solid rgba(168,85,247,.4);border-radius:999px;padding:4px 12px;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+  h1{font-size:28px;margin:10px 0 4px;font-weight:700;letter-spacing:-.5px}
+  h1 small{color:var(--muted);font-weight:400;font-size:14px;display:block;margin-top:6px}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:18px;margin-top:14px;color:var(--muted);font-size:12px}
+  .hero-meta b{color:var(--ink)}
+
+  .grid{display:grid;grid-template-columns: 320px 1fr 320px;gap:20px}
+  @media (max-width:1280px){.grid{grid-template-columns:1fr}}
+
+  .panel{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px
+  }
+  .panel h2{font-size:13px;margin:0 0 12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .panel h2 .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  .panel h3{font-size:12px;margin:14px 0 6px;color:#cbd5e1;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+
+  .item{padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel-2);margin-bottom:6px;font-size:12px}
+  .item b{color:#fff}
+  .item .meta{color:var(--muted);font-size:11px;margin-top:2px}
+
+  .badge{display:inline-block;padding:1px 7px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+  .b-p0{background:rgba(220,38,38,.18);color:#fca5a5;border:1px solid rgba(220,38,38,.4)}
+  .b-p1{background:rgba(249,115,22,.18);color:#fdba74;border:1px solid rgba(249,115,22,.4)}
+  .b-okr{background:rgba(168,85,247,.18);color:#d8b4fe;border:1px solid rgba(168,85,247,.4)}
+  .b-s1{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.35)}
+  .b-s2{background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.35)}
+  .b-s3{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.35)}
+  .b-s4{background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.35)}
+  .b-prog{background:rgba(34,211,238,.15);color:#67e8f9;border:1px solid rgba(34,211,238,.35)}
+
+  /* center mind map */
+  .map-wrap{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px;min-height:760px;position:relative}
+  .map-wrap svg{width:100%;height:760px;display:block}
+
+  /* legend */
+  .legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 14px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--line);border-radius:14px 14px 0 0;font-size:11px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+  /* KPI grid */
+  .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+  .kpi{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .kpi .v{font-size:18px;font-weight:700;color:#fff}
+  .kpi .v.warn{color:#fdba74}
+  .kpi .v.ok{color:#6ee7b7}
+  .kpi .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+
+  /* bottom strip */
+  .strip{margin-top:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media (max-width:1100px){.strip{grid-template-columns:1fr 1fr}}
+  @media (max-width:640px){.strip{grid-template-columns:1fr}}
+  .prog-card{border-radius:12px;padding:14px;border:1px solid;position:relative;overflow:hidden}
+  .prog-card.conecta{background:linear-gradient(135deg,rgba(34,211,238,.10),rgba(15,23,42,.6));border-color:rgba(34,211,238,.35)}
+  .prog-card.desenvolve{background:linear-gradient(135deg,rgba(16,185,129,.10),rgba(15,23,42,.6));border-color:rgba(16,185,129,.35)}
+  .prog-card.reconhece{background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(15,23,42,.6));border-color:rgba(251,191,36,.4)}
+  .prog-card.inova{background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(15,23,42,.6));border-color:rgba(168,85,247,.4)}
+  .prog-card h4{margin:0 0 6px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .prog-card p{color:var(--muted);margin:0 0 8px;font-size:11.5px;line-height:1.45}
+  .prog-card ul{margin:0;padding-left:16px}
+  .prog-card li{font-size:11.5px;color:#cbd5e1;margin-bottom:3px}
+
+  /* gargalos */
+  .gargalo{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;background:var(--panel-2);border:1px solid var(--line);margin-bottom:6px}
+  .gargalo b{font-size:11.5px}
+  .bar{width:60%;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;position:relative}
+  .bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--crit),var(--warn));border-radius:3px}
+  .gargalo .nums{font-size:11px;color:var(--muted);margin-left:8px;min-width:74px;text-align:right}
+
+  .foot{margin-top:24px;color:var(--muted);font-size:11px;text-align:center;border-top:1px solid var(--line);padding-top:12px}
+
+  /* tooltips on SVG nodes */
+  .node-bg{cursor:pointer;transition:filter .15s}
+  .node-bg:hover{filter:brightness(1.2)}
+  text{user-select:none;font-family:'Inter','Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <header class="hero">
+    <span class="pilar-tag">PE2026 · Pilar Institucional P5</span>
+    <h1>Pessoas, Liderança e Capacidade Intelectual
+      <small>RH como infraestrutura de escala — onde método, dados e cultura encontram execução</small>
+    </h1>
+    <div class="hero-meta">
+      <span><b>Pilar:</b> P5 — DOC 04 v2.0</span>
+      <span><b>Motor PE:</b> M5 — Pessoas</span>
+      <span><b>Responsável:</b> Cláudio Ribeiro — Direção Executiva</span>
+      <span><b>Cadência:</b> WBR · MBR · QBR</span>
+      <span><b>Programas:</b> Aero Conecta · Desenvolve · Reconhece · Inova</span>
+      <span><b>Versão:</b> 2.0 (mar/2026)</span>
+    </div>
+  </header>
+
+  <div class="grid">
+
+    <!-- LEFT — Subpilares + OKRs -->
+    <aside class="panel">
+      <h2><span class="dot" style="background:var(--p5)"></span> Subpilares de P5</h2>
+      <div class="item" style="border-left:3px solid var(--s1)">
+        <b>P5.S1 — Liderança e Gestão</b>
+        <div class="meta">Rituais, clareza, execução, cobrança de líderes</div>
+      </div>
+      <div class="item" style="border-left:3px solid var(--s2)">
+        <b>P5.S2 — Talentos e Densidade Intelectual</b>
+        <div class="meta">Contratar e desenvolver — COO + Comercial prioritários</div>
+      </div>
+      <div class="item" style="border-left:3px solid var(--s3)">
+        <b>P5.S3 — Cultura, Engajamento e Reconhecimento</b>
+        <div class="meta">Infraestrutura de escala — corrigir 4 gargalos 2025</div>
+      </div>
+      <div class="item" style="border-left:3px solid var(--s4)">
+        <b>P5.S4 — People Analytics e Governança RH</b>
+        <div class="meta">RH decide com dados, não com narrativa</div>
+      </div>
+
+      <h2 style="margin-top:18px"><span class="dot" style="background:var(--gold)"></span> OKRs do RH 2026</h2>
+      <div class="item">
+        <span class="badge b-okr">O1</span> <b>Estabilidade & Proteção de Capacidade</b>
+        <div class="meta">Turnover ≤ 35% · Críticos ≤ 20% · Churn 0–90 ≤ 10%</div>
+      </div>
+      <div class="item">
+        <span class="badge b-okr">O2</span> <b>Escola de Líderes & Rituais Mínimos</b>
+        <div class="meta">Aderência ≥ 85% (jun) → ≥ 95% (dez) · NPS ≥ 60</div>
+      </div>
+      <div class="item">
+        <span class="badge b-okr">O3</span> <b>Cultura Operacional (Conecta + Reconhece)</b>
+        <div class="meta">Elevar os 4 indicadores de gargalo nos pulsos trimestrais</div>
+      </div>
+      <div class="item">
+        <span class="badge b-okr">O4</span> <b>Gestão de Desempenho Institucional</b>
+        <div class="meta">100% áreas com metas · Avaliações ≥ 95% (set) · PDIs críticos jun/26</div>
+      </div>
+      <div class="item">
+        <span class="badge b-okr">O5</span> <b>GPTW, Marca Empregadora & People Analytics</b>
+        <div class="meta">Plano GPTW v1.0 (mar) · Readiness ≥ 95% (nov) · Certificação 2026</div>
+      </div>
+    </aside>
+
+    <!-- CENTER — Mind Map SVG -->
+    <main class="map-wrap">
+      <div class="legend">
+        <span><i style="background:var(--p5)"></i> Pilar P5</span>
+        <span><i style="background:var(--s1)"></i> S1 Liderança</span>
+        <span><i style="background:var(--s2)"></i> S2 Talentos</span>
+        <span><i style="background:var(--s3)"></i> S3 Cultura</span>
+        <span><i style="background:var(--s4)"></i> S4 Analytics</span>
+        <span><i style="background:var(--accent)"></i> Programa</span>
+        <span><i style="background:var(--gold)"></i> Iniciativa / KR</span>
+      </div>
+      <svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid meet" id="mindmap"></svg>
+    </main>
+
+    <!-- RIGHT — KPIs + Iniciativas -->
+    <aside class="panel">
+      <h2><span class="dot" style="background:var(--ok)"></span> Placar do MBR · KPIs</h2>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="v warn">≤ 35%</div><div class="l">Turnover YTD</div></div>
+        <div class="kpi"><div class="v warn">≤ 20%</div><div class="l">Turnover crítico</div></div>
+        <div class="kpi"><div class="v">≤ 10%</div><div class="l">Churn 0–90 dias</div></div>
+        <div class="kpi"><div class="v ok">≥ 85%</div><div class="l">Sucesso 90º dia</div></div>
+        <div class="kpi"><div class="v ok">≥ 95%</div><div class="l">Aderência rituais (dez)</div></div>
+        <div class="kpi"><div class="v ok">≥ 95%</div><div class="l">GPTW readiness (nov)</div></div>
+        <div class="kpi"><div class="v">≥ 90%</div><div class="l">Onboarding 45/90</div></div>
+        <div class="kpi"><div class="v">≥ 80%</div><div class="l">Ações do MBR</div></div>
+      </div>
+
+      <h2 style="margin-top:18px"><span class="dot" style="background:var(--gold)"></span> Iniciativas Corporativas · Motor M5</h2>
+      <div class="item">
+        <span class="badge b-p0">P0</span> <b>INIT-012 — Mapa de posições-chave 2026</b>
+        <div class="meta">KR P5.4 · R$ 5–10K · Mar/2026 · Tipo ORG</div>
+      </div>
+      <div class="item">
+        <span class="badge b-p0">P0</span> <b>INIT-013 — Onboarding estruturado (45/90)</b>
+        <div class="meta">KR P5.5 · R$ 10–15K · Abr/2026 · Tipo MET</div>
+      </div>
+      <div class="item">
+        <span class="badge b-p1">P1</span> <b>INIT-015 — Contratação COO/Diretor de Operações</b>
+        <div class="meta">KR P5.4 · R$ 216–264K/ano · Entrada abr/2026 · Tipo ORG</div>
+      </div>
+      <div class="item">
+        <span class="badge b-p1">P1</span> <b>INIT-016 — Contratação Liderança Comercial</b>
+        <div class="meta">KR P5.4 · R$ 144–192K/ano · Entrada mai/2026 · Tipo ORG</div>
+      </div>
+      <div class="item">
+        <span class="badge b-p1">P1</span> <b>INIT-022 — Rituais mínimos de liderança</b>
+        <div class="meta">KR P5.3 · R$ 10–20K · Abr–jun/2026 · Tipo MET · Aderência ≥ 85%</div>
+      </div>
+
+      <h2 style="margin-top:18px"><span class="dot" style="background:var(--crit)"></span> Gargalos 2025 → Meta Q4/26</h2>
+      <div class="gargalo">
+        <b>Decisões/Mudanças</b>
+        <div class="bar"><i style="width:52%"></i></div>
+        <div class="nums">52% → ≥75%</div>
+      </div>
+      <div class="gargalo">
+        <b>Colaboração interáreas</b>
+        <div class="bar"><i style="width:59%"></i></div>
+        <div class="nums">59% → ≥75%</div>
+      </div>
+      <div class="gargalo">
+        <b>Onboarding e suporte</b>
+        <div class="bar"><i style="width:63%"></i></div>
+        <div class="nums">63% → ≥80%</div>
+      </div>
+      <div class="gargalo">
+        <b>Reconhecimento</b>
+        <div class="bar"><i style="width:69%"></i></div>
+        <div class="nums">67–70% → ≥82%</div>
+      </div>
+      <div class="gargalo" style="border-color:rgba(34,197,94,.4)">
+        <b>Favorabilidade geral</b>
+        <div class="bar"><i style="width:81%;background:linear-gradient(90deg,#22c55e,#10b981)"></i></div>
+        <div class="nums">81,3% (base)</div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- BOTTOM STRIP — 4 Programas -->
+  <section class="strip">
+    <div class="prog-card conecta">
+      <h4><span class="badge b-prog">CONECTA</span></h4>
+      <p>Comunicação interna e clareza. Resolve gargalo de decisões (52%) e colaboração (59%). Atende O3, O5.</p>
+      <ul>
+        <li><b>C1.1</b> Log de decisões (SLA 48h)</li>
+        <li><b>C2.1</b> Fala AERO — 12 edições/ano</li>
+        <li><b>C3.1</b> Integração interáreas — 6 encontros/ano</li>
+        <li><b>C4.1</b> Canal de escuta (SLA ≤ 7 dias)</li>
+      </ul>
+    </div>
+    <div class="prog-card desenvolve">
+      <h4><span class="badge b-prog" style="background:rgba(16,185,129,.18);color:#6ee7b7;border-color:rgba(16,185,129,.4)">DESENVOLVE</span></h4>
+      <p>Liderança, competências e desempenho. Resolve maturidade desigual de liderança. Atende O2, O4 (apoia O1).</p>
+      <ul>
+        <li><b>D1.1</b> Escola de Líderes — trilhas + calendário</li>
+        <li><b>D2.1</b> Rituais mínimos (1:1, feedback, alinhamento, PDI)</li>
+        <li><b>D3.1</b> Gestão de desempenho — framework + metas + Nine Box</li>
+        <li><b>D4.1</b> PDIs e trilhas — críticos primeiro</li>
+      </ul>
+    </div>
+    <div class="prog-card reconhece">
+      <h4><span class="badge b-prog" style="background:rgba(251,191,36,.18);color:#fde047;border-color:rgba(251,191,36,.4)">RECONHECE</span></h4>
+      <p>Reconhecimento e mérito com critério. Resolve reconhecimento (67–70%). Atende O3, O1, O5.</p>
+      <ul>
+        <li><b>R1.1</b> "Reconhecer é AERO" — ritual mensal</li>
+        <li><b>R2.1</b> Guia de critérios + exemplos</li>
+        <li><b>R4.1</b> Pulso trimestral — 4/ano com plano</li>
+      </ul>
+    </div>
+    <div class="prog-card inova">
+      <h4><span class="badge b-prog" style="background:rgba(168,85,247,.18);color:#d8b4fe;border-color:rgba(168,85,247,.4)">INOVA</span></h4>
+      <p>People Analytics e GPTW como disciplina. Resolve decisões reativas e GPTW como campanha. Atende O1–O5 (ênfase O5).</p>
+      <ul>
+        <li><b>I1.1</b> Dicionário KPIs RH v1.0 (mar/26)</li>
+        <li><b>I2.1</b> Painel RH 1.0 (mai/26)</li>
+        <li><b>I3.1</b> MBR RH — 12 ciclos/ano</li>
+        <li><b>I4.1</b> Plano GPTW v1.0 + Certificação 2026</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="foot">
+    Canvas gerado a partir de DOC 04 (Pilares) · DOC 06 (OKRs) · DOC 08 (Carteira) · DOC 11-A / A.1 / A.2 (Cadernos RH) · PE2026 v2.0
+    <br>Confidencial — uso interno da Direção · 22 KRs setoriais · 4 Programas · 13 iniciativas operacionais · 5 INITs corporativas (M5)
+  </div>
+</div>
+
+<script>
+/* Radial mind map — pure SVG */
+const svg = document.getElementById('mindmap');
+const NS = 'http://www.w3.org/2000/svg';
+const W = 1200, H = 760, CX = W/2, CY = H/2;
+
+const tree = {
+  id:'P5', label:'P5 · RH', sub:'Pessoas, Liderança & Capacidade Intelectual', color:'#a855f7',
+  children:[
+    {id:'S1', label:'P5.S1', sub:'Liderança & Gestão', color:'#f59e0b',
+      children:[
+        {id:'D1', label:'D1.1 Escola de Líderes', meta:'Mar/26 · NPS≥60', color:'#fbbf24'},
+        {id:'D2', label:'D2.1 Rituais Mínimos', meta:'≥85% jun · ≥95% dez', color:'#fbbf24'},
+        {id:'INIT22', label:'INIT-022 Rituais', meta:'P1 · R$10–20K', color:'#fdba74'},
+      ]},
+    {id:'S2', label:'P5.S2', sub:'Talentos & Densidade Intelectual', color:'#10b981',
+      children:[
+        {id:'INIT12', label:'INIT-012 Posições-chave', meta:'P0 · Mar/26', color:'#fdba74'},
+        {id:'INIT15', label:'INIT-015 COO', meta:'P1 · Abr/26', color:'#fdba74'},
+        {id:'INIT16', label:'INIT-016 Liderança Comercial', meta:'P1 · Mai/26', color:'#fdba74'},
+        {id:'D4', label:'D4.1 PDIs Críticos', meta:'100% jun/26', color:'#fbbf24'},
+      ]},
+    {id:'S3', label:'P5.S3', sub:'Cultura, Engajamento & Reconhecimento', color:'#ef4444',
+      children:[
+        {id:'PCON', label:'Aero Conecta', meta:'C1.1 · C2.1 · C3.1 · C4.1', color:'#22d3ee'},
+        {id:'PREC', label:'Aero Reconhece', meta:'R1.1 · R2.1 · R4.1', color:'#fbbf24'},
+        {id:'INIT13', label:'INIT-013 Onboarding 45/90', meta:'P0 · Abr/26', color:'#fdba74'},
+      ]},
+    {id:'S4', label:'P5.S4', sub:'People Analytics & Governança RH', color:'#3b82f6',
+      children:[
+        {id:'PINO', label:'Aero Inova', meta:'I1.1 · I2.1 · I3.1 · I4.1', color:'#c084fc'},
+        {id:'I1', label:'Dicionário KPIs v1.0', meta:'Mar/26', color:'#fbbf24'},
+        {id:'I2', label:'Painel RH 1.0', meta:'Mai/26', color:'#fbbf24'},
+        {id:'I4', label:'Plano GPTW + Certif.', meta:'Nov/26', color:'#fbbf24'},
+      ]},
+    {id:'PDEV', label:'Aero Desenvolve', sub:'Programa transversal', color:'#22d3ee',
+      children:[
+        {id:'D3', label:'D3.1 Desempenho', meta:'100% áreas · Set/26', color:'#fbbf24'},
+        {id:'KR06', label:'KR-RH-06 Rituais', meta:'≥85% jun', color:'#fde68a'},
+        {id:'KR15', label:'KR-RH-15 Avaliações', meta:'≥95% set', color:'#fde68a'},
+      ]},
+  ]
+};
+
+/* layout: radial - root at center, 5 sub branches around */
+const branches = tree.children;
+const N = branches.length;
+const innerR = 200;
+const outerR = 320;
+
+function ang(i,total){ return (-Math.PI/2) + (i*(2*Math.PI/total)); }
+
+/* draw glow root */
+const defs = document.createElementNS(NS,'defs');
+defs.innerHTML = `
+<radialGradient id="g1" cx="50%" cy="50%" r="50%">
+  <stop offset="0%" stop-color="#a855f7" stop-opacity=".7"/>
+  <stop offset="60%" stop-color="#7c3aed" stop-opacity=".25"/>
+  <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+</radialGradient>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+  <feGaussianBlur stdDeviation="3"/>
+</filter>`;
+svg.appendChild(defs);
+
+/* background glow */
+const glow = document.createElementNS(NS,'circle');
+glow.setAttribute('cx',CX); glow.setAttribute('cy',CY);
+glow.setAttribute('r',260); glow.setAttribute('fill','url(#g1)');
+svg.appendChild(glow);
+
+/* draw branches */
+branches.forEach((br,i)=>{
+  const a = ang(i,N);
+  const x1 = CX + Math.cos(a)*innerR;
+  const y1 = CY + Math.sin(a)*innerR;
+
+  /* connector root -> branch */
+  const path = document.createElementNS(NS,'path');
+  const cx1 = CX + Math.cos(a)*innerR*0.5;
+  const cy1 = CY + Math.sin(a)*innerR*0.5;
+  path.setAttribute('d',`M ${CX} ${CY} Q ${cx1} ${cy1} ${x1} ${y1}`);
+  path.setAttribute('fill','none');
+  path.setAttribute('stroke',br.color);
+  path.setAttribute('stroke-width','2.2');
+  path.setAttribute('stroke-opacity','.55');
+  svg.appendChild(path);
+
+  /* branch node */
+  drawNode(x1,y1,br.label,br.sub,br.color,72);
+
+  /* leaves around branch */
+  const M = br.children.length;
+  const leafR = 95;
+  const spread = Math.PI/2.6;
+  br.children.forEach((leaf,j)=>{
+    const la = a - spread/2 + (j*(spread/Math.max(M-1,1)));
+    const lx = x1 + Math.cos(la)*leafR;
+    const ly = y1 + Math.sin(la)*leafR;
+    /* connector branch -> leaf */
+    const lpath = document.createElementNS(NS,'path');
+    lpath.setAttribute('d',`M ${x1} ${y1} Q ${(x1+lx)/2} ${(y1+ly)/2 - 6} ${lx} ${ly}`);
+    lpath.setAttribute('fill','none');
+    lpath.setAttribute('stroke',leaf.color);
+    lpath.setAttribute('stroke-width','1.4');
+    lpath.setAttribute('stroke-opacity','.5');
+    svg.appendChild(lpath);
+    drawLeaf(lx,ly,leaf.label,leaf.meta,leaf.color);
+  });
+});
+
+/* root node */
+drawNode(CX,CY,tree.label,tree.sub,tree.color,90,true);
+
+function drawNode(x,y,label,sub,color,r,isRoot){
+  const g = document.createElementNS(NS,'g');
+  const ring = document.createElementNS(NS,'circle');
+  ring.setAttribute('cx',x); ring.setAttribute('cy',y);
+  ring.setAttribute('r',r+6);
+  ring.setAttribute('fill','none');
+  ring.setAttribute('stroke',color);
+  ring.setAttribute('stroke-opacity','.25');
+  ring.setAttribute('stroke-width','1.5');
+  g.appendChild(ring);
+
+  const bg = document.createElementNS(NS,'circle');
+  bg.setAttribute('cx',x); bg.setAttribute('cy',y);
+  bg.setAttribute('r',r);
+  bg.setAttribute('fill','#0f172a');
+  bg.setAttribute('stroke',color);
+  bg.setAttribute('stroke-width', isRoot ? '3' : '2');
+  bg.setAttribute('class','node-bg');
+  g.appendChild(bg);
+
+  const t1 = document.createElementNS(NS,'text');
+  t1.setAttribute('x',x); t1.setAttribute('y',y - (isRoot?6:4));
+  t1.setAttribute('text-anchor','middle');
+  t1.setAttribute('fill','#fff');
+  t1.setAttribute('font-weight','700');
+  t1.setAttribute('font-size', isRoot ? '20' : '15');
+  t1.textContent = label;
+  g.appendChild(t1);
+
+  if(sub){
+    /* word-wrap simple */
+    const words = sub.split(' ');
+    const lines = [];
+    let line = '';
+    const maxLen = isRoot ? 22 : 18;
+    words.forEach(w=>{
+      if((line+' '+w).trim().length>maxLen){lines.push(line.trim());line=w;}
+      else line += ' '+w;
+    });
+    if(line.trim()) lines.push(line.trim());
+    lines.slice(0,2).forEach((ln,k)=>{
+      const t2 = document.createElementNS(NS,'text');
+      t2.setAttribute('x',x);
+      t2.setAttribute('y',y + (isRoot?14:10) + k*12);
+      t2.setAttribute('text-anchor','middle');
+      t2.setAttribute('fill','#cbd5e1');
+      t2.setAttribute('font-size', isRoot ? '11' : '10');
+      t2.textContent = ln;
+      g.appendChild(t2);
+    });
+  }
+  svg.appendChild(g);
+}
+
+function drawLeaf(x,y,label,meta,color){
+  const g = document.createElementNS(NS,'g');
+  const w = 152, h = 38;
+  const rect = document.createElementNS(NS,'rect');
+  rect.setAttribute('x', x - w/2);
+  rect.setAttribute('y', y - h/2);
+  rect.setAttribute('width', w);
+  rect.setAttribute('height', h);
+  rect.setAttribute('rx', 8);
+  rect.setAttribute('fill','#111c34');
+  rect.setAttribute('stroke',color);
+  rect.setAttribute('stroke-opacity','.6');
+  rect.setAttribute('stroke-width','1.2');
+  rect.setAttribute('class','node-bg');
+  g.appendChild(rect);
+
+  const t1 = document.createElementNS(NS,'text');
+  t1.setAttribute('x', x);
+  t1.setAttribute('y', y - 3);
+  t1.setAttribute('text-anchor','middle');
+  t1.setAttribute('fill','#fff');
+  t1.setAttribute('font-weight','600');
+  t1.setAttribute('font-size','10.5');
+  t1.textContent = label.length>22? label.slice(0,21)+'…' : label;
+  g.appendChild(t1);
+
+  if(meta){
+    const t2 = document.createElementNS(NS,'text');
+    t2.setAttribute('x', x);
+    t2.setAttribute('y', y + 11);
+    t2.setAttribute('text-anchor','middle');
+    t2.setAttribute('fill','#94a3b8');
+    t2.setAttribute('font-size','9.5');
+    t2.textContent = meta;
+    g.appendChild(t2);
+  }
+
+  /* tooltip */
+  const title = document.createElementNS(NS,'title');
+  title.textContent = `${label}${meta? ' · '+meta : ''}`;
+  g.appendChild(title);
+
+  svg.appendChild(g);
+}
+</script>
+</body>
+</html>
